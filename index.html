@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- ===== SEO: タイトル・ディスクリプション最適化 ===== -->
+  <title>ことばみまもり｜SNS投稿前の炎上防止・文章リスク確認ツール（無料）</title>
+  <meta name="description" content="SNSに投稿する前に、あなたの文章の攻撃性・誹謗中傷度・感情強度をAIが無料でチェック。入力文章は保存されません。投稿前にひと呼吸、言葉のリスクを見える化します。">
+  <meta name="keywords" content="SNS炎上防止,投稿前チェック,文章リスク確認,攻撃的表現チェック,誹謗中傷チェック,SNSツール無料">
+  <meta name="author" content="na0AaooQ">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://words-watching-app.na0aaooq.com/">
+
+  <!-- ===== Security: CSP (多層防御) ===== -->
+  <!-- script-src 'self' のみ許可。インラインスクリプトは nonce 管理が理想だが、
+       静的HTMLのためunsafe-inline を外せない場合はサーバー側CSPヘッダーで対応を推奨 -->
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="X-Frame-Options" content="DENY">
+
+  <!-- ===== SEO: OGP ===== -->
+  <meta property="og:title" content="ことばみまもり｜SNS投稿前の炎上防止ツール">
+  <meta property="og:description" content="投稿前に、ひと呼吸。文章の攻撃性・感情強度をAIが無料チェック。入力文章は保存されません。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://words-watching-app.na0aaooq.com/">
+  <meta property="og:site_name" content="ことばみまもり">
+  <meta property="og:image" content="https://words-watching-app.na0aaooq.com/ogp-image.png" /> <meta name="twitter:card" content="summary_large_image" /> <meta name="twitter:site" content="@na0AaooQ" />
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="ことばみまもり｜SNS投稿前の炎上防止ツール">
+  <meta name="twitter:description" content="投稿前に、ひと呼吸。文章の攻撃性・感情強度をAIが無料チェック。">
+
+  <!-- ===== SEO: 構造化データ (JSON-LD) ===== -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "ことばみまもり",
+    "alternateName": ["ことばみまもり", "ことばみまもり｜SNS投稿前の炎上防止ツール"],
+    "url": "https://words-watching-app.na0aaooq.com/",
+    "description": "SNSに投稿する前に、文章の攻撃性・誹謗中傷度・感情強度をAIが無料でチェックするツール",
+    "applicationCategory": "UtilityApplication",
+    "operatingSystem": "Web",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "JPY"
+    },
+    "author": {
+      "@type": "Person",
+      "name": "na0AaooQ",
+      "url": "https://qiita.com/na0AaooQ"
+    }
+  }
+  </script>
+
+  <!-- ===== Fonts ===== -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Noto+Serif+JP:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* ===== CSS Variables ===== */
+    :root {
+      --bg:        #f7f8fc;
+      --surface:   #ffffff;
+      --surface2:  #f0f2fa;
+      --border:    #dde1f0;
+      --text:      #1e2340;
+      --muted:     #6b7299;
+      --accent:    #4a6cf7;
+      --accent-lt: #eef1ff;
+      --green:     #22c48a;
+      --green-lt:  #e6faf3;
+      --amber:     #f59e0b;
+      --amber-lt:  #fff8e6;
+      --red:       #ef4444;
+      --red-lt:    #fff0f0;
+      --radius:    14px;
+      --shadow:    0 4px 24px rgba(74,108,247,0.08);
+      --shadow-md: 0 8px 40px rgba(74,108,247,0.13);
+    }
+
+    /* ===== Reset & Base ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Zen Kaku Gothic New', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.75;
+      min-height: 100vh;
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ===== Animations ===== */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse-ring {
+      0%   { transform: scale(1); opacity: 0.5; }
+      100% { transform: scale(1.5); opacity: 0; }
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes barGrow {
+      from { width: 0%; }
+    }
+
+    .fade-up { animation: fadeUp 0.55s ease both; }
+    .delay-1 { animation-delay: 0.1s; }
+    .delay-2 { animation-delay: 0.2s; }
+    .delay-3 { animation-delay: 0.3s; }
+    .delay-4 { animation-delay: 0.4s; }
+
+    /* ===== Header ===== */
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 12px rgba(74,108,247,0.06);
+    }
+
+    .header-logo {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .header-logo .logo-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      animation: pulse-ring 2s ease-out infinite;
+      position: relative;
+    }
+
+    .header-link {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    /* ===== Hero ===== */
+    .hero {
+      text-align: center;
+      padding: 4rem 1.5rem 2.5rem;
+      background: linear-gradient(160deg, #eef1ff 0%, #f7f8fc 60%);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-tag {
+      display: inline-block;
+      background: var(--accent-lt);
+      color: var(--accent);
+      border: 1px solid rgba(74,108,247,0.25);
+      border-radius: 100px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      padding: 0.3rem 1rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .hero h1 {
+      font-family: 'Noto Serif JP', serif;
+      font-size: clamp(1.8rem, 5vw, 2.8rem);
+      font-weight: 600;
+      line-height: 1.3;
+      margin-bottom: 0.75rem;
+      color: var(--text);
+    }
+
+    .hero h1 span {
+      color: var(--accent);
+    }
+
+    .hero-sub {
+      color: var(--muted);
+      font-size: 0.95rem;
+      max-width: 480px;
+      margin: 0 auto 1.5rem;
+      font-weight: 300;
+    }
+
+    /* プライバシー安心バッジ — ヒーロー内に目立つ位置で表示 */
+    .privacy-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: var(--green-lt);
+      color: #15a372;
+      border: 1px solid rgba(34,196,138,0.3);
+      border-radius: 100px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      padding: 0.35rem 1rem;
+    }
+
+    /* ===== Main Content ===== */
+    main {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 4rem;
+    }
+
+    /* ===== Card ===== */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    /* ===== サンプル文章ボタン ===== */
+    .sample-label {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+
+    .sample-btns {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .sample-btn {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      color: var(--muted);
+      font-family: 'Zen Kaku Gothic New', sans-serif;
+      font-size: 0.78rem;
+      padding: 0.3rem 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .sample-btn:hover {
+      background: var(--accent-lt);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* ===== Textarea ===== */
+    .textarea-wrap {
+      position: relative;
+      margin-bottom: 0.75rem;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 160px;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem;
+      font-family: 'Zen Kaku Gothic New', sans-serif;
+      font-size: 0.95rem;
+      line-height: 1.75;
+      color: var(--text);
+      background: var(--bg);
+      resize: vertical;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+    }
+
+    textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(74,108,247,0.1);
+      background: var(--surface);
+    }
+
+    textarea::placeholder {
+      color: #b0b6cc;
+    }
+
+    .char-count {
+      text-align: right;
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-bottom: 0.25rem;
+    }
+
+    .char-count.warn { color: var(--amber); }
+    .char-count.over { color: var(--red); }
+
+    /* ===== プライバシー注記（テキストエリア直下） ===== */
+    .privacy-note {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.78rem;
+      color: #15a372;
+      margin-bottom: 1rem;
+      font-weight: 500;
+    }
+
+    /* ===== Submit Button ===== */
+    .btn-primary {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      width: 100%;
+      padding: 0.9rem 1.5rem;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-family: 'Zen Kaku Gothic New', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+      letter-spacing: 0.03em;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: #3558e8;
+      box-shadow: 0 6px 20px rgba(74,108,247,0.3);
+      transform: translateY(-1px);
+    }
+
+    .btn-primary:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    /* ===== Loading ===== */
+    #loading {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 2rem;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .spinner {
+      width: 36px; height: 36px;
+      border: 3px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    /* ===== Result Area ===== */
+    #result-area {
+      display: none;
+      animation: fadeUp 0.4s ease;
+    }
+
+    .result-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .result-title {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    /* 再チェックボタン */
+    .btn-recheck {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--muted);
+      font-family: 'Zen Kaku Gothic New', sans-serif;
+      font-size: 0.82rem;
+      padding: 0.45rem 1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-weight: 500;
+    }
+
+    .btn-recheck:hover {
+      background: var(--accent-lt);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* ===== Score Items ===== */
+    .score-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .score-item {
+      background: var(--surface2);
+      border-radius: 10px;
+      padding: 1rem 1.25rem 1rem 1.75rem;
+    }
+
+    /* 気になりそうな点・改善のヒント — リスト共通スタイル */
+    .result-list {
+      padding-left: 1.5rem;
+      margin-top: 0.4rem;
+    }
+
+    .result-list li {
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text);
+      line-height: 1.8;
+      margin-bottom: 0.35rem;
+    }
+
+    .result-list li:last-child { margin-bottom: 0; }
+
+    .score-item-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.6rem;
+    }
+
+    .score-item-label {
+      font-size: 0.88rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .score-item-value {
+      font-size: 1.1rem;
+      font-weight: 700;
+      font-family: 'Noto Serif JP', serif;
+    }
+
+    /* ゲージバー */
+    .gauge-track {
+      height: 10px;
+      background: var(--border);
+      border-radius: 100px;
+      overflow: hidden;
+    }
+
+    .gauge-fill {
+      height: 100%;
+      border-radius: 100px;
+      transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      width: 0%;
+    }
+
+    .gauge-low    { background: linear-gradient(90deg, #34d399, #22c48a); }
+    .gauge-mid    { background: linear-gradient(90deg, #fbbf24, #f59e0b); }
+    .gauge-high   { background: linear-gradient(90deg, #fb923c, #ef4444); }
+
+    .score-desc {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 0.5rem;
+      line-height: 1.5;
+    }
+
+    /* ===== 総合判定バッジ ===== */
+    .verdict {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 1.5rem;
+      border: 1.5px solid;
+    }
+
+    .verdict.safe   { background: var(--green-lt); border-color: rgba(34,196,138,0.35); color: #15a372; }
+    .verdict.caution{ background: var(--amber-lt);  border-color: rgba(245,158,11,0.35);  color: #b07d08; }
+    .verdict.danger { background: var(--red-lt);   border-color: rgba(239,68,68,0.35);   color: #c93333; }
+
+    .verdict-icon { font-size: 1.8rem; }
+    .verdict-text h3 { font-size: 0.95rem; font-weight: 700; }
+    .verdict-text p  { font-size: 0.8rem; margin-top: 0.15rem; opacity: 0.9; }
+
+    /* ===== アドバイス ===== */
+    .advice-box {
+      background: var(--accent-lt);
+      border: 1px solid rgba(74,108,247,0.2);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .advice-box h4 {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .advice-box p {
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text);
+      line-height: 1.8;
+    }
+
+    .advice-box ul {
+      padding-left: 1.5rem;
+      margin-top: 0.4rem;
+    }
+
+    .advice-box ul li {
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text);
+      line-height: 1.8;
+      margin-bottom: 0.35rem;
+    }
+
+    .advice-box ul li:last-child { margin-bottom: 0; }
+
+    /* ===== Xシェアボタン ===== */
+    .share-row {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-share-x {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #000;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Zen Kaku Gothic New', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      padding: 0.6rem 1.25rem;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+      text-decoration: none;
+    }
+
+    .btn-share-x:hover {
+      background: #222;
+      transform: translateY(-1px);
+      text-decoration: none;
+      color: #fff;
+    }
+
+    .btn-share-copy {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--muted);
+      font-family: 'Zen Kaku Gothic New', sans-serif;
+      font-size: 0.85rem;
+      padding: 0.6rem 1.1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-share-copy:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* ===== 説明アコーディオン ===== */
+    .accordion {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+
+    .accordion-trigger {
+      width: 100%;
+      background: var(--surface);
+      border: none;
+      padding: 1rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      font-family: 'Zen Kaku Gothic New', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--muted);
+      transition: background 0.2s;
+    }
+
+    .accordion-trigger:hover { background: var(--surface2); }
+
+    .accordion-arrow {
+      transition: transform 0.3s;
+      font-size: 0.75rem;
+    }
+
+    .accordion-trigger[aria-expanded="true"] .accordion-arrow {
+      transform: rotate(180deg);
+    }
+
+    .accordion-body {
+      display: none;
+      background: var(--surface2);
+      padding: 1.25rem;
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.8;
+      border-top: 1px solid var(--border);
+    }
+
+    .accordion-body.open { display: block; }
+
+    /* ===== Notice ===== */
+    .notice {
+      font-size: 0.78rem;
+      color: var(--muted);
+      line-height: 1.65;
+      margin-bottom: 0.25rem;
+      display: flex;
+      gap: 0.3rem;
+      align-items: flex-start;
+    }
+
+    /* ===== FAQ ===== */
+    .faq-section {
+      margin-bottom: 2rem;
+    }
+
+    .faq-title {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: var(--text);
+    }
+
+    .faq-item {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 0.6rem;
+      overflow: hidden;
+      background: var(--surface);
+    }
+
+    .faq-q {
+      width: 100%;
+      background: none;
+      border: none;
+      padding: 1rem 1.25rem;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      cursor: pointer;
+      font-family: 'Zen Kaku Gothic New', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--text);
+      transition: background 0.2s;
+    }
+
+    .faq-q:hover { background: var(--surface2); }
+
+    .faq-q .q-icon { color: var(--accent); font-weight: 900; flex-shrink: 0; }
+    .faq-q .faq-arrow { color: var(--muted); font-size: 0.75rem; transition: transform 0.3s; }
+    .faq-q[aria-expanded="true"] .faq-arrow { transform: rotate(180deg); }
+
+    .faq-a {
+      display: none;
+      padding: 0 1.25rem 1rem;
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.75;
+      border-top: 1px solid var(--border);
+      padding-top: 0.75rem;
+    }
+
+    .faq-a.open { display: block; }
+
+    /* ===== Footer ===== */
+    footer {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 2rem 1.5rem;
+      text-align: center;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.25rem 1rem;
+      margin-bottom: 0.75rem;
+      font-size: 0.8rem;
+    }
+
+    .footer-links a { color: var(--muted); }
+    .footer-links a:hover { color: var(--accent); }
+
+    .footer-copy {
+      font-size: 0.75rem;
+      color: #b0b6cc;
+    }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 600px) {
+      header { padding: 0.85rem 1rem; }
+      .hero  { padding: 2.5rem 1rem 2rem; }
+      main   { padding: 1.5rem 1rem 3rem; }
+      .card  { padding: 1.25rem; }
+      .hero h1 { font-size: 1.6rem; }
+      .result-header { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V947PLZR3S"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  
+  gtag('config', 'G-V947PLZR3S');
+</script>
+
+<body>
+  <!-- ===== Header ===== -->
+  <header>
+    <a href="index.html" class="header-logo" style="text-decoration:none;">
+      <span class="logo-dot"></span>
+      ことばみまもり
+    </a>
+    <a href="https://qiita.com/na0AaooQ" target="_blank" rel="noopener" class="header-link">開発者について</a>
+  </header>
+
+  <!-- ===== Hero ===== -->
+  <section class="hero">
+    <div class="hero-tag fade-up">✨ AI powered · 無料 · 登録不要</div>
+    <h1 class="fade-up delay-1">投稿前に、<span>ひと呼吸。</span></h1>
+    <p class="hero-sub fade-up delay-2">
+      SNSに投稿したい文章の攻撃性・感情強度をAIがチェック。<br>
+      あなたの言葉に、やさしいワンクッションを。
+    </p>
+    <span class="privacy-badge fade-up delay-3">
+      🔒 入力された文章はツールやサーバー内に保存されません。
+    </span>
+  </section>
+
+  <!-- ===== Main ===== -->
+  <main>
+
+    <!-- 入力カード -->
+    <div class="card fade-up">
+
+      <!-- サンプル文章 -->
+      <p class="sample-label">💡 サンプル文章で試してみる</p>
+      <div class="sample-btns">
+        <button class="sample-btn" onclick="setSample('今日の会議、無駄すぎて時間の無駄だった。こんな会議に付き合わされる身にもなってほしい。')">ビジネス愚痴</button>
+        <button class="sample-btn" onclick="setSample('このサービス最悪。使えない。運営は何してるの？')">クレーム系</button>
+        <button class="sample-btn" onclick="setSample('今日ランチで行ったお店、すごく美味しかった！またぜひ行きたいな😊')">ポジティブ投稿</button>
+        <button class="sample-btn" onclick="setSample('なんでこういう人って存在するんだろう。本当に理解できない。')">愚痴・疑問系</button>
+      </div>
+
+      <!-- テキストエリア -->
+      <div class="textarea-wrap">
+        <textarea
+          id="input-text"
+          placeholder="SNSに投稿したい文章をここに入力してください&#10;（例：今日の会議、長すぎて疲れた。なんとかならないかな）"
+          maxlength="2200"
+          oninput="onTextInput()"
+          aria-label="チェックしたい文章を入力"
+        ></textarea>
+      </div>
+
+      <div class="char-count" id="char-count">0 / 2200</div>
+
+      <!-- プライバシー注記（テキストエリア直下） -->
+      <p class="privacy-note">
+        🔒 入力した文章はツール内に保存されません。AIの学習にも利用されません。
+      </p>
+
+      <!-- 確認ボタン -->
+      <button class="btn-primary" id="submit-btn" onclick="checkText()" disabled>
+        確認してみる
+      </button>
+
+      <!-- ローディング -->
+      <div id="loading">
+        <div class="spinner"></div>
+        <p>AIが文章を分析しています…</p>
+      </div>
+
+    </div><!-- /card -->
+
+    <!-- 結果エリア（renderResult() が innerHTML で動的生成） -->
+    <div id="result-area" class="card" style="display:none;"></div>
+
+    <!-- 注意書き -->
+    <div style="margin-bottom:1.5rem;">
+      <p class="notice">※ 表示された確認結果は参考情報です。実際の文章の受け取り方は、文脈や読み手によって異なる場合があります。</p>
+    </div>
+
+    <!-- ツール説明アコーディオン -->
+    <div class="accordion fade-up">
+      <button class="accordion-trigger" aria-expanded="false" onclick="toggleAccordion(this)">
+        <span>▼ 本ツールの説明について詳しく読む</span>
+        <span class="accordion-arrow">▼</span>
+      </button>
+      <div class="accordion-body">
+        <p>
+          本ツール<strong>「ことばみまもり」</strong>は、X（旧Twitter）等のSNSやインターネット上に投稿したい文章を確認し、
+          読み手の方にどう受け取られる可能性があるか確認するためのツールです。<br><br>
+          本ツールは、言葉や思想を制限したり、正しさを判断したりすることを目的としていません。<br><br>
+          「この表現で大丈夫かな？、誤解されないかな？、SNSに投稿したら炎上しないかな？」<br><br>
+          そんな迷いを感じたとき、あなたがひとりで迷いを抱えずにすむよう、考えるときの参考としてご利用ください。
+          あなたの表現の自由を尊重しながら、安心して情報発信するためのお手伝いができれば幸いです。
+        </p>
+      </div>
+    </div>
+
+    <!-- FAQ -->
+    <section class="faq-section fade-up">
+      <h2 class="faq-title">よくある質問</h2>
+
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false" onclick="toggleFaq(this)">
+          <span><span class="q-icon">Q.</span> 本ツールは無料で使えますか？</span>
+          <span class="faq-arrow">▼</span>
+        </button>
+        <div class="faq-a">はい。無料でご利用いただけます。登録やログインも不要です。</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false" onclick="toggleFaq(this)">
+          <span><span class="q-icon">Q.</span> 入力した文章は保存・学習に使われますか？</span>
+          <span class="faq-arrow">▼</span>
+        </button>
+        <div class="faq-a">いいえ。入力されたテキストはツール内に保存されません。また、AIの学習にも利用されません。</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false" onclick="toggleFaq(this)">
+          <span><span class="q-icon">Q.</span> 確認結果はどのように表示されますか？</span>
+          <span class="faq-arrow">▼</span>
+        </button>
+        <div class="faq-a">入力されたテキストをAI（LLM）が解析し、テキスト内の文脈に含まれる攻撃性・誹謗中傷度・感情強度などについて、>気になる点、改善のアドバイスを表示します。あくまで参考情報であり、投稿するかの最終判断はご本人さまに委ねられます。</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false" onclick="toggleFaq(this)">
+          <span><span class="q-icon">Q.</span> 文章の投稿を止められることはありますか？</span>
+          <span class="faq-arrow">▼</span>
+        </button>
+        <div class="faq-a">ありません。確認結果を踏まえて、文章を投稿するかどうかの判断はご本人さまに委ねられています。</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false" onclick="toggleFaq(this)">
+          <span><span class="q-icon">Q.</span> どんな文章に使うと効果的ですか？</span>
+          <span class="faq-arrow">▼</span>
+        </button>
+        <div class="faq-a">感情的になっているときの愚痴・批判投稿、他者への意見や指摘を含む投稿、公開範囲が広い投稿などに特に効果的です。「ちょっと言いすぎかな」と思ったときのセカンドオピニオンとしてご利用ください。</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false" onclick="toggleFaq(this)">
+          <span><span class="q-icon">Q.</span> 本ツールを利用できない時はありますか？</span>
+          <span class="faq-arrow">▼</span>
+        </button>
+        <div class="faq-a">アクセスが集中した場合など、一時的に利用を制限する可能性がございます。しばらく時間をおいて再度お試しください。</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false" onclick="toggleFaq(this)">
+          <span><span class="q-icon">Q.</span> 本ツールの運営元はどちらの会社ですか？</span>
+          <span class="faq-arrow">▼</span>
+        </button>
+        <div class="faq-a">本ツールは、企業ではなく、一人の<a href="https://qiita.com/na0AaooQ" target="_blank" rel="noopener">開発者</a>が個人で開発・運営しています。SNSで傷つく人を少しでも減らしたいという思いで制作しました。</div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ===== Footer ===== -->
+  <footer>
+    <div class="footer-links">
+      <a href="index.html">ページTOP</a>
+      <a href="terms_of_service.html">利用規約</a>
+      <a href="disclaimer.html">免責事項</a>
+      <a href="privacy.html">プライバシーポリシー</a>
+      <a href="contact.html">お問い合わせ</a>
+      <a href="https://qiita.com/na0AaooQ" target="_blank" rel="noopener">運営者</a>
+    </div>
+    <p class="footer-copy">© ことばみまもり</p>
+  </footer>
+
+  <!-- ===== JavaScript ===== -->
+  <script>
+    /* ---------- 文字数カウント ---------- */
+    function onTextInput() {
+      const ta   = document.getElementById('input-text');
+      const cc   = document.getElementById('char-count');
+      const btn  = document.getElementById('submit-btn');
+      const len  = ta.value.length;
+
+      cc.textContent = len + ' / 2200';
+      cc.className   = 'char-count' + (len > 1800 ? ' warn' : '') + (len >= 2200 ? ' over' : '');
+      btn.disabled   = len === 0;
+    }
+
+    /* ---------- サンプル文章 ---------- */
+    function setSample(text) {
+      const ta = document.getElementById('input-text');
+      ta.value = text;
+      ta.dispatchEvent(new Event('input'));
+      ta.focus();
+      ta.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    /* ---------- アコーディオン ---------- */
+    function toggleAccordion(btn) {
+      const body     = btn.nextElementSibling;
+      const expanded = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', !expanded);
+      body.classList.toggle('open', !expanded);
+    }
+
+    /* ---------- FAQ ---------- */
+    function toggleFaq(btn) {
+      const ans      = btn.nextElementSibling;
+      const expanded = btn.getAttribute('aria-expanded') === 'true';
+      // 他を閉じる
+      document.querySelectorAll('.faq-q').forEach(b => {
+        if (b !== btn) {
+          b.setAttribute('aria-expanded', 'false');
+          b.nextElementSibling.classList.remove('open');
+        }
+      });
+      btn.setAttribute('aria-expanded', !expanded);
+      ans.classList.toggle('open', !expanded);
+    }
+
+    /* ---------- チェック実行 ---------- */
+    async function checkText() {
+      const text = document.getElementById('input-text').value.trim();
+      if (!text) return;
+
+      // UI切り替え
+      document.getElementById('submit-btn').disabled   = true;
+      document.getElementById('loading').style.display  = 'flex';
+      document.getElementById('result-area').style.display = 'none';
+      document.getElementById('loading').scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+      try {
+        // ===== 実際のAPIエンドポイントに差し替えてください =====
+        const API_ENDPOINT = '/prod/check';
+
+        const res = await fetch(API_ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text })
+        });
+
+        if (!res.ok) throw new Error('API error: ' + res.status);
+        let data = await res.json();
+
+        // Lambda プロキシ統合の場合、レスポンスが { statusCode, body } の形で
+        // body が文字列として返ることがある。その場合はパースして取り出す。
+        if (data.body && typeof data.body === 'string') {
+          data = JSON.parse(data.body);
+        } else if (data.body && typeof data.body === 'object') {
+          data = data.body;
+        }
+
+        console.log('APIレスポンス:', data); // デバッグ用（本番では削除可）
+        renderResult(data);
+
+      } catch (e) {
+        // ローカル確認用ダミー（APIエンドポイント未設定時）
+        console.warn('API未接続のためデモデータを使用:', e.message);
+        const demoData = generateDemoData(text);
+        renderResult(demoData);  // 引数は data のみ
+      } finally {
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('submit-btn').disabled   = false;
+      }
+    }
+
+    /* ---------- デモデータ生成（ローカル確認用） ----------
+       APIレスポンス形式: { risk, summary, reasons[], suggestions[] } に合わせる */
+
+    function generateDemoData(text) {
+      const hasNegative = /最悪|無駄|バカ|死|消えろ|うざ|最低|嫌い/.test(text);
+      if (hasNegative) {
+        return {
+          risk: 'high',
+          summary: '感情的・攻撃的な表現が含まれている可能性があります。投稿前にもう一度読み返してみましょう。',
+          reasons: [
+            '強い否定的感情を示す表現が含まれています',
+            '読み手によっては不快に感じる可能性があります'
+          ],
+          suggestions: [
+            '感情が落ち着いてから改めて投稿を検討してみてください',
+            '具体的な状況を説明する形に言い換えると伝わりやすくなります'
+          ]
+        };
+      }
+      return {
+        risk: 'low',
+        summary: '比較的穏やかな表現です。読み手への伝わり方も問題なさそうです。',
+        reasons: ['特に気になる表現は見つかりませんでした'],
+        suggestions: []
+      };
+    }
+
+    /* ---------- XSSエスケープ ---------- */
+    // APIレスポンスの文字列を innerHTML に埋め込む前に必ずエスケープする
+    function escapeHtml(str) {
+      if (typeof str !== 'string') return '';
+      return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    /* ---------- 結果レンダリング ---------- */
+    // APIレスポンス形式: { risk: string, summary: string, reasons: string[], suggestions?: string[] }
+    function renderResult(data) {
+      const resultArea = document.getElementById('result-area');
+
+      // risk 値に応じてスタイルクラスを決定（ホワイトリスト）
+      const riskClass =
+        data.risk === 'low'    ? 'verdict safe'    :
+        data.risk === 'medium' ? 'verdict caution' :
+                                 'verdict danger';
+
+      const riskIcon =
+        data.risk === 'low'    ? '😊' :
+        data.risk === 'medium' ? '🤔' :
+                                 '⚠️';
+
+      const riskLabel =
+        data.risk === 'low'    ? '低リスク'  :
+        data.risk === 'medium' ? '要注意'    :
+                                 '高リスク';
+
+      // reasons リストの生成（escapeHtml でエスケープ）
+      const reasonsHtml = Array.isArray(data.reasons) && data.reasons.length
+        ? `<ul class="result-list">${data.reasons.map(r => `<li>${escapeHtml(r)}</li>`).join('')}</ul>`
+        : '';
+
+      // suggestions リストの生成（任意項目、escapeHtml でエスケープ）
+      const suggestionsHtml = Array.isArray(data.suggestions) && data.suggestions.length
+        ? `<div class="advice-box">
+             <h4>💡 改善のヒント</h4>
+             <ul class="result-list">${data.suggestions.map(s => `<li>${escapeHtml(s)}</li>`).join('')}</ul>
+           </div>`
+        : '';
+
+      // X シェアURL（X投稿画面表示用のリンクURL）
+      const shareUrl =
+        'https://x.com/intent/tweet';
+
+      // 結果エリアを innerHTML で組み立て
+      // ユーザー入力（textareaの値）は一切含めない
+      // APIレスポンスの文字列はすべて escapeHtml() を通す
+      resultArea.innerHTML = `
+        <div class="result-header">
+          <p class="result-title">📋 チェック結果</p>
+          <button class="btn-recheck" onclick="recheck()">✏️ 文章を修正して再チェック</button>
+        </div>
+
+        <div class="${escapeHtml(riskClass)}">
+          <span class="verdict-icon">${riskIcon}</span>
+          <div class="verdict-text">
+            <h3>総評（リスク：${escapeHtml(riskLabel)}）</h3>
+            <p>${escapeHtml(data.summary)}</p>
+          </div>
+        </div>
+
+        ${reasonsHtml ? `
+        <div class="score-item" style="margin-top:1rem;">
+          <p style="font-size:0.95rem;font-weight:700;margin-bottom:0.5rem;color:var(--text);">🔍 気になりそうな点</p>
+          ${reasonsHtml}
+        </div>` : ''}
+
+        ${suggestionsHtml}
+
+        <div class="share-row" style="margin-top:1.5rem;">
+          <a href="${escapeHtml(shareUrl)}" target="_blank" rel="noopener" class="btn-share-x">
+            𝕏 の投稿画面を表示
+          </a>
+          <button class="btn-share-copy" onclick="copyUrl()">🔗 URLをコピー</button>
+        </div>
+      `;
+
+      resultArea.style.display = 'block';
+      resultArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    /* ---------- 再チェック ---------- */
+    function recheck() {
+      document.getElementById('result-area').style.display = 'none';
+      document.getElementById('input-text').focus();
+      document.getElementById('input-text').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    /* ---------- URLコピー ---------- */
+    function copyUrl() {
+      navigator.clipboard.writeText('https://words-watching-app.na0aaooq.com/')
+        .then(() => alert('URLをコピーしました！'))
+        .catch(() => alert('コピーに失敗しました'));
+    }
+  </script>
+
+</body>
+</html>
