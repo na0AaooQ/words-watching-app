@@ -584,6 +584,30 @@
       color: #fff;
     }
 
+    .btn-share-instagram {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Zen Kaku Gothic New', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      padding: 0.6rem 1.25rem;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s;
+      text-decoration: none;
+    }
+
+    .btn-share-instagram:hover {
+      opacity: 0.85;
+      transform: translateY(-1px);
+      text-decoration: none;
+      color: #fff;
+    }
+
     .btn-share-copy {
       display: inline-flex;
       align-items: center;
@@ -785,7 +809,7 @@
       あなたの言葉に、やさしいワンクッションを。
     </p>
     <span class="privacy-badge fade-up delay-3">
-      🔒 入力された文章はツールやサーバー内に保存されません。
+      🔒 入力された文章はツール内に保存されません。
     </span>
   </section>
 
@@ -851,7 +875,7 @@
       </button>
       <div class="accordion-body">
         <p>
-          本ツール<strong>「ことばみまもり」</strong>は、X（旧Twitter）等のSNSやインターネット上に投稿したい文章を確認し、
+          本ツール<strong>「ことばみまもり」</strong>は、X（旧Twitter）、Instagram、tiktok等のSNS、インターネット上に投稿したい文章を確認し、
           読み手の方にどう受け取られる可能性があるか確認するためのツールです。<br><br>
           本ツールは、言葉や思想を制限したり、正しさを判断したりすることを目的としていません。<br><br>
           「この表現で大丈夫かな？、誤解されないかな？、SNSに投稿したら炎上しないかな？」<br><br>
@@ -1103,9 +1127,13 @@
            </div>`
         : '';
 
-      // X シェアURL（X投稿画面表示用のリンクURL）
-      const shareUrl =
+      // X URL（X投稿画面表示用のリンクURL）
+      const shareUrlX =
         'https://x.com/intent/tweet';
+
+      // Instagram URL (Instagram投稿画面表示用のリンクURL）
+      const shareUrlInstagram =
+        'https://www.instagram.com/';
 
       // 結果エリアを innerHTML で組み立て
       // ユーザー入力（textareaの値）は一切含めない
@@ -1133,8 +1161,11 @@
         ${suggestionsHtml}
 
         <div class="share-row" style="margin-top:1.5rem;">
-          <a href="${escapeHtml(shareUrl)}" target="_blank" rel="noopener" class="btn-share-x">
-            𝕏 の投稿画面を表示
+          <a href="${escapeHtml(shareUrlX)}" target="_blank" rel="noopener" class="btn-share-x">
+            𝕏 投稿画面を表示
+          </a>
+          <a href="${escapeHtml(shareUrlInstagram)}" target="_blank" rel="noopener" class="btn-share-instagram">
+            Instagram 投稿画面を表示
           </a>
           <button class="btn-share-copy" onclick="copyUrl()">🔗 URLをコピー</button>
         </div>
