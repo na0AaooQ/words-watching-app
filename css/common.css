@@ -1,0 +1,240 @@
+/* ===== ことばみまもり 共通CSS (サブページ用) ===== */
+@import url('https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Noto+Serif+JP:wght@400;600&display=swap');
+
+:root {
+  --bg:        #f7f8fc;
+  --surface:   #ffffff;
+  --surface2:  #f0f2fa;
+  --border:    #dde1f0;
+  --text:      #1e2340;
+  --muted:     #6b7299;
+  --accent:    #4a6cf7;
+  --accent-lt: #eef1ff;
+  --green:     #22c48a;
+  --green-lt:  #e6faf3;
+  --radius:    14px;
+  --shadow:    0 4px 24px rgba(74,108,247,0.08);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Zen Kaku Gothic New', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.75;
+  min-height: 100vh;
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ===== Header ===== */
+header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 12px rgba(74,108,247,0.06);
+}
+
+.header-logo {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+}
+
+.header-logo:hover { text-decoration: none; }
+
+@keyframes pulse-ring {
+  0%   { transform: scale(1); opacity: 0.5; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+
+.logo-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: pulse-ring 2s ease-out infinite;
+  flex-shrink: 0;
+}
+
+.header-link {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+/* ===== Page Hero ===== */
+.page-hero {
+  background: linear-gradient(160deg, #eef1ff 0%, #f7f8fc 60%);
+  border-bottom: 1px solid var(--border);
+  padding: 3rem 1.5rem 2rem;
+  text-align: center;
+}
+
+.page-hero h1 {
+  font-family: 'Noto Serif JP', serif;
+  font-size: clamp(1.5rem, 4vw, 2.2rem);
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.4rem;
+}
+
+.page-hero p {
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+/* ===== Main ===== */
+main {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 4rem;
+}
+
+/* ===== Card ===== */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 2rem 2.25rem;
+  margin-bottom: 1.5rem;
+}
+
+/* ===== Document Content (利用規約・免責・プライバシー) ===== */
+.doc-section {
+  margin-bottom: 2rem;
+}
+
+.doc-section:last-child {
+  margin-bottom: 0;
+}
+
+.doc-section h2 {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.75rem;
+  padding-left: 0.85rem;
+  border-left: 3px solid var(--accent);
+  line-height: 1.5;
+}
+
+.doc-section p {
+  font-size: 0.9rem;
+  color: var(--muted);
+  margin-bottom: 0.6rem;
+  line-height: 1.85;
+}
+
+.doc-section p:last-child { margin-bottom: 0; }
+
+.doc-section ul {
+  padding-left: 1.4rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+  line-height: 1.85;
+}
+
+.doc-section ul li { margin-bottom: 0.3rem; }
+
+.doc-section strong { color: var(--text); font-weight: 500; }
+
+/* 更新日バッジ */
+.updated-badge {
+  display: inline-block;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 0.75rem;
+  color: var(--muted);
+  padding: 0.25rem 0.75rem;
+  margin-bottom: 1.75rem;
+}
+
+/* ===== Contact ===== */
+.contact-method {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+  transition: border-color 0.2s;
+}
+
+.contact-method:hover { border-color: var(--accent); }
+
+.contact-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.contact-body h3 {
+  font-size: 0.92rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.contact-body p {
+  font-size: 0.83rem;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+.contact-note {
+  font-size: 0.78rem;
+  color: var(--muted);
+  margin-top: 0.25rem;
+  display: flex;
+  gap: 0.3rem;
+}
+
+/* ===== Footer ===== */
+footer {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  padding: 2rem 1.5rem;
+  text-align: center;
+}
+
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.25rem 1rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.8rem;
+}
+
+.footer-links a { color: var(--muted); }
+.footer-links a:hover { color: var(--accent); }
+
+.footer-copy {
+  font-size: 0.75rem;
+  color: #b0b6cc;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 600px) {
+  header { padding: 0.85rem 1rem; }
+  .page-hero { padding: 2rem 1rem 1.5rem; }
+  main { padding: 1.5rem 1rem 3rem; }
+  .card { padding: 1.25rem; }
+}
