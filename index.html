@@ -7,7 +7,7 @@
   <!-- ===== SEO: タイトル・ディスクリプション最適化 ===== -->
   <title>ことばみまもり｜SNS投稿前の炎上防止・文章リスク確認ツール（無料）</title>
   <meta name="description" content="SNSに投稿する前に、あなたの文章の攻撃性・誹謗中傷度・感情強度をAIが無料でチェック。入力文章は保存されません。投稿前にひと呼吸、言葉のリスクを見える化します。">
-  <meta name="keywords" content="SNS炎上防止,投稿前チェック,文章リスク確認,攻撃的表現チェック,誹謗中傷チェック,SNSツール無料">
+  <meta name="keywords" content="SNS炎上防止,投稿前チェック,文章リスク確認,攻撃的表現チェック,誹謗中傷チェック,SNSツール無料,炎上チェッカー">
   <meta name="author" content="na0AaooQ">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://words-watching-app.na0aaooq.com/">
@@ -608,6 +608,30 @@
       color: #fff;
     }
 
+    .btn-share-tiktok {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #010101;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Zen Kaku Gothic New', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      padding: 0.6rem 1.25rem;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s;
+      text-decoration: none;
+    }
+
+    .btn-share-tiktok:hover {
+      opacity: 0.75;
+      transform: translateY(-1px);
+      text-decoration: none;
+      color: #fff;
+    }
+
     .btn-share-copy {
       display: inline-flex;
       align-items: center;
@@ -1131,9 +1155,13 @@
       const shareUrlX =
         'https://x.com/intent/tweet';
 
-      // Instagram URL (Instagram投稿画面表示用のリンクURL）
+      // Instagram URL (Instagram画面表示用のリンクURL）
       const shareUrlInstagram =
         'https://www.instagram.com/';
+
+      // TikTok URL (TikTok画面表示用のリンクURL）
+      const shareUrlTiktok =
+        'https://www.tiktok.com/';
 
       // 結果エリアを innerHTML で組み立て
       // ユーザー入力（textareaの値）は一切含めない
@@ -1162,12 +1190,15 @@
 
         <div class="share-row" style="margin-top:1.5rem;">
           <a href="${escapeHtml(shareUrlX)}" target="_blank" rel="noopener" class="btn-share-x">
-            𝕏 投稿画面を表示
+            𝕏 を開く
           </a>
           <a href="${escapeHtml(shareUrlInstagram)}" target="_blank" rel="noopener" class="btn-share-instagram">
-            Instagram 投稿画面を表示
+            Instagram を開く
           </a>
-          <button class="btn-share-copy" onclick="copyUrl()">🔗 URLをコピー</button>
+          <a href="${escapeHtml(shareUrlTiktok)}" target="_blank" rel="noopener" class="btn-share-tiktok">
+            TikTok を開く
+          </a>
+          <button class="btn-share-copy" onclick="copyUrl()">🔗 ツール共有用URLコピー</button>
         </div>
       `;
 
@@ -1185,8 +1216,8 @@
     /* ---------- URLコピー ---------- */
     function copyUrl() {
       navigator.clipboard.writeText('https://words-watching-app.na0aaooq.com/')
-        .then(() => alert('URLをコピーしました！'))
-        .catch(() => alert('コピーに失敗しました'));
+        .then(() => alert('本ツールのURLをコピーしました！'))
+        .catch(() => alert('本ツールのURLコピーに失敗しました'));
     }
   </script>
 
