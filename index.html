@@ -553,7 +553,7 @@
 
     .advice-box ul li:last-child { margin-bottom: 0; }
 
-    /* ===== Xシェアボタン ===== */
+    /* ===== Xを開くボタン ===== */
     .share-row {
       display: flex;
       gap: 0.75rem;
@@ -584,6 +584,7 @@
       color: #fff;
     }
 
+    /* ===== Instagramを開くボタン ===== */
     .btn-share-instagram {
       display: inline-flex;
       align-items: center;
@@ -608,6 +609,7 @@
       color: #fff;
     }
 
+    /* ===== TikTokを開くボタン ===== */
     .btn-share-tiktok {
       display: inline-flex;
       align-items: center;
@@ -632,6 +634,57 @@
       color: #fff;
     }
 
+    /* ===== Threadsを開くボタン ===== */
+    .btn-share-threads {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #101010;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Zen Kaku Gothic New', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      padding: 0.6rem 1.25rem;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s;
+      text-decoration: none;
+    }
+
+    .btn-share-threads:hover {
+      opacity: 0.75;
+      transform: translateY(-1px);
+      text-decoration: none;
+      color: #fff;
+    }
+
+    /* ===== Facebookを開くボタン ===== */
+    .btn-share-facebook {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #1877F2;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Zen Kaku Gothic New', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      padding: 0.6rem 1.25rem;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s;
+      text-decoration: none;
+    }
+
+    .btn-share-facebook:hover {
+      opacity: 0.85;
+      transform: translateY(-1px);
+      text-decoration: none;
+      color: #fff;
+    }
+
+    /* ===== ことばみまもりのURLコピーボタン ===== */
     .btn-share-copy {
       display: inline-flex;
       align-items: center;
@@ -1155,6 +1208,10 @@
       const shareUrlX =
         'https://x.com/intent/tweet';
 
+      // Facebook (Facebook投稿画面表示用のリンクURL）
+      const shareUrlFacebook =
+        'https://www.facebook.com/sharer/sharer.php';
+
       // Instagram URL (Instagram画面表示用のリンクURL）
       const shareUrlInstagram =
         'https://www.instagram.com/';
@@ -1162,6 +1219,10 @@
       // TikTok URL (TikTok画面表示用のリンクURL）
       const shareUrlTiktok =
         'https://www.tiktok.com/';
+
+      // Threads URL (Threads画面表示用のリンクURL)
+      const shareUrlThreads =
+        'https://www.threads.com/';
 
       // 結果エリアを innerHTML で組み立て
       // ユーザー入力（textareaの値）は一切含めない
@@ -1192,11 +1253,17 @@
           <a href="${escapeHtml(shareUrlX)}" target="_blank" rel="noopener" class="btn-share-x">
             𝕏 を開く
           </a>
+          <a href="${escapeHtml(shareUrlFacebook)}" target="_blank" rel="noopener" class="btn-share-facebook">
+            Facebook を開く
+          </a>
           <a href="${escapeHtml(shareUrlInstagram)}" target="_blank" rel="noopener" class="btn-share-instagram">
             Instagram を開く
           </a>
           <a href="${escapeHtml(shareUrlTiktok)}" target="_blank" rel="noopener" class="btn-share-tiktok">
             TikTok を開く
+          </a>
+          <a href="${escapeHtml(shareUrlThreads)}" target="_blank" rel="noopener" class="btn-share-threads">
+            Threads を開く
           </a>
           <button class="btn-share-copy" onclick="copyUrl()">🔗 ツール共有用URLコピー</button>
         </div>
@@ -1216,7 +1283,7 @@
     /* ---------- URLコピー ---------- */
     function copyUrl() {
       navigator.clipboard.writeText('https://words-watching-app.na0aaooq.com/')
-        .then(() => alert('本ツールのURLをコピーしました！'))
+        .then(() => alert('本ツールのURLをコピーしました。本ツールのURLをシェアいただく場合にご利用ください！'))
         .catch(() => alert('本ツールのURLコピーに失敗しました'));
     }
   </script>

@@ -7,6 +7,7 @@
 
 // ─────────────────────────────────────────────
 // テスト対象の関数を直接定義（index.html の <script> と同一ロジック）
+// 実装を外部 JS ファイルに切り出した場合は import/require に変更してください
 // ─────────────────────────────────────────────
 
 /* ---------- テスト対象関数 ---------- */
@@ -113,8 +114,10 @@ function renderResult(data) {
     : '';
 
   const shareUrlX         = 'https://x.com/intent/tweet';
+  const shareUrlFacebook  = 'https://www.facebook.com/sharer/sharer.php';
   const shareUrlInstagram = 'https://www.instagram.com/';
   const shareUrlTiktok    = 'https://www.tiktok.com/';
+  const shareUrlThreads   = 'https://www.threads.com/';
 
   resultArea.innerHTML = `
     <div class="result-header">
@@ -132,8 +135,10 @@ function renderResult(data) {
     ${suggestionsHtml}
     <div class="share-row" style="margin-top:1.5rem;">
       <a href="${escapeHtml(shareUrlX)}" target="_blank" rel="noopener" class="btn-share-x">𝕏 を開く</a>
+      <a href="${escapeHtml(shareUrlFacebook)}" target="_blank" rel="noopener" class="btn-share-facebook">Facebook を開く</a>
       <a href="${escapeHtml(shareUrlInstagram)}" target="_blank" rel="noopener" class="btn-share-instagram">Instagram を開く</a>
       <a href="${escapeHtml(shareUrlTiktok)}" target="_blank" rel="noopener" class="btn-share-tiktok">TikTok を開く</a>
+      <a href="${escapeHtml(shareUrlThreads)}" target="_blank" rel="noopener" class="btn-share-threads">Threads を開く</a>
       <button class="btn-share-copy" onclick="copyUrl()">🔗 ツール共有用URLコピー</button>
     </div>
   `;
@@ -578,6 +583,11 @@ describe('renderResult()', () => {
     expect(document.getElementById('result-area').innerHTML).toContain('x.com/intent/tweet');
   });
 
+  test('SNS共有リンク（Facebook）が結果エリアに含まれる', () => {
+    renderResult(baseData);
+    expect(document.getElementById('result-area').innerHTML).toContain('www.facebook.com/sharer/sharer.php');
+  });
+
   test('Instagram リンクが結果エリアに含まれる', () => {
     renderResult(baseData);
     expect(document.getElementById('result-area').innerHTML).toContain('instagram.com');
@@ -587,6 +597,12 @@ describe('renderResult()', () => {
     renderResult(baseData);
     expect(document.getElementById('result-area').innerHTML).toContain('tiktok.com');
   });
+
+  test('Threads リンクが結果エリアに含まれる', () => {
+    renderResult(baseData);
+    expect(document.getElementById('result-area').innerHTML).toContain('www.threads.com');
+  });
+
 });
 
 // ================================================================
