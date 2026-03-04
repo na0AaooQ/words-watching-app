@@ -6,5 +6,7 @@
   "jest": {
     "testEnvironment": "jsdom"
   },
-  "scripts": { "test": "jest" }
+  "scripts": {
+    "test": "jest"
+  }
 }

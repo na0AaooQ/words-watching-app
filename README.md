@@ -215,53 +215,56 @@ jestとjest-environment-jsdomがインストールされたことを確認しま
 (6) 以下のいずれかのコマンドを実行し、リポジトリ内にあうユニットテストコード index.test.js で index.html のユニットテストを実行します。  
 
 ```
-% npx jest index.test.js
+% npm test -- index.test.js
 ```
 
 　または
 
 ```
-% npm test -- index.test.js
-```
-
-
-(7) ユニットテスト結果が表示されます。テスト結果を確認し、[Tests: 70 passed, 70 total] とテスト項目が全件成功していることを確認します。
-
-```
 % npx jest index.test.js
+```
+
+(7) ユニットテスト結果が表示されます。テスト結果を確認し、[Test Suites: 1 passed, 1 total]、[Tests: 72 passed, 72 total] と表示されており、テストが全件成功していることを確認します。
+
+```
+% npm test -- index.test.js
+
+> test
+> jest index.test.js
+
  PASS  ./index.test.js
   onTextInput()
     ✓ 空文字のとき「0 / 2200」と表示し、ボタンが disabled になる (5 ms)
     ✓ 1文字以上入力するとボタンが enabled になる (1 ms)
     ✓ 1800文字以内は warn クラスなし (1 ms)
-    ✓ 1801文字で warn クラスが付く (1 ms)
-    ✓ 2200文字で over クラスが付く
-    ✓ 文字数が正しくカウントされる（絵文字含む）
+    ✓ 1801文字で warn クラスが付く
+    ✓ 2200文字で over クラスが付く (1 ms)
+    ✓ 文字数が正しくカウントされる（絵文字含む） (1 ms)
   setSample()
     ✓ textarea に指定テキストがセットされる (1 ms)
     ✓ input イベントが発火して文字数カウントが更新される (1 ms)
     ✓ 空文字をセットできる (1 ms)
   toggleAccordion()
-    ✓ 閉じている状態でクリックすると aria-expanded="true" になる (1 ms)
-    ✓ 開いた状態でクリックすると aria-expanded="false" になる
-    ✓ 閉じている→開くと body に open クラスが追加される (1 ms)
-    ✓ 開いている→閉じると body から open クラスが除去される
+    ✓ 閉じている状態でクリックすると aria-expanded="true" になる
+    ✓ 開いた状態でクリックすると aria-expanded="false" になる (1 ms)
+    ✓ 閉じている→開くと body に open クラスが追加される
+    ✓ 開いている→閉じると body から open クラスが除去される (1 ms)
     ✓ 2回トグルすると元の状態に戻る
   toggleFaq()
-    ✓ Q1をクリックすると開く (2 ms)
+    ✓ Q1をクリックすると開く (3 ms)
     ✓ Q1が開いている状態でQ2をクリックすると Q1 が閉じる (1 ms)
     ✓ 開いているFAQをもう一度クリックすると閉じる (2 ms)
   escapeHtml()
     ✓ & が &amp; にエスケープされる
-    ✓ < が &lt; にエスケープされる
+    ✓ < が &lt; にエスケープされる (1 ms)
     ✓ > が &gt; にエスケープされる
     ✓ " が &quot; にエスケープされる
     ✓ ' が &#039; にエスケープされる
     ✓ 複数の特殊文字が混在していても正しくエスケープされる
     ✓ 特殊文字なし文字列はそのまま返る
     ✓ 空文字はそのまま返る
-    ✓ string 以外の型（null）は空文字を返す (1 ms)
-    ✓ string 以外の型（数値）は空文字を返す
+    ✓ string 以外の型（null）は空文字を返す
+    ✓ string 以外の型（数値）は空文字を返す (1 ms)
     ✓ string 以外の型（undefined）は空文字を返す
   generateDemoData()
     ✓ ネガティブワードを含むテキストは risk: high を返す
@@ -279,41 +282,43 @@ jestとjest-environment-jsdomがインストールされたことを確認しま
     ✓ result-area が表示される（display: block） (3 ms)
     ✓ risk: low のとき verdict safe クラスが付く (1 ms)
     ✓ risk: medium のとき verdict caution クラスが付く (1 ms)
-    ✓ risk: high のとき verdict danger クラスが付く (1 ms)
+    ✓ risk: high のとき verdict danger クラスが付く (2 ms)
     ✓ risk: low のとき 😊 アイコンが表示される (1 ms)
     ✓ risk: medium のとき 🤔 アイコンが表示される (1 ms)
     ✓ risk: high のとき ⚠️ アイコンが表示される (1 ms)
     ✓ risk: low のとき「低リスク」ラベルが表示される (1 ms)
     ✓ risk: medium のとき「要注意」ラベルが表示される (1 ms)
-    ✓ risk: high のとき「高リスク」ラベルが表示される (1 ms)
+    ✓ risk: high のとき「高リスク」ラベルが表示される (2 ms)
     ✓ summary が表示される (1 ms)
-    ✓ reasons が <li> として描画される (2 ms)
+    ✓ reasons が <li> として描画される (1 ms)
     ✓ suggestions がある場合「改善のヒント」セクションが表示される (1 ms)
-    ✓ suggestions が空のとき「改善のヒント」セクションが表示されない (2 ms)
+    ✓ suggestions が空のとき「改善のヒント」セクションが表示されない (1 ms)
     ✓ XSS: summary の <script> タグがエスケープされる (1 ms)
     ✓ XSS: reasons の悪意ある文字列がエスケープされる (1 ms)
     ✓ SNS共有リンク（X）が結果エリアに含まれる (1 ms)
-    ✓ Instagram リンクが結果エリアに含まれる (1 ms)
-    ✓ TikTok リンクが結果エリアに含まれる (1 ms)
+    ✓ SNS共有リンク（Facebook）が結果エリアに含まれる (1 ms)
+    ✓ Instagram リンクが結果エリアに含まれる
+    ✓ TikTok リンクが結果エリアに含まれる
+    ✓ Threads リンクが結果エリアに含まれる (1 ms)
   recheck()
     ✓ result-area が非表示になる
-    ✓ input-text にフォーカスが移る (1 ms)
+    ✓ input-text にフォーカスが移る
   checkText()
-    ✓ textarea が空のときは何もしない（fetch を呼ばない）
+    ✓ textarea が空のときは何もしない（fetch を呼ばない） (1 ms)
     ✓ API成功時: renderResult が呼ばれ result-area が表示される (1 ms)
-    ✓ API成功時: ローディングが非表示になる (1 ms)
-    ✓ API成功時: ボタンが再び enabled になる
-    ✓ Lambda プロキシ形式 { body: string } も正しくパースされる
+    ✓ API成功時: ローディングが非表示になる (3 ms)
+    ✓ API成功時: ボタンが再び enabled になる (1 ms)
+    ✓ Lambda プロキシ形式 { body: string } も正しくパースされる (1 ms)
     ✓ Lambda プロキシ形式 { body: object } も正しくパースされる (1 ms)
-    ✓ API が res.ok=false のとき: デモデータで結果が表示される (9 ms)
+    ✓ API が res.ok=false のとき: デモデータで結果が表示される (1 ms)
     ✓ fetch が reject のとき: デモデータで結果が表示される (1 ms)
-    ✓ チェック実行中はローディングが表示される
-    ✓ POST リクエストが JSON ボディで送信される (1 ms)
+    ✓ チェック実行中はローディングが表示される (1 ms)
+    ✓ POST リクエストが JSON ボディで送信される (4 ms)
 
 Test Suites: 1 passed, 1 total
-Tests:       70 passed, 70 total
+Tests:       72 passed, 72 total
 Snapshots:   0 total
-Time:        0.38 s, estimated 1 s
+Time:        0.377 s, estimated 1 s
 Ran all test suites matching index.test.js.
 % 
 ```
