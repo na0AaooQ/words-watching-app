@@ -903,6 +903,7 @@
         <button class="sample-btn" onclick="setSample('このサービス最悪。使えない。運営は何してるの？')">クレーム系</button>
         <button class="sample-btn" onclick="setSample('今日ランチで行ったお店、すごく美味しかった！またぜひ行きたいな😊')">ポジティブ投稿</button>
         <button class="sample-btn" onclick="setSample('なんでこういう人って存在するんだろう。本当に理解できない。')">愚痴・疑問系</button>
+        <button class="sample-btn" onclick="setSample('SNSはじめました。これから、日々の出来事や興味関心をSNSで共有していきます。よろしくお願いします！')">挨拶文</button>
       </div>
 
       <!-- テキストエリア -->
@@ -910,13 +911,13 @@
         <textarea
           id="input-text"
           placeholder="SNSに投稿したい文章をここに入力してください&#10;（例：今日の会議、長すぎて疲れた。なんとかならないかな）"
-          maxlength="2200"
+          maxlength="5000"
           oninput="onTextInput()"
           aria-label="チェックしたい文章を入力"
         ></textarea>
       </div>
 
-      <div class="char-count" id="char-count">0 / 2200</div>
+      <div class="char-count" id="char-count">0 / 5000</div>
 
       <!-- プライバシー注記（テキストエリア直下） -->
       <p class="privacy-note">
@@ -1043,13 +1044,16 @@
   <script>
     /* ---------- 文字数カウント ---------- */
     function onTextInput() {
+      // 入力可能な最大文字数
+      const inputMaxNumberOfChar = 5000;
+
       const ta   = document.getElementById('input-text');
       const cc   = document.getElementById('char-count');
       const btn  = document.getElementById('submit-btn');
       const len  = ta.value.length;
 
-      cc.textContent = len + ' / 2200';
-      cc.className   = 'char-count' + (len > 1800 ? ' warn' : '') + (len >= 2200 ? ' over' : '');
+      cc.textContent = len + ' / ' + inputMaxNumberOfChar;
+      cc.className   = 'char-count' + (len > 1800 ? ' warn' : '') + (len >= inputMaxNumberOfChar ? ' over' : '');
       btn.disabled   = len === 0;
     }
 
