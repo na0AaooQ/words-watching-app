@@ -120,8 +120,13 @@ def lambda_handler(event, context):
             })
         )
 
+        ## Amazon Bedrockのレスポンスボディ
+        ## Bedrockのレスポンスボディの解析結果には、本文を類推できる文章が含まれる可能性があるため、ログ出力しない
         response_body = json.loads(response["body"].read())
-        logger.info("Bedrock raw response: %s", response_body)
+
+        ## Amazon Bedrockのステータスコード
+        bedrock_status_code = response["ResponseMetadata"]["HTTPStatusCode"]
+        logger.info("Amazon Bedrock Lambda bedrock.invoke_model() HTTP Status Code: %s", bedrock_status_code)
 
         # -----------------------------
         # 4. レスポンスパース (Gemma対応)
