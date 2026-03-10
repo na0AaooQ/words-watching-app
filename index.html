@@ -6,6 +6,9 @@
 
   <!-- ===== SEO: タイトル・ディスクリプション最適化 ===== -->
   <title>ことばみまもり｜SNS投稿前の炎上防止・文章リスク確認ツール（無料）</title>
+  <link rel="icon" href="./favicon.png" type="image/png">
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+
   <meta name="description" content="SNSに投稿する前に、あなたの文章の攻撃性・誹謗中傷度・感情強度をAIが無料でチェック。入力文章は保存されません。投稿前にひと呼吸、言葉のリスクを見える化します。">
   <meta name="keywords" content="SNS炎上防止,投稿前チェック,文章リスク確認,攻撃的表現チェック,誹謗中傷チェック,SNSツール無料,炎上チェッカー">
   <meta name="author" content="na0AaooQ">
@@ -553,6 +556,14 @@
 
     .advice-box ul li:last-child { margin-bottom: 0; }
 
+    /* ===== 各種SNSを開くボタンの文章 ===== */
+    .share-info-label {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+
     /* ===== Xを開くボタン ===== */
     .share-row {
       display: flex;
@@ -684,25 +695,29 @@
       color: #fff;
     }
 
-    /* ===== ことばみまもりのURLコピーボタン ===== */
-    .btn-share-copy {
+    /* ===== LINEを開くボタン ===== */
+    .btn-share-line {
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
-      background: var(--surface2);
-      border: 1px solid var(--border);
+      background: #06C755;
+      color: #fff;
+      border: none;
       border-radius: 8px;
-      color: var(--muted);
       font-family: 'Zen Kaku Gothic New', sans-serif;
       font-size: 0.85rem;
-      padding: 0.6rem 1.1rem;
+      font-weight: 700;
+      padding: 0.6rem 1.25rem;
       cursor: pointer;
-      transition: all 0.2s;
+      transition: opacity 0.2s, transform 0.15s;
+      text-decoration: none;
     }
 
-    .btn-share-copy:hover {
-      border-color: var(--accent);
-      color: var(--accent);
+    .btn-share-line:hover {
+      opacity: 0.85;
+      transform: translateY(-1px);
+      text-decoration: none;
+      color: #fff;
     }
 
     /* ===== 説明アコーディオン ===== */
@@ -886,7 +901,7 @@
       あなたの言葉に、やさしいワンクッションを。
     </p>
     <span class="privacy-badge fade-up delay-3">
-      🔒 入力された文章はツール内に保存されません。
+      🔒 入力された文章はツール内に保存されません。AIの学習にも利用されません。
     </span>
   </section>
 
@@ -941,7 +956,7 @@
     <div id="result-area" class="card" style="display:none;"></div>
 
     <!-- 注意書き -->
-    <div style="margin-bottom:1.5rem;">
+    <div style="margin-bottom:2em;">
       <p class="notice">※ 表示された確認結果は参考情報です。実際の文章の受け取り方は、文脈や読み手によって異なる場合があります。</p>
     </div>
 
@@ -953,7 +968,7 @@
       </button>
       <div class="accordion-body">
         <p>
-          本ツール<strong>「ことばみまもり」</strong>は、X（旧Twitter）、Instagram、tiktok等のSNS、インターネット上に投稿したい文章を確認し、
+          本ツール<strong>「ことばみまもり」</strong>は、X（旧Twitter）、Instagram、TikTok、Threads、LINE等のSNS、インターネット上に投稿したい文章を確認し、
           読み手の方にどう受け取られる可能性があるか確認するためのツールです。<br><br>
           本ツールは、言葉や思想を制限したり、正しさを判断したりすることを目的としていません。<br><br>
           「この表現で大丈夫かな？、誤解されないかな？、SNSに投稿したら炎上しないかな？」<br><br>
@@ -973,6 +988,14 @@
           <span class="faq-arrow">▼</span>
         </button>
         <div class="faq-a">はい。無料でご利用いただけます。アプリ等のインストール不要、ユーザー登録不要、ログイン不要でご利用いただけます。</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false" onclick="toggleFaq(this)">
+          <span><span class="q-icon">Q.</span> 入力してはいけない情報はありますか？</span>
+          <span class="faq-arrow">▼</span>
+        </button>
+        <div class="faq-a">本サービスはSNSやインターネットに公開する前提の文章を確認いただくためのサービスです。例えば、会社や所属組織の社外秘情報、個人情報、機密情報等、SNSやインターネットに投稿しない文章は入力しないでください。</div>
       </div>
 
       <div class="faq-item">
@@ -1228,6 +1251,10 @@
       const shareUrlThreads =
         'https://www.threads.com/';
 
+      // LINE URL（LINE投稿画面表示用のリンクURL）
+      const shareUrlLine =
+        'https://line.me/R/nv/chat';
+
       // 結果エリアを innerHTML で組み立て
       // ユーザー入力（textareaの値）は一切含めない
       // APIレスポンスの文字列はすべて escapeHtml() を通す
@@ -1253,6 +1280,14 @@
 
         ${suggestionsHtml}
 
+        <br>
+        <p class="share-info-label">
+        💡 確認もしくは修正した文章について、各SNSへ投稿される場合、以下のボタンから各SNS画面を表示いただけます。<br>
+        💡 SNS画面を開くだけで、文章は自動的に投稿されませんので、ご安心ください。<br>
+        💡 最終的にSNSへ文章を投稿するかどうかの判断はご本人さまに委ねられています。<br>
+        💡 なお、[LINE を開く] ボタンをクリックすると、LINEアプリをインストールしている環境のみLINEトーク画面を表示されます。それ以外の環境ではLINEアプリダウンロード画面を表示されます。<br>
+        </p>
+
         <div class="share-row" style="margin-top:1.5rem;">
           <a href="${escapeHtml(shareUrlX)}" target="_blank" rel="noopener" class="btn-share-x">
             𝕏 を開く
@@ -1269,7 +1304,9 @@
           <a href="${escapeHtml(shareUrlThreads)}" target="_blank" rel="noopener" class="btn-share-threads">
             Threads を開く
           </a>
-          <button class="btn-share-copy" onclick="copyUrl()">🔗 ツール共有用URLコピー</button>
+          <a href="${escapeHtml(shareUrlLine)}" target="_blank" rel="noopener" class="btn-share-line">
+            LINE を開く
+          </a>
         </div>
       `;
 
