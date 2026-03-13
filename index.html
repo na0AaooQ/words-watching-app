@@ -234,6 +234,28 @@
       margin-bottom: 1.5rem;
     }
 
+    /* ===== マニュアルリンク ===== */
+    .manual-inline-link {
+      margin-bottom: 1rem;
+      padding: 0.75rem 0.95rem;
+      background: #f8faff;
+      border: 1px solid rgba(74,108,247,0.14);
+      border-radius: 10px;
+      font-size: 0.88rem;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .manual-inline-link a {
+      color: var(--accent);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .manual-inline-link a:hover {
+      text-decoration: underline;
+    }
+
     /* ===== サンプル文章ボタン ===== */
     .sample-label {
       font-size: 0.78rem;
@@ -911,6 +933,11 @@
     <!-- 入力カード -->
     <div class="card fade-up">
 
+      <!-- マニュアルへのリンク -->
+      <p class="manual-inline-link">
+      はじめてご利用の方は <a href="manual.html" target="_blank" rel="noopener">使い方を見る</a> をご覧ください。
+      </p>
+
       <!-- サンプル文章 -->
       <p class="sample-label">💡 サンプル文章で試してみる</p>
       <div class="sample-btns">
@@ -973,7 +1000,11 @@
           本ツールは、言葉や思想を制限したり、正しさを判断したりすることを目的としていません。<br><br>
           「この表現で大丈夫かな？、誤解されないかな？、SNSに投稿したら炎上しないかな？」<br><br>
           そんな迷いを感じたとき、あなたがひとりで迷いを抱えずにすむよう、考えるときの参考としてご利用ください。
-          あなたの表現の自由を尊重しながら、安心して情報発信するためのお手伝いができれば幸いです。
+          あなたの表現の自由を尊重しながら、安心して情報発信するためのお手伝いができれば幸いです。<br><br>
+
+          なお、本ツールでは、内部的にAIを利用して文章の解析、気になりそうな点 や 改善のヒントを表示しておりますが、投稿する文章の全文は生成しておりません。
+          なぜなら、あなたの言葉は、あなたの想いがこもった、あなただけの大切な言葉だから。<br><br>
+          あなただけの想いや言葉を大切にしてほしいと思い、AIで投稿する文章の全文は生成しないようにしております。
         </p>
       </div>
     </div>
@@ -1054,6 +1085,7 @@
   <footer>
     <div class="footer-links">
       <a href="index.html">ページTOP</a>
+      <a href="manual.html">マニュアル</a>
       <a href="terms_of_service.html">利用規約</a>
       <a href="disclaimer.html">免責事項</a>
       <a href="privacy.html">プライバシーポリシー</a>
