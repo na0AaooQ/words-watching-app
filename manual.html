@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>マニュアル｜ことばみまもり</title>
+  <link rel="icon" href="./favicon.png" type="image/png">
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+  <meta name="description" content="ことばみまもりの使い方を説明するマニュアルページです。">
+  <meta name="robots" content="noindex">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="X-Frame-Options" content="DENY">
+  <link rel="stylesheet" href="css/common.css">
+
+  <style>
+    .manual-intro {
+      font-size: 0.98rem;
+      color: var(--muted);
+      line-height: 1.9;
+      margin-bottom: 2rem;
+    }
+
+    .manual-step {
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
+    .manual-step:first-of-type {
+      margin-top: 0;
+      padding-top: 0;
+      border-top: none;
+    }
+
+    .step-badge {
+      display: inline-block;
+      margin-bottom: 0.85rem;
+      padding: 0.35rem 0.8rem;
+      border-radius: 999px;
+      background: #eef4ff;
+      color: #4f6edb;
+      font-size: 0.88rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    .manual-step h2 {
+      margin-bottom: 0.8rem;
+      font-size: 1.25rem;
+      line-height: 1.6;
+    }
+
+    .manual-step p {
+      margin-bottom: 1rem;
+      line-height: 1.9;
+      color: #333;
+    }
+
+    .manual-image {
+      margin: 1rem 0 1.25rem;
+    }
+
+    .manual-image img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 16px;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+      background: #fff;
+    }
+
+    .manual-caption {
+      margin-top: 0.6rem;
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .manual-points {
+      margin: 0.75rem 0 0;
+      padding-left: 1.25rem;
+      color: #333;
+      line-height: 1.9;
+    }
+
+    .manual-points li {
+      margin-bottom: 0.5rem;
+    }
+
+    .manual-note-box {
+      margin-top: 2rem;
+      padding: 1rem 1.1rem;
+      border-radius: 14px;
+      background: #f8fbff;
+      border: 1px solid #dbe8ff;
+    }
+
+    .manual-note-box h3 {
+      margin: 0 0 0.6rem;
+      font-size: 1rem;
+      color: #3556b8;
+    }
+
+    .manual-note-box p,
+    .manual-note-box li {
+      font-size: 0.95rem;
+      line-height: 1.8;
+      color: #444;
+    }
+
+    .manual-note-box ul {
+      margin: 0;
+      padding-left: 1.2rem;
+    }
+
+    .manual-usage-box {
+      margin-bottom: 2rem;
+      padding: 1.15rem 1.2rem;
+      border-radius: 16px;
+      background: #fcfcff;
+      border: 1px solid rgba(79, 110, 219, 0.14);
+    }
+
+    .manual-usage-box h2 {
+      margin: 0 0 0.8rem;
+      font-size: 1.12rem;
+      line-height: 1.6;
+      color: #334;
+    }
+
+    .manual-usage-box p {
+      margin: 0 0 0.9rem;
+      line-height: 1.9;
+      color: #444;
+    }
+
+    .manual-usage-box ul {
+      margin: 0;
+      padding-left: 1.2rem;
+      line-height: 1.9;
+      color: #333;
+    }
+
+    .manual-usage-box li {
+      margin-bottom: 0.45rem;
+    }
+
+    @media (max-width: 768px) {
+      .manual-step h2,
+      .manual-usage-box h2 {
+        font-size: 1.08rem;
+      }
+
+      .manual-intro,
+      .manual-step p,
+      .manual-points li,
+      .manual-caption,
+      .manual-note-box p,
+      .manual-note-box li,
+      .manual-usage-box p,
+      .manual-usage-box li {
+        font-size: 0.95rem;
+      }
+    }
+  </style>
+</head>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V947PLZR3S"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-V947PLZR3S');
+</script>
+
+<body>
+  <header>
+    <a href="index.html" class="header-logo">
+      <span class="logo-dot"></span>
+      ことばみまもり
+    </a>
+    <a href="https://qiita.com/na0AaooQ" target="_blank" rel="noopener" class="header-link">開発者について</a>
+  </header>
+
+  <div class="page-hero">
+    <h1>マニュアル</h1>
+    <p>Manual</p>
+  </div>
+
+  <main>
+    <div class="card">
+      <span class="updated-badge">最終更新日：2026年3月</span>
+
+      <p class="manual-intro">
+        <strong>「ことばみまもり」</strong>は、SNSへ投稿したい文章について、
+        表現の強さや伝わり方の傾向を確認しながら、
+        投稿前にひと呼吸おくための参考情報を表示するツールです。<br>
+        はじめてご利用される方にも安心してお使いいただけるよう、
+        このページでは基本的な使い方と、活用しやすい場面をご案内します。
+      </p>
+
+      <section class="manual-usage-box">
+        <h2>どんな時に使うとよいか</h2>
+        <p>
+          「ことばみまもり」は、文章の正誤を決めるためのものではなく、
+          投稿前に表現を少し見直したい時の補助としてご利用いただく想定です。
+        </p>
+        <ul>
+          <li>SNSへ投稿する前に、言い方がきつく見えないか少し気になる時</li>
+          <li>気持ちが高ぶっている時に、いったん落ち着いて文章を見直したい時</li>
+          <li>相手に誤解なく伝わる表現になっているか確認したい時</li>
+          <li>下書きした文章を、もう少しやわらかい表現に整えたい時</li>
+        </ul>
+      </section>
+
+      <section class="manual-step">
+        <span class="step-badge">STEP 1</span>
+        <h2>確認したい文章を入力します</h2>
+        <p>
+          トップページの入力欄に、SNSへ投稿したい文章を入力します。<br>
+          投稿前に「この言い方で伝わりやすいかな」「少し強すぎないかな」と感じた文章を、
+          そのまま入力して確認できます。
+        </p>
+
+        <div class="manual-image">
+          <img src="image/manual-step1.png" alt="ことばみまもりの入力欄に、確認したい文章を入力する画面">
+          <p class="manual-caption">
+            入力欄に、確認したい文章を入力します。
+          </p>
+        </div>
+
+        <ul class="manual-points">
+          <li>短い文章でも確認できます。</li>
+          <li>投稿前の下書きや、送信前の文面チェックにもご利用いただけます。</li>
+          <li>入力した文章はツール内に保存されません。</li>
+        </ul>
+      </section>
+
+      <section class="manual-step">
+        <span class="step-badge">STEP 2</span>
+        <h2>「確認してみる」ボタンをクリックします</h2>
+        <p>
+          文章を入力したあと、画面下の
+          <strong>「確認してみる」</strong>
+          ボタンをクリックしてください。<br>
+          入力した文章をもとに、AIが参考情報を表示します。
+        </p>
+
+        <div class="manual-image">
+          <img src="image/manual-step2.png" alt="テキスト入力後に確認してみるボタンをクリックする画面">
+          <p class="manual-caption">
+            テキスト入力後、「確認してみる」ボタンをクリックします。
+          </p>
+        </div>
+
+        <ul class="manual-points">
+          <li>文章が未入力の場合は、先に文章を入力してください。</li>
+          <li>確認結果が表示されるまで、少し時間がかかる場合があります。</li>
+        </ul>
+      </section>
+
+      <section class="manual-step">
+        <span class="step-badge">STEP 3</span>
+        <h2>確認結果を参考に、必要に応じて表現を整えます。</h2>
+        <p>
+          確認結果では、文章全体の傾向に加えて、
+          <strong>気になりそうな点</strong> や
+          <strong>改善のヒント</strong>
+          が表示されます。<br>
+          必要に応じて文章を見直し、より伝わりやすく、やわらかい表現に整えてみてください。
+        </p>
+
+        <div class="manual-image">
+          <img src="image/manual-step3.png" alt="文章の確認結果として総評、気になりそうな点、改善のヒントが表示された画面">
+          <p class="manual-caption">
+            テキストの確認結果として、リスク・気になりそうな点・改善のヒントが表示されます。
+          </p>
+        </div>
+
+        <ul class="manual-points">
+          <li>表示内容は参考情報であり、正確性や完全性を保証するものではありません。</li>
+          <li>最終的に投稿するかどうかの判断は、ご利用者さまご自身で行ってください。</li>
+          <li>必要に応じて文章を修正し、再度チェックすることもできます。</li>
+        </ul>
+      </section>
+
+      <div class="manual-note-box">
+        <h3>ご利用時の補足、安心してお使いいただくために</h3>
+        <ul>
+          <li>本ツールは無料でご利用いただけます。</li>
+          <li>ログインやユーザー登録は不要です。</li>
+          <li>アプリ等のインストールも不要です。</li>
+          <li>入力した文章はツール内やサーバー内に保存されません。</li>
+          <br>
+          <li>利用規約は <a href="terms_of_service.html" target="_blank" rel="noopener">利用規約</a> をご確認ください。</li>
+          <li>詳しい注意事項は <a href="disclaimer.html" target="_blank" rel="noopener">免責事項</a> をご確認ください。</li>
+        </ul>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-links">
+      <a href="index.html">ページTOP</a>
+      <a href="manual.html">マニュアル</a>
+      <a href="terms_of_service.html">利用規約</a>
+      <a href="disclaimer.html">免責事項</a>
+      <a href="privacy.html">プライバシーポリシー</a>
+      <a href="contact.html">お問い合わせ</a>
+      <a href="https://qiita.com/na0AaooQ" target="_blank" rel="noopener">運営者</a>
+    </div>
+    <p class="footer-copy">© ことばみまもり</p>
+  </footer>
+
+</body>
+</html>
