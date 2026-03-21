@@ -1237,7 +1237,7 @@
       document.getElementById('loading').scrollIntoView({ behavior: 'smooth', block: 'center' });
 
       try {
-        // ===== 実際のAPIエンドポイントに差し替えてください =====
+        // ===== 呼び出すAPIを指定する =====
         const API_ENDPOINT = '/prod/check';
 
         const res = await fetch(API_ENDPOINT, {
