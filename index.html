@@ -1154,6 +1154,13 @@
       document.getElementById('submit-btn').disabled   = true;
       document.getElementById('loading').style.display  = 'flex';
       document.getElementById('result-area').style.display = 'none';
+
+      // 文章の確認後、「文章を修正して再チェックボタン」をクリックした時、前回の確認結果を表示したままにする
+      const oldNotice = document.getElementById('recheck-notice');
+      if (oldNotice) {
+        oldNotice.remove();
+      }
+
       document.getElementById('loading').scrollIntoView({ behavior: 'smooth', block: 'center' });
 
       try {
@@ -1353,6 +1360,34 @@
       document.getElementById('input-text').focus();
       document.getElementById('input-text').scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
+
+    function recheck() {
+      // 文章の確認後、「文章を修正して再チェックボタン」をクリックした時、前回の確認結果を表示したままにする
+      // result-area は非表示にしない（前回の結果を見ながら修正できるようにする）
+      // 「編集中」バナーを表示して、前回の結果であることを明示する
+      const resultArea = document.getElementById('result-area');
+      if (resultArea.style.display !== 'none') {
+        // まだバナーがなければ挿入
+        if (!document.getElementById('recheck-notice')) {
+          const notice = document.createElement('div');
+          notice.id = 'recheck-notice';
+          notice.style.cssText = `
+          background: var(--amber-lt);
+          border: 1px solid var(--amber);
+          border-radius: 10px;
+          padding: 0.6rem 1rem;
+          font-size: 0.85rem;
+          color: #92600a;
+          margin-bottom: 1rem;
+        `;
+        notice.innerHTML = '✏️ <strong>編集中</strong>　上の入力欄を修正して「確認してみる」ボタンをクリックすると、チェック結果が更新されます。';
+        resultArea.insertBefore(notice, resultArea.firstChild);
+      }
+    }
+    document.getElementById('input-text').focus();
+    document.getElementById('input-text').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
 
     /* ---------- URLコピー ---------- */
     function copyUrl() {
