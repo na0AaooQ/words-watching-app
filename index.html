@@ -322,15 +322,81 @@
       color: #b0b6cc;
     }
 
+    /* 文字数カウント＋コピーボタンの行 */
+    .char-count-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.25rem;
+    }
+
     .char-count {
-      text-align: right;
       font-size: 0.78rem;
       color: var(--muted);
-      margin-bottom: 0.25rem;
     }
 
     .char-count.warn { color: var(--amber); }
     .char-count.over { color: var(--red); }
+
+    /* ===== テキストコピーボタン ===== */
+    .btn-copy-text {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--muted);
+      font-family: 'Zen Kaku Gothic New', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 500;
+      padding: 0.25rem 0.65rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .btn-copy-text:hover {
+      background: var(--accent-lt);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .btn-copy-text.copied {
+      background: var(--green-lt);
+      border-color: var(--green);
+      color: #15a372;
+    }
+
+    /* ===== リスク変化バナー ===== */
+    .risk-change-banner {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      border-radius: 10px;
+      padding: 0.65rem 1rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .risk-change-banner.improved {
+      background: var(--green-lt);
+      border: 1px solid rgba(34,196,138,0.4);
+      color: #15a372;
+    }
+
+    .risk-change-banner.worsened {
+      background: var(--red-lt);
+      border: 1px solid rgba(239,68,68,0.35);
+      color: #c93333;
+    }
+
+    .risk-change-banner.unchanged {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
 
     /* ===== プライバシー注記（テキストエリア直下） ===== */
     .privacy-note {
@@ -959,7 +1025,11 @@
         ></textarea>
       </div>
 
-      <div class="char-count" id="char-count">0 / 5000</div>
+      <!-- 文字数カウント＋コピーボタン（同じ行に配置） -->
+      <div class="char-count-row">
+        <button class="btn-copy-text" id="btn-copy-text" onclick="copyText()" title="文章をコピー">📋 文章をコピー</button>
+        <span class="char-count" id="char-count">0 / 5000</span>
+      </div>
 
       <!-- プライバシー注記（テキストエリア直下） -->
       <p class="privacy-note">
@@ -1098,6 +1168,9 @@
 
   <!-- ===== JavaScript ===== -->
   <script>
+    /* ---------- グローバル変数 ---------- */
+    let previousRisk = null; // 前回のリスクレベルを保持（リスク変化表示に使用）
+
     /* ---------- 文字数カウント ---------- */
     function onTextInput() {
       // 入力可能な最大文字数
@@ -1298,11 +1371,37 @@
       // 結果エリアを innerHTML で組み立て
       // ユーザー入力（textareaの値）は一切含めない
       // APIレスポンスの文字列はすべて escapeHtml() を通す
+
+      // リスク変化バナーの生成（2回目以降のチェック時のみ表示）
+      let riskChangeBannerHtml = '';
+      if (previousRisk !== null && previousRisk !== data.risk) {
+        const prevIcon  = previousRisk === 'low' ? '😊' : previousRisk === 'medium' ? '🤔' : '⚠️';
+        const prevLabel = previousRisk === 'low' ? '低リスク' : previousRisk === 'medium' ? '要注意' : '高リスク';
+        const riskOrder = { low: 0, medium: 1, high: 2 };
+        const improved  = riskOrder[data.risk] < riskOrder[previousRisk];
+        riskChangeBannerHtml = `
+          <div class="risk-change-banner ${improved ? 'improved' : 'worsened'}">
+            <span>${improved ? '🎉' : '📢'}</span>
+            <span>前回：${prevIcon} ${escapeHtml(prevLabel)}　→　今回：${riskIcon} ${escapeHtml(riskLabel)}　${improved ? 'リスクが改善されました！' : 'リスクが上がりました。もう一度確認してみましょう。'}</span>
+          </div>`;
+      } else if (previousRisk !== null && previousRisk === data.risk) {
+        riskChangeBannerHtml = `
+          <div class="risk-change-banner unchanged">
+            <span>↔️</span>
+            <span>前回と同じ判定です（リスク：${escapeHtml(riskLabel)}）</span>
+          </div>`;
+      }
+
+      // previousRisk を今回の結果で更新
+      previousRisk = data.risk;
+
       resultArea.innerHTML = `
         <div class="result-header">
           <p class="result-title">📋 チェック結果</p>
           <button class="btn-recheck" onclick="recheck()">✏️ 文章を修正して再チェック</button>
         </div>
+
+        ${riskChangeBannerHtml}
 
         <div class="${escapeHtml(riskClass)}">
           <span class="verdict-icon">${riskIcon}</span>
@@ -1356,12 +1455,6 @@
 
     /* ---------- 再チェック ---------- */
     function recheck() {
-      document.getElementById('result-area').style.display = 'none';
-      document.getElementById('input-text').focus();
-      document.getElementById('input-text').scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
-
-    function recheck() {
       // 文章の確認後、「文章を修正して再チェックボタン」をクリックした時、前回の確認結果を表示したままにする
       // result-area は非表示にしない（前回の結果を見ながら修正できるようにする）
       // 「編集中」バナーを表示して、前回の結果であることを明示する
@@ -1388,6 +1481,34 @@
     document.getElementById('input-text').scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
 
+
+    /* ---------- テキストコピー ---------- */
+    function copyText() {
+      const text = document.getElementById('input-text').value;
+      if (!text) return;
+      const btn = document.getElementById('btn-copy-text');
+      navigator.clipboard.writeText(text)
+        .then(() => {
+          btn.textContent = '✅ 文章をコピーしました';
+          btn.classList.add('copied');
+          setTimeout(() => {
+            btn.textContent = '📋 文章をコピー';
+            btn.classList.remove('copied');
+          }, 2000);
+        })
+        .catch(() => {
+          // clipboard API非対応環境のフォールバック
+          const ta = document.getElementById('input-text');
+          ta.select();
+          document.execCommand('copy');
+          btn.textContent = '✅ 文章をコピーしました';
+          btn.classList.add('copied');
+          setTimeout(() => {
+            btn.textContent = '📋 文章をコピー';
+            btn.classList.remove('copied');
+          }, 2000);
+        });
+    }
 
     /* ---------- URLコピー ---------- */
     function copyUrl() {
