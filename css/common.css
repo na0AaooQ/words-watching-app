@@ -238,3 +238,39 @@ footer {
   main { padding: 1.5rem 1rem 3rem; }
   .card { padding: 1.25rem; }
 }
+
+/* ===== ダークモード（OS設定 or 手動切り替え） ===== */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:        #0f1117;
+    --surface:   #1a1d27;
+    --surface2:  #22263a;
+    --border:    #2e3350;
+    --text:      #e8eaf6;
+    --muted:     #8b93b8;
+    --accent:    #6b8aff;
+    --accent-lt: #1a2040;
+    --green-lt:  #0d2b22;
+    --shadow:    0 4px 24px rgba(0,0,0,0.3);
+  }
+  :root:not([data-theme="light"]) .page-hero {
+    background: linear-gradient(160deg, #13172a 0%, #0f1117 60%);
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg:        #0f1117;
+  --surface:   #1a1d27;
+  --surface2:  #22263a;
+  --border:    #2e3350;
+  --text:      #e8eaf6;
+  --muted:     #8b93b8;
+  --accent:    #6b8aff;
+  --accent-lt: #1a2040;
+  --green-lt:  #0d2b22;
+  --shadow:    0 4px 24px rgba(0,0,0,0.3);
+}
+
+:root[data-theme="dark"] .page-hero {
+  background: linear-gradient(160deg, #13172a 0%, #0f1117 60%);
+}

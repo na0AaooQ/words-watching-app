@@ -11,6 +11,60 @@
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
   <meta http-equiv="X-Frame-Options" content="DENY">
   <link rel="stylesheet" href="css/common.css">
+  <style>
+    /* ===== ダークモード（OS設定 or 手動切り替え） ===== */
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg:        #0f1117;
+        --surface:   #1a1d27;
+        --surface2:  #22263a;
+        --border:    #2e3350;
+        --text:      #e8eaf6;
+        --muted:     #8b93b8;
+        --accent:    #6b8aff;
+        --accent-lt: #1a2040;
+        --shadow:    0 4px 24px rgba(0,0,0,0.3);
+        --shadow-md: 0 8px 40px rgba(0,0,0,0.45);
+      }
+      :root:not([data-theme="light"]) .page-hero h1 { color: var(--text); }
+      :root:not([data-theme="light"]) .page-hero p  { color: var(--muted); }
+    }
+    :root[data-theme="dark"] {
+      --bg:        #0f1117;
+      --surface:   #1a1d27;
+      --surface2:  #22263a;
+      --border:    #2e3350;
+      --text:      #e8eaf6;
+      --muted:     #8b93b8;
+      --accent:    #6b8aff;
+      --accent-lt: #1a2040;
+      --shadow:    0 4px 24px rgba(0,0,0,0.3);
+      --shadow-md: 0 8px 40px rgba(0,0,0,0.45);
+    }
+    :root[data-theme="dark"] .page-hero h1 { color: var(--text); }
+    :root[data-theme="dark"] .page-hero p  { color: var(--muted); }
+    .btn-theme {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      color: var(--muted);
+      font-family: inherit;
+      font-size: 0.78rem;
+      font-weight: 500;
+      padding: 0.3rem 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .btn-theme:hover {
+      background: var(--accent-lt);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+  </style>
 </head>
 
 <!-- Google tag (gtag.js) -->
@@ -29,7 +83,13 @@
       <span class="logo-dot"></span>
       ことばみまもり
     </a>
-    <a href="https://qiita.com/na0AaooQ" target="_blank" rel="noopener" class="header-link">開発者について</a>
+    <div style="display:flex; align-items:center; gap:0.75rem;">
+      <button class="btn-theme" id="btn-theme" onclick="toggleTheme()" aria-label="ダークモード切り替え">
+        <span id="theme-icon">🌙</span>
+        <span id="theme-label">ダーク</span>
+      </button>
+      <a href="https://qiita.com/na0AaooQ" target="_blank" rel="noopener" class="header-link">開発者について</a>
+    </div>
   </header>
 
   <div class="page-hero">
@@ -112,6 +172,45 @@
     </div>
     <p class="footer-copy">© ことばみまもり</p>
   </footer>
+
+  <script>
+    /* ---------- テーマ切り替え ---------- */
+    (function () {
+      const saved = localStorage.getItem('theme');
+      if (saved) document.documentElement.setAttribute('data-theme', saved);
+    })();
+
+    function toggleTheme() {
+      const root    = document.documentElement;
+      const current = root.getAttribute('data-theme');
+      const osDark  = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const isDark  = current === 'dark' || (!current && osDark);
+      const next = isDark ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+      updateThemeButton(next);
+    }
+
+    function updateThemeButton(theme) {
+      const icon  = document.getElementById('theme-icon');
+      const label = document.getElementById('theme-label');
+      if (!icon || !label) return;
+      if (theme === 'dark') {
+        icon.textContent  = '☀️';
+        label.textContent = 'ライト';
+      } else {
+        icon.textContent  = '🌙';
+        label.textContent = 'ダーク';
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', function () {
+      const saved  = localStorage.getItem('theme');
+      const osDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const theme  = saved || (osDark ? 'dark' : 'light');
+      updateThemeButton(theme);
+    });
+  </script>
 
 </body>
 </html>

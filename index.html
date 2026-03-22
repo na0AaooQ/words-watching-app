@@ -83,6 +83,98 @@
       --shadow-md: 0 8px 40px rgba(74,108,247,0.13);
     }
 
+    /* ===== ダークモード（OS設定 or 手動切り替え） ===== */
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg:        #0f1117;
+        --surface:   #1a1d27;
+        --surface2:  #22263a;
+        --border:    #2e3350;
+        --text:      #e8eaf6;
+        --muted:     #8b93b8;
+        --accent:    #6b8aff;
+        --accent-lt: #1a2040;
+        --green:     #2dd4a0;
+        --green-lt:  #0d2b22;
+        --amber:     #fbbf24;
+        --amber-lt:  #2a1f05;
+        --red:       #f87171;
+        --red-lt:    #2a0e0e;
+        --shadow:    0 4px 24px rgba(0,0,0,0.3);
+        --shadow-md: 0 8px 40px rgba(0,0,0,0.45);
+      }
+      :root:not([data-theme="light"]) .hero {
+        background: linear-gradient(160deg, #13172a 0%, #0f1117 60%);
+      }
+      :root:not([data-theme="light"]) textarea:focus {
+        box-shadow: 0 0 0 4px rgba(107,138,255,0.15);
+      }
+      :root:not([data-theme="light"]) .verdict.safe    { background: #0d2b22; border-color: rgba(45,212,160,0.3); color: #2dd4a0; }
+      :root:not([data-theme="light"]) .verdict.caution { background: #2a1f05; border-color: rgba(251,191,36,0.3); color: #fbbf24; }
+      :root:not([data-theme="light"]) .verdict.danger  { background: #2a0e0e; border-color: rgba(248,113,113,0.3); color: #f87171; }
+      :root:not([data-theme="light"]) .advice-box { background: #1a2040; border-color: rgba(107,138,255,0.2); }
+      :root:not([data-theme="light"]) .risk-change-banner.improved  { background: #0d2b22; border-color: rgba(45,212,160,0.35); color: #2dd4a0; }
+      :root:not([data-theme="light"]) .risk-change-banner.worsened  { background: #2a0e0e; border-color: rgba(248,113,113,0.3); color: #f87171; }
+      :root:not([data-theme="light"]) .risk-change-banner.unchanged { background: var(--surface2); }
+    }
+
+    /* 手動でダークモードを選択した場合 */
+    :root[data-theme="dark"] {
+      --bg:        #0f1117;
+      --surface:   #1a1d27;
+      --surface2:  #22263a;
+      --border:    #2e3350;
+      --text:      #e8eaf6;
+      --muted:     #8b93b8;
+      --accent:    #6b8aff;
+      --accent-lt: #1a2040;
+      --green:     #2dd4a0;
+      --green-lt:  #0d2b22;
+      --amber:     #fbbf24;
+      --amber-lt:  #2a1f05;
+      --red:       #f87171;
+      --red-lt:    #2a0e0e;
+      --shadow:    0 4px 24px rgba(0,0,0,0.3);
+      --shadow-md: 0 8px 40px rgba(0,0,0,0.45);
+    }
+    :root[data-theme="dark"] .hero {
+      background: linear-gradient(160deg, #13172a 0%, #0f1117 60%);
+    }
+    :root[data-theme="dark"] textarea:focus {
+      box-shadow: 0 0 0 4px rgba(107,138,255,0.15);
+    }
+    :root[data-theme="dark"] .verdict.safe    { background: #0d2b22; border-color: rgba(45,212,160,0.3); color: #2dd4a0; }
+    :root[data-theme="dark"] .verdict.caution { background: #2a1f05; border-color: rgba(251,191,36,0.3); color: #fbbf24; }
+    :root[data-theme="dark"] .verdict.danger  { background: #2a0e0e; border-color: rgba(248,113,113,0.3); color: #f87171; }
+    :root[data-theme="dark"] .advice-box { background: #1a2040; border-color: rgba(107,138,255,0.2); }
+    :root[data-theme="dark"] .risk-change-banner.improved  { background: #0d2b22; border-color: rgba(45,212,160,0.35); color: #2dd4a0; }
+    :root[data-theme="dark"] .risk-change-banner.worsened  { background: #2a0e0e; border-color: rgba(248,113,113,0.3); color: #f87171; }
+    :root[data-theme="dark"] .risk-change-banner.unchanged { background: var(--surface2); }
+
+    /* ===== テーマ切り替えボタン ===== */
+    .btn-theme {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      color: var(--muted);
+      font-family: 'Zen Kaku Gothic New', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 500;
+      padding: 0.3rem 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .btn-theme:hover {
+      background: var(--accent-lt);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
     /* ===== Reset & Base ===== */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -396,6 +488,41 @@
       background: var(--surface2);
       border: 1px solid var(--border);
       color: var(--muted);
+    }
+
+    /* ===== SNS別文字数ガイド ===== */
+    .sns-guide {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.4rem 0.6rem;
+      margin-bottom: 1rem;
+      font-size: 0.75rem;
+    }
+
+    .sns-guide-label {
+      color: var(--muted);
+      font-weight: 500;
+      flex-shrink: 0;
+    }
+
+    .sns-guide-item {
+      padding: 0.15rem 0.6rem;
+      border-radius: 100px;
+      border: 1px solid var(--border);
+      background: var(--surface2);
+      color: var(--muted);
+      font-weight: 500;
+      white-space: nowrap;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+    }
+
+    /* 上限を超えた場合に赤くハイライト */
+    .sns-guide-item.over-limit {
+      background: var(--red-lt);
+      border-color: var(--red);
+      color: var(--red);
+      font-weight: 700;
     }
 
     /* ===== プライバシー注記（テキストエリア直下） ===== */
@@ -977,7 +1104,13 @@
       <span class="logo-dot"></span>
       ことばみまもり
     </a>
-    <a href="https://qiita.com/na0AaooQ" target="_blank" rel="noopener" class="header-link">開発者について</a>
+    <div style="display:flex; align-items:center; gap:0.75rem;">
+      <button class="btn-theme" id="btn-theme" onclick="toggleTheme()" aria-label="ダークモード切り替え">
+        <span id="theme-icon">🌙</span>
+        <span id="theme-label">ダークモード</span>
+      </button>
+      <a href="https://qiita.com/na0AaooQ" target="_blank" rel="noopener" class="header-link">開発者について</a>
+    </div>
   </header>
 
   <!-- ===== Hero ===== -->
@@ -1019,7 +1152,7 @@
         <textarea
           id="input-text"
           placeholder="SNSに投稿したい文章をここに入力してください&#10;（例：今日の会議、長すぎて疲れた。なんとかならないかな）"
-          maxlength="5000"
+          maxlength="50000"
           oninput="onTextInput()"
           aria-label="チェックしたい文章を入力"
         ></textarea>
@@ -1028,13 +1161,19 @@
       <!-- 文字数カウント＋コピーボタン（同じ行に配置） -->
       <div class="char-count-row">
         <button class="btn-copy-text" id="btn-copy-text" onclick="copyText()" title="文章をコピー">📋 文章をコピー</button>
-        <span class="char-count" id="char-count">0 / 5000</span>
+        <span class="char-count" id="char-count">0 / 50000</span>
       </div>
 
-      <!-- プライバシー注記（テキストエリア直下） -->
-      <p class="privacy-note">
-        🔒 入力した文章はツール内に保存されません。AIの学習にも利用されません。
-      </p>
+      <!-- SNS別文字数ガイド -->
+      <div class="sns-guide" id="sns-guide" style="display:none;">
+        <span class="sns-guide-label">SNS別 最大文字数の目安：</span>
+        <span class="sns-guide-item" id="guide-x">𝕏 280字（ブルーバッチの場合 25,000字）</span>
+        <span class="sns-guide-item" id="guide-facebook">Facebook 50,000字</span>
+        <span class="sns-guide-item" id="guide-instagram">Instagram 2,200字</span>
+        <span class="sns-guide-item" id="guide-tiktok">TikTok 2,200字</span>
+        <span class="sns-guide-item" id="guide-threads">Threads 500字</span>
+        <span class="sns-guide-item" id="guide-line">LINE 1,000字</span>
+      </div>
 
       <!-- 確認ボタン -->
       <button class="btn-primary" id="submit-btn" onclick="checkText()" disabled>
@@ -1168,13 +1307,55 @@
 
   <!-- ===== JavaScript ===== -->
   <script>
+    /* ---------- テーマ切り替え ---------- */
+    (function () {
+      // ページ読み込み時に保存済みテーマを適用（チラつき防止のため即時実行）
+      const saved = localStorage.getItem('theme');
+      if (saved) document.documentElement.setAttribute('data-theme', saved);
+    })();
+
+    function toggleTheme() {
+      const root    = document.documentElement;
+      const current = root.getAttribute('data-theme');
+
+      // 現在のテーマを判定（OS設定も考慮）
+      const osDark  = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const isDark  = current === 'dark' || (!current && osDark);
+
+      const next = isDark ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+      updateThemeButton(next);
+    }
+
+    function updateThemeButton(theme) {
+      const icon  = document.getElementById('theme-icon');
+      const label = document.getElementById('theme-label');
+      if (!icon || !label) return;
+      if (theme === 'dark') {
+        icon.textContent  = '☀️';
+        label.textContent = 'ライトモード';
+      } else {
+        icon.textContent  = '🌙';
+        label.textContent = 'ダークモード';
+      }
+    }
+
+    // 初期表示時にボタンのアイコン・ラベルを正しく設定
+    window.addEventListener('DOMContentLoaded', function () {
+      const saved  = localStorage.getItem('theme');
+      const osDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const theme  = saved || (osDark ? 'dark' : 'light');
+      updateThemeButton(theme);
+    });
+
     /* ---------- グローバル変数 ---------- */
     let previousRisk = null; // 前回のリスクレベルを保持（リスク変化表示に使用）
 
     /* ---------- 文字数カウント ---------- */
     function onTextInput() {
       // 入力可能な最大文字数
-      const inputMaxNumberOfChar = 5000;
+      const inputMaxNumberOfChar = 50000;
 
       const ta   = document.getElementById('input-text');
       const cc   = document.getElementById('char-count');
@@ -1184,6 +1365,20 @@
       cc.textContent = len + ' / ' + inputMaxNumberOfChar;
       cc.className   = 'char-count' + (len > 1800 ? ' warn' : '') + (len >= inputMaxNumberOfChar ? ' over' : '');
       btn.disabled   = len === 0;
+
+      // SNS別文字数ガイドの表示制御
+      const guide = document.getElementById('sns-guide');
+      if (len === 0) {
+        guide.style.display = 'none';
+      } else {
+        guide.style.display = 'flex';
+        // SNSごとの上限文字数
+        const limits = { x: 280, threads: 500, tiktok: 2200, instagram: 2200, facebook: 50000, line: 1000 };
+        Object.entries(limits).forEach(([key, limit]) => {
+          const el = document.getElementById('guide-' + key);
+          if (el) el.classList.toggle('over-limit', len > limit);
+        });
+      }
     }
 
     /* ---------- サンプル文章 ---------- */
