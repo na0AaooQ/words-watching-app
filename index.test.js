@@ -14,7 +14,7 @@
 
 function onTextInput() {
   // 入力可能な最大文字数
-  const inputMaxNumberOfChar = 5000;
+  const inputMaxNumberOfChar = 50000;
 
   const ta  = document.getElementById('input-text');
   const cc  = document.getElementById('char-count');
@@ -211,11 +211,11 @@ function setupDom() {
 describe('onTextInput()', () => {
   beforeEach(setupDom);
 
-  test('空文字のとき「0 / 5000」と表示し、ボタンが disabled になる', () => {
+  test('空文字のとき「0 / 50000」と表示し、ボタンが disabled になる', () => {
     document.getElementById('input-text').value = '';
     onTextInput();
 
-    expect(document.getElementById('char-count').textContent).toBe('0 / 5000');
+    expect(document.getElementById('char-count').textContent).toBe('0 / 50000');
     expect(document.getElementById('submit-btn').disabled).toBe(true);
   });
 
@@ -241,8 +241,8 @@ describe('onTextInput()', () => {
     expect(document.getElementById('char-count').className).not.toContain('over');
   });
 
-  test('5000文字で over クラスが付く', () => {
-    document.getElementById('input-text').value = 'a'.repeat(5000);
+  test('50000文字で over クラスが付く', () => {
+    document.getElementById('input-text').value = 'a'.repeat(50000);
     onTextInput();
 
     expect(document.getElementById('char-count').className).toContain('over');
@@ -254,7 +254,7 @@ describe('onTextInput()', () => {
     onTextInput();
 
     // 絵文字はサロゲートペアで length=2 になるため実際の length を使用
-    expect(document.getElementById('char-count').textContent).toBe(input.length + ' / 5000');
+    expect(document.getElementById('char-count').textContent).toBe(input.length + ' / 50000');
   });
 });
 
