@@ -56,7 +56,7 @@
     <div style="display:flex; align-items:center; gap:0.75rem;">
       <button class="btn-theme" id="btn-theme" onclick="toggleTheme()" aria-label="ダークモード切り替え">
         <span id="theme-icon">🌙</span>
-        <span id="theme-label">ダーク</span>
+        <span id="theme-label">ダークモード</span>
       </button>
       <a href="https://qiita.com/na0AaooQ" target="_blank" rel="noopener" class="header-link">開発者について</a>
     </div>
@@ -137,8 +137,8 @@
       const icon = document.getElementById('theme-icon');
       const label = document.getElementById('theme-label');
       if (!icon || !label) return;
-      if (theme === 'dark') { icon.textContent = '☀️'; label.textContent = 'ライト'; }
-      else { icon.textContent = '🌙'; label.textContent = 'ダーク'; }
+      if (theme === 'dark') { icon.textContent = '☀️'; label.textContent = 'ライトモード'; }
+      else { icon.textContent = '🌙'; label.textContent = 'ダークモード'; }
     }
     window.addEventListener('DOMContentLoaded', function () {
       const saved = localStorage.getItem('theme');
