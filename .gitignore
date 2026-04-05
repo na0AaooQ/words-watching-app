@@ -208,3 +208,4 @@ __marimo__/
 
 # words-watching-app
 node_modules/
+.env
