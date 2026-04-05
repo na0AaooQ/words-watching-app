@@ -113,6 +113,32 @@
       color: var(--accent);
     }
 
+    .about-inline-link {
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    .about-inline-link a {
+      color: var(--accent);
+      font-weight: 500;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(74, 108, 247, 0.25);
+      transition: border-color 0.2s ease, color 0.2s ease;
+    }
+
+    .about-inline-link a:hover {
+      text-decoration: none;
+      border-bottom-color: var(--accent);
+    }
+
+    .about-inline-separator {
+      display: inline-block;
+      margin: 0 0.45rem;
+      color: var(--muted);
+    }
+
     /* ===== Reset & Base ===== */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 

@@ -101,6 +101,13 @@
     <span class="privacy-badge fade-up delay-3">
       🔒 入力された文章はツール内に保存されません。AIの学習にも利用されません。
     </span>
+
+    <p class="about-inline-link fade-up delay-4">
+      はじめて本サービスを利用いただく方へ：
+      <a href="manual.html" target="_blank" rel="noopener">使い方</a>
+      <span class="about-inline-separator">/</span>
+      <a href="about.html" target="_blank" rel="noopener">サービス説明</a>
+    </p>
   </section>
 
   <!-- ===== Main ===== -->
@@ -108,11 +115,6 @@
 
     <!-- 入力カード -->
     <div class="card fade-up">
-
-      <!-- マニュアルへのリンク -->
-      <p class="manual-inline-link">
-      はじめてご利用いただく場合は <a href="manual.html" target="_blank" rel="noopener">使い方を見る</a> をご覧ください。
-      </p>
 
       <!-- サンプル文章 -->
       <p class="sample-label">💡 サンプル文章で試してみる</p>
@@ -171,29 +173,6 @@
     <!-- 注意書き -->
     <div style="margin-bottom:2em;">
       <p class="notice">※ 表示された確認結果は参考情報です。実際の文章の受け取り方は、文脈や読み手によって異なる場合があります。</p>
-    </div>
-
-    <!-- ツール説明アコーディオン -->
-    <div class="accordion fade-up">
-      <button class="accordion-trigger" aria-expanded="false" onclick="toggleAccordion(this)">
-        <span>▼ 本ツールの説明について詳しく読む</span>
-        <span class="accordion-arrow">▼</span>
-      </button>
-      <div class="accordion-body">
-        <p>
-          本ツール<strong>「ことばみまもり」</strong>は、X（旧Twitter）、Facebook、Instagram、TikTok、Threads、LINE等のSNS、インターネット上に投稿したい文章を確認し、
-          読み手の方にどう受け取られる可能性があるか確認するためのツールです。<br><br>
-          本ツールは、言葉や思想を制限したり、正しさを判断したりすることを目的としていません。<br><br>
-          「この表現で大丈夫かな？、誤解されないかな？、SNSに投稿したら炎上しないかな？」<br><br>
-          そんな迷いを感じたとき、あなたがひとりで迷いを抱えずにすむよう、考えるときの参考としてご利用ください。
-          あなたの表現の自由を尊重しながら、安心して情報発信するためのお手伝いができれば幸いです。<br><br>
-
-          なお、本ツールでは、24時間365日、必要に応じて、いつでもツールを利用できるようにするため、AIを利用しております。<br>
-          AIを利用して文章の解析、気になりそうな点 や 改善のヒントを表示しておりますが、投稿する文章の全文は生成しておりません。<br><br>
-          なぜなら、あなたの言葉は、あなたの想いがこもった、あなただけの大切な言葉だから。<br>
-          あなただけの想いや言葉を尊重したいと思い、AIで投稿する文章の全文は生成しないようにしております。
-        </p>
-      </div>
     </div>
 
     <!-- FAQ -->
@@ -272,6 +251,7 @@
   <footer>
     <div class="footer-links">
       <a href="index.html">トップページ</a>
+      <a href="about.html">サービス説明</a>
       <a href="manual.html">マニュアル</a>
       <a href="terms_of_service.html">利用規約</a>
       <a href="disclaimer.html">免責事項</a>
@@ -365,14 +345,6 @@
       ta.dispatchEvent(new Event('input'));
       ta.focus();
       ta.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
-
-    /* ---------- アコーディオン ---------- */
-    function toggleAccordion(btn) {
-      const body     = btn.nextElementSibling;
-      const expanded = btn.getAttribute('aria-expanded') === 'true';
-      btn.setAttribute('aria-expanded', !expanded);
-      body.classList.toggle('open', !expanded);
     }
 
     /* ---------- FAQ ---------- */

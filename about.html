@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>サービス説明｜ことばみまもり</title>
+  <link rel="icon" href="./favicon.png" type="image/png">
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+  <meta name="description" content="ことばみまもりを、なぜ無料で運営しているのか。開発の背景や目指していること、サービスに込めた思いをご説明します。">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://words-watching-app.na0aaooq.com/about.html">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="X-Frame-Options" content="DENY">
+  <link rel="stylesheet" href="assets/css/common.css">
+  <style>
+    .about-lead {
+      font-size: 0.98rem;
+      color: var(--muted);
+      line-height: 1.95;
+      margin-bottom: 2rem;
+    }
+
+    .about-section {
+      margin-bottom: 2rem;
+    }
+
+    .about-section:last-child {
+      margin-bottom: 0;
+    }
+
+    .about-section h2 {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 1.02rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.85rem;
+      padding-left: 0.85rem;
+      border-left: 3px solid var(--accent);
+      line-height: 1.6;
+    }
+
+    .about-section p {
+      margin-bottom: 1rem;
+      line-height: 1.95;
+      color: #333;
+      font-size: 0.95rem;
+    }
+
+    .about-section p:last-child {
+      margin-bottom: 0;
+    }
+
+    .about-note-box {
+      margin: 1.2rem 0 0;
+      padding: 1rem 1.1rem;
+      border-radius: 14px;
+      background: #f8fbff;
+      border: 1px solid #dbe8ff;
+    }
+
+    .about-note-box p,
+    .about-note-box li {
+      font-size: 0.93rem;
+      line-height: 1.85;
+      color: #444;
+    }
+
+    .about-points {
+      margin: 0.8rem 0 0;
+      padding-left: 1.2rem;
+      line-height: 1.9;
+      color: #333;
+    }
+
+    .about-points li {
+      margin-bottom: 0.45rem;
+    }
+
+    .about-profile-box {
+      margin-top: 2rem;
+      padding: 1.15rem 1.2rem;
+      border-radius: 16px;
+      background: #fcfcff;
+      border: 1px solid rgba(79, 110, 219, 0.14);
+    }
+
+    .about-profile-box h2 {
+      margin: 0 0 0.8rem;
+    }
+
+    .about-profile-box p {
+      margin: 0 0 0.85rem;
+      line-height: 1.9;
+      color: #444;
+      font-size: 0.95rem;
+    }
+
+    .about-profile-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    @media (max-width: 768px) {
+      .about-lead,
+      .about-section p,
+      .about-points li,
+      .about-note-box p,
+      .about-note-box li,
+      .about-profile-box p {
+        font-size: 0.95rem;
+      }
+    }
+
+    /* ===== ダークモード（OS設定 or 手動切り替え） ===== */
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg:        #0f1117;
+        --surface:   #1a1d27;
+        --surface2:  #22263a;
+        --border:    #2e3350;
+        --text:      #e8eaf6;
+        --muted:     #8b93b8;
+        --accent:    #6b8aff;
+        --accent-lt: #1a2040;
+        --shadow:    0 4px 24px rgba(0,0,0,0.3);
+        --shadow-md: 0 8px 40px rgba(0,0,0,0.45);
+      }
+      :root:not([data-theme="light"]) .page-hero h1 { color: var(--text); }
+      :root:not([data-theme="light"]) .page-hero p  { color: var(--muted); }
+
+      :root:not([data-theme="light"]) .about-section p,
+      :root:not([data-theme="light"]) .about-points,
+      :root:not([data-theme="light"]) .about-points li,
+      :root:not([data-theme="light"]) .about-note-box p,
+      :root:not([data-theme="light"]) .about-note-box li,
+      :root:not([data-theme="light"]) .about-profile-box p {
+        color: var(--text);
+      }
+
+      :root:not([data-theme="light"]) .about-note-box {
+        background: var(--surface2);
+        border-color: var(--border);
+      }
+
+      :root:not([data-theme="light"]) .about-profile-box {
+        background: var(--surface2);
+        border-color: var(--border);
+      }
+    }
+
+    :root[data-theme="dark"] {
+      --bg:        #0f1117;
+      --surface:   #1a1d27;
+      --surface2:  #22263a;
+      --border:    #2e3350;
+      --text:      #e8eaf6;
+      --muted:     #8b93b8;
+      --accent:    #6b8aff;
+      --accent-lt: #1a2040;
+      --shadow:    0 4px 24px rgba(0,0,0,0.3);
+      --shadow-md: 0 8px 40px rgba(0,0,0,0.45);
+    }
+
+    :root[data-theme="dark"] .page-hero h1 { color: var(--text); }
+    :root[data-theme="dark"] .page-hero p  { color: var(--muted); }
+
+    :root[data-theme="dark"] .about-section p,
+    :root[data-theme="dark"] .about-points,
+    :root[data-theme="dark"] .about-points li,
+    :root[data-theme="dark"] .about-note-box p,
+    :root[data-theme="dark"] .about-note-box li,
+    :root[data-theme="dark"] .about-profile-box p {
+      color: var(--text);
+    }
+
+    :root[data-theme="dark"] .about-note-box {
+      background: var(--surface2);
+      border-color: var(--border);
+    }
+
+    :root[data-theme="dark"] .about-profile-box {
+      background: var(--surface2);
+      border-color: var(--border);
+    }
+
+    .btn-theme {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      color: var(--muted);
+      font-family: inherit;
+      font-size: 0.78rem;
+      font-weight: 500;
+      padding: 0.3rem 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .btn-theme:hover {
+      background: var(--accent-lt);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+  </style>
+</head>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V947PLZR3S"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-V947PLZR3S');
+</script>
+
+<body>
+  <header>
+    <a href="index.html" class="header-logo">
+      <span class="logo-dot"></span>
+      ことばみまもり
+    </a>
+    <div style="display:flex; align-items:center; gap:0.75rem;">
+      <button class="btn-theme" id="btn-theme" onclick="toggleTheme()" aria-label="ダークモード切り替え">
+        <span id="theme-icon">🌙</span>
+        <span id="theme-label">ダークモード</span>
+      </button>
+      <a href="https://qiita.com/na0AaooQ" target="_blank" rel="noopener" class="header-link">開発者について</a>
+    </div>
+  </header>
+
+  <div class="page-hero">
+    <h1>サービス説明</h1>
+    <p>About Kotoba Mimamori</p>
+  </div>
+
+  <main>
+    <div class="card">
+      <span class="updated-badge">最終更新日：2026年4月</span>
+
+      <p class="about-lead">
+        <strong><a href="index.html" target="_blank" rel="noopener">「ことばみまもり」</a></strong> は、SNSやインターネットへの投稿やメッセージの文章を見直すときに、
+        自分の言葉にそっと目を向けるための、無料の個人開発サービスです。<br>
+        このページでは、なぜ開発者・運営者(青木直之 @na0AaooQ)がこのサービスを作ったのか、なぜ無料で運営しているのか、
+        そしてどのようなことを目指しているのかをご説明します。
+      </p>
+
+      <section class="about-section">
+        <h2>1. このサービスについて</h2>
+        <p>
+          「ことばみまもり」は、X（旧Twitter）、Facebook、Instagram、TikTok、Threads、LINE等のSNSや、
+          インターネット上へ投稿したい文章について、表現の強さや伝わり方の傾向を確認しながら、
+          投稿前にひと呼吸おくための参考情報を表示するツールです。
+        </p>
+        <p>
+          ・きつい言い方になっていないか。<br>
+          ・相手を強く傷つける表現になっていないか。<br>
+          ・感情が高ぶったまま送ろうとしていないか。<br>
+          ・読み手にどう受け取られる可能性があるか。
+        </p>
+        <p>
+          そんな時に、投稿前の“やさしいワンクッション”として使っていただくことを目指しています。
+        </p>
+        <p>
+          「この表現で大丈夫かな？」「誤解されないかな？」「SNSに投稿したら炎上しないかな？」<br>
+          そんな迷いを感じたとき、あなたがひとりで迷いを抱えずにすむよう、
+          考えるときの参考としてご利用いただければと思っています。
+        </p>
+      </section>
+
+      <section class="about-section">
+        <h2>2. なぜこのサービスを作ったのか</h2>
+        <p>
+          私(青木直之 @na0AaooQ)はITエンジニアとして、一人の個人として、小さなシステムを開発しています。
+        </p>
+        <p>
+          その中で、最終的に目指しているのは、
+          <strong>人が孤独で壊れにくい社会の仕組みをつくること</strong>です。
+        </p>
+        <p>
+          現代は、社会や生活の変化の中で、多くの人が見えないストレスを抱えやすい時代になっているのではないかと感じています。<br>
+          そしてその負荷のひとつに、人の心や感情への配慮を失った、過度な言葉やコミュニケーションがあるのではないかと考えています。
+        </p>
+        <p>
+          「ことばみまもり」は、そうした問題に対して、小さくてもできることから一歩ずつ取り組みたいという思いで作りました。
+        </p>
+      </section>
+
+      <section class="about-section">
+        <h2>3. このサービスが大切にしていること</h2>
+        <p>
+          このサービスは、誰かの信念や価値観、意見そのものを縛るためのものではありません。<br>
+          また、言葉や思想を制限したり、正しさを一方的に判断したりすることを目的としていません。
+        </p>
+        <p>
+          すべての人に完璧で綺麗な言葉だけを求めるものでもありません。<br>
+          人にはそれぞれ感情があり、ときには言いすぎてしまうこともあると思っています。<br>
+          お互いに対等な関係性や信頼関係がある中で、意見の違いから言い合いになることも、現実にはあることだと思っています。
+        </p>
+        <p>
+          そのうえで、あなたの表現の自由を尊重しながら、安心して情報発信するためのお手伝いができれば幸いです。
+        </p>
+
+        <div class="about-note-box">
+          <p>少なくとも次のような、一方的で過度な言葉の負荷は少しでも減らしたいと考えています。</p>
+          <ul class="about-points">
+            <li>優位な立場や上下関係を背景に、一方的に人の心を傷つけること</li>
+            <li>複数人で一人を追い詰めるような言葉やコミュニケーション</li>
+            <li>存在や人格を否定するような表現</li>
+            <li>特定の属性だけで人を判断し、強い言葉を向けること</li>
+          </ul>
+        </div>
+
+        <p style="margin-top:1rem;">
+          なお、本ツールでは、24時間365日、必要に応じて、いつでもご利用いただけるようにするため、AIを利用しています。<br>
+          AIを利用して文章の解析や、気になりそうな点、改善のヒントを表示しておりますが、
+          投稿する文章の全文は生成しておりません。
+        </p>
+        <p>
+          なぜなら、あなたの言葉は、あなたの想いがこもった、あなただけの大切な言葉だからです。<br>
+          あなただけの想いや言葉を尊重したいと考え、AIで投稿文の全文を生成しない形にしています。
+        </p>
+      </section>
+
+      <section class="about-section">
+        <h2>4. 無料で運営している理由</h2>
+        <p>
+          「なぜ無料なのか」「なぜ個人で運営しているのか」と、不安に思われる方もいらっしゃるかもしれません。
+        </p>
+        <p>
+          私自身、サービスを使う前に、運営者や開発者、サービスの背景を確認したくなるタイプなので、その感覚はとてもよくわかります。
+        </p>
+        <p>
+          「ことばみまもり」は、このテーマに対して仮説検証を重ねながら、小さく改善を続けている個人開発サービスです。<br>
+          まずは必要な方に触れていただき、少しでも役立つものになっているかを確かめながら、丁寧に育てていきたいと考えています。
+        </p>
+        <p>
+          そのため、現時点では完全無料で運営しています。
+        </p>
+      </section>
+
+      <section class="about-section">
+        <h2>5. これから取り組みたいこと</h2>
+        <p>
+          言葉やコミュニケーションの問題は、とても大きく、簡単に答えが出るものではありません。
+        </p>
+        <div class="about-note-box">
+          <ul class="about-points">
+            <li>人の心を強く傷つける言動とは、具体的にどういうものか</li>
+            <li>どのような構造や状況で起こりやすいのか</li>
+            <li>どこからが「過度」なのか</li>
+          </ul>
+        </div>
+        <p style="margin-top:1rem;">
+          こうしたことを今後も調査・検討しながら、必要に応じて小さな仕組みを作り、試し、改善していくつもりです。
+        </p>
+        <p>
+          遠回りに見えることもあるかもしれませんが、安心してお互いの思いを言葉で交わせる状態に少しでも近づけるよう、一歩ずつ取り組んでいきたいと思っています。
+        </p>
+      </section>
+
+      <section class="about-profile-box">
+        <h2>6. 開発者・運営者について</h2>
+        <p>
+          本サービス開発者・運営者：青木直之（あおきなおひさ）
+        </p>
+        <p>
+          ITエンジニアとして、人の心をそっと守る仕組みづくりに取り組んでいます。
+        </p>
+        <p>
+          開発者についての詳細は、<a href="https://portfolio.na0aaooq.com/" target="_blank" rel="noopener">ポートフォリオサイト</a> をご覧ください。
+        </p>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-links">
+      <a href="index.html">トップページ</a>
+      <a href="about.html">サービス説明</a>
+      <a href="manual.html">マニュアル</a>
+      <a href="terms_of_service.html">利用規約</a>
+      <a href="disclaimer.html">免責事項</a>
+      <a href="privacy.html">プライバシーポリシー</a>
+      <a href="contact.html">お問い合わせ</a>
+      <a href="https://portfolio.na0aaooq.com/" target="_blank" rel="noopener">運営者</a>
+    </div>
+    <p class="footer-copy">&copy; ことばみまもり 2026 青木直之 (@na0AaooQ) All Rights Reserved.</p>
+  </footer>
+
+  <script>
+    /* ---------- テーマ切り替え ---------- */
+    (function () {
+      const saved = localStorage.getItem('theme');
+      if (saved) document.documentElement.setAttribute('data-theme', saved);
+    })();
+
+    function toggleTheme() {
+      const root    = document.documentElement;
+      const current = root.getAttribute('data-theme');
+      const osDark  = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const isDark  = current === 'dark' || (!current && osDark);
+      const next = isDark ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+      updateThemeButton(next);
+    }
+
+    function updateThemeButton(theme) {
+      const icon  = document.getElementById('theme-icon');
+      const label = document.getElementById('theme-label');
+      if (!icon || !label) return;
+      if (theme === 'dark') {
+        icon.textContent  = '☀️';
+        label.textContent = 'ライトモード';
+      } else {
+        icon.textContent  = '🌙';
+        label.textContent = 'ダークモード';
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', function () {
+      const saved  = localStorage.getItem('theme');
+      const osDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const theme  = saved || (osDark ? 'dark' : 'light');
+      updateThemeButton(theme);
+    });
+  </script>
+
+</body>
+</html>
