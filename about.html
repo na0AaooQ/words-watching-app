@@ -76,6 +76,69 @@
       margin-bottom: 0.45rem;
     }
 
+    .about-lead {
+      font-size: 0.98rem;
+      color: var(--muted);
+      line-height: 1.95;
+      margin-bottom: 2rem;
+    }
+
+    .about-section {
+      margin-bottom: 2rem;
+    }
+
+    .about-section:last-child {
+      margin-bottom: 0;
+    }
+
+    .about-section h2 {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 1.02rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.85rem;
+      padding-left: 0.85rem;
+      border-left: 3px solid var(--accent);
+      line-height: 1.6;
+    }
+
+    .about-section p {
+      margin-bottom: 1rem;
+      line-height: 1.95;
+      color: #333;
+      font-size: 0.95rem;
+    }
+
+    .about-section p:last-child {
+      margin-bottom: 0;
+    }
+
+    .about-note-box {
+      margin: 1.2rem 0 0;
+      padding: 1rem 1.1rem;
+      border-radius: 14px;
+      background: #f8fbff;
+      border: 1px solid #dbe8ff;
+    }
+
+    .about-note-box p,
+    .about-note-box li {
+      font-size: 0.93rem;
+      line-height: 1.85;
+      color: #444;
+    }
+
+    .about-points {
+      margin: 0.8rem 0 0;
+      padding-left: 1.2rem;
+      line-height: 1.9;
+      color: #333;
+    }
+
+    .about-points li {
+      margin-bottom: 0.45rem;
+    }
+
     .about-profile-box {
       margin-top: 2rem;
       padding: 1.15rem 1.2rem;
@@ -99,6 +162,41 @@
       margin-bottom: 0;
     }
 
+    .about-business-list {
+      display: grid;
+      gap: 0;
+      margin: 1rem 0 0;
+    }
+
+    .about-business-row {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 1rem;
+      padding: 0.9rem 0;
+      border-top: 1px solid rgba(79, 110, 219, 0.14);
+    }
+
+    .about-business-row:first-child {
+      margin-top: 0.1rem;
+    }
+
+    .about-business-row dt {
+      font-size: 0.94rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .about-business-row dd {
+      margin: 0;
+      font-size: 0.94rem;
+      line-height: 1.9;
+      color: #444;
+    }
+
+    .about-business-note {
+      margin-top: 1rem !important;
+    }
+
     @media (max-width: 768px) {
       .about-lead,
       .about-section p,
@@ -107,6 +205,17 @@
       .about-note-box li,
       .about-profile-box p {
         font-size: 0.95rem;
+      }
+
+      .about-business-row {
+        grid-template-columns: 1fr;
+        gap: 0.35rem;
+        padding: 0.8rem 0;
+      }
+
+      .about-business-row dt,
+      .about-business-row dd {
+        font-size: 0.93rem;
       }
     }
 
@@ -124,6 +233,7 @@
         --shadow:    0 4px 24px rgba(0,0,0,0.3);
         --shadow-md: 0 8px 40px rgba(0,0,0,0.45);
       }
+
       :root:not([data-theme="light"]) .page-hero h1 { color: var(--text); }
       :root:not([data-theme="light"]) .page-hero p  { color: var(--muted); }
 
@@ -132,7 +242,9 @@
       :root:not([data-theme="light"]) .about-points li,
       :root:not([data-theme="light"]) .about-note-box p,
       :root:not([data-theme="light"]) .about-note-box li,
-      :root:not([data-theme="light"]) .about-profile-box p {
+      :root:not([data-theme="light"]) .about-profile-box p,
+      :root:not([data-theme="light"]) .about-business-row dt,
+      :root:not([data-theme="light"]) .about-business-row dd {
         color: var(--text);
       }
 
@@ -168,7 +280,9 @@
     :root[data-theme="dark"] .about-points li,
     :root[data-theme="dark"] .about-note-box p,
     :root[data-theme="dark"] .about-note-box li,
-    :root[data-theme="dark"] .about-profile-box p {
+    :root[data-theme="dark"] .about-profile-box p,
+    :root[data-theme="dark"] .about-business-row dt,
+    :root[data-theme="dark"] .about-business-row dd {
       color: var(--text);
     }
 
@@ -365,13 +479,50 @@
       <section class="about-profile-box">
         <h2>6. 開発者・運営者について</h2>
         <p>
-          本サービス開発者・運営者：青木直之（あおきなおひさ）
+          本サービスは、個人事業主「こころみまもり」が開発・運営しています。
         </p>
-        <p>
-          ITエンジニアとして、人の心をそっと守る仕組みづくりに取り組んでいます。
-        </p>
-        <p>
-          開発者についての詳細は、<a href="https://portfolio.na0aaooq.com/" target="_blank" rel="noopener">ポートフォリオサイト</a> をご覧ください。
+
+        <dl class="about-business-list">
+          <div class="about-business-row">
+            <dt>屋号</dt>
+            <dd>こころみまもり</dd>
+          </div>
+
+          <div class="about-business-row">
+            <dt>代表者</dt>
+            <dd>青木 直之（あおき なおひさ）</dd>
+          </div>
+
+          <div class="about-business-row">
+            <dt>職種</dt>
+            <dd>フリーランスエンジニア</dd>
+          </div>
+
+          <div class="about-business-row">
+            <dt>事業内容</dt>
+            <dd>Webサービスの企画・開発・運営、ソフトウェア開発業</dd>
+          </div>
+
+          <div class="about-business-row">
+            <dt>事業所住所</dt>
+            <dd>
+              〒160-0023<br>
+              東京都新宿区西新宿3丁目3番13号西新宿水間ビル2F
+            </dd>
+          </div>
+
+          <div class="about-business-row">
+            <dt>連絡先</dt>
+            <dd>
+              <a href="https://words-watching-app.na0aaooq.com/contact.html" target="_blank" rel="noopener">お問い合わせ</a> をご覧ください。
+            </dd>
+          </div>
+        </dl>
+
+        <p class="about-business-note">
+          開発者についての詳細は、
+          <a href="https://portfolio.na0aaooq.com/" target="_blank" rel="noopener">ポートフォリオサイト</a>
+          をご覧ください。
         </p>
       </section>
     </div>
