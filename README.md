@@ -117,8 +117,9 @@ words-watching-app/
 ├── favicon.svg            # サイトのファビコン画像
 ├── ogp-image.png          # サイトのOGP画像
 ├── sitemap.xml            # サイトマップ
-├── package.json           # 本リポジトリのアプリケーションプロジェクト情報を保存しているファイル(テストコードで使用している)
-├── package-lock.json      # 本リポジトリで使用しているパッケージの依存関係、バージョン情報を保存しているファイル(テストコードで使用している)
+├── package.json           # Jest / ESLint を含む開発用依存関係や npm scripts を定義するファイル
+├── package-lock.json      # Jest / ESLint を含む依存関係とバージョン情報を保存するファイル
+├── eslint.config.cjs      # ESLint の設定ファイル
 ├── README.md              # 本リポジトリの説明
 ├── .gitignore             # リポジトリの管理対象外とするディレクトリやファイル(ログファイル等)を定義するファイル
 ├── css/
@@ -180,70 +181,31 @@ v25.6.1
 % cd words-watching-app
 ```
 
-(4) テスト実行に必要なパッケージ Jest と jest-environment-jsdom をインストールします。
+(4) テスト実行やESLint実行に必要な依存関係をインストールします。
 
-以下のコマンドを実行し、テスト実行に必要なパッケージ Jest と jest-environment-jsdom をインストールします。  
-
-**(※) jest-environment-jsdom については、Jestバージョン28以降、今回の手順のように、個別インストールが必要となります。**  
+本リポジトリでは、Jest / jest-environment-jsdom / ESLint などの開発用依存関係を `package.json` で管理しています。  
+以下のコマンドを実行し、依存関係を一括インストールします。  
 
 ```
-% npm install --save-dev jest jest-environment-jsdom
-
-　(省略)
-
-added 339 packages in 7s
-
-51 packages are looking for funding
-  run `npm fund` for details
+% npm install
 %
 ```
 
-jestとjest-environment-jsdomがインストールされたことを確認します。
+Jest と ESLint がインストールされたことを確認する場合は、以下のように実行します。
 
 ```
 % npx jest --version
-30.1.3
-% 
+30.3.0
+%
 ```
 
 ```
-% grep jest-environment-jsdom package.json 
-    "jest-environment-jsdom": "^30.2.0" 
-% 
+% npx eslint --version
+v10.2.0
+%
 ```
 
-リポジトリ内のディレクトリに package.json が生成されます。  
-
-```
-% cat package.json 
-{
-  "devDependencies": {
-    "jest": "^30.2.0",
-    "jest-environment-jsdom": "^30.2.0"
-  }
-}
-% 
-```
-
-(5) package.json に対して、Jestとjest-environment-jsdomを追加します。
-
-```
-% vi package.json 
-{
-  "devDependencies": {
-    "jest": "^30.2.0",
-    "jest-environment-jsdom": "^30.2.0"
-  },
-  "jest": {
-    "testEnvironment": "jsdom"
-  },
-  "scripts": { "test": "jest" }
-}
-```
-
-**(※) "scripts" セクションの追加は任意です。本手順では、npx jest index.test.js or npm test -- index.test.js のどちらのコマンドでも、テストを実行できるようにするため、セクションを追加しています。**  
-
-(6) 以下のいずれかのコマンドを実行し、リポジトリ内にあうユニットテストコード index.test.js で index.html のユニットテストを実行します。  
+(5) 以下のいずれかのコマンドを実行し、リポジトリ内にあるユニットテストコード `index.test.js` で `index.html` のユニットテストを実行します。  
 
 ```
 % npm test -- index.test.js
@@ -255,7 +217,7 @@ jestとjest-environment-jsdomがインストールされたことを確認しま
 % npx jest index.test.js
 ```
 
-(7) ユニットテスト結果が表示されます。テスト結果を確認し、[Test Suites: 1 passed, 1 total]、[Tests: 72 passed, 72 total] と表示されており、テストが全件成功していることを確認します。
+(6) ユニットテスト結果が表示されます。テスト結果を確認し、[Test Suites: 1 passed, 1 total]、[Tests: 72 passed, 72 total] と表示されており、テストが全件成功していることを確認します。
 
 ```
 % npm test -- index.test.js
@@ -353,6 +315,46 @@ Time:        0.372 s, estimated 1 s
 Ran all test suites matching index.test.js.
 % 
 ```
+
+---
+
+## ESLint 実行方法
+
+本リポジトリでは、JavaScript ファイルに加えて、`index.html` 内のインライン JavaScript も ESLint による静的解析の対象としています。  
+ESLint の設定は `eslint.config.cjs` に定義しています。
+
+### ESLint 利用準備
+
+ESLint 実行前に、前述の「ユニットテスト実行方法」の手順 (1) から (4) までを実施し、`npm install` で依存関係をインストールしてください。  
+
+### ESLint による静的解析の実行
+
+以下のコマンドを実行すると、リポジトリ内の `.js` / `.html` を対象に静的解析を実行できます。  
+
+```
+% npm run lint
+
+> lint
+> eslint . --ext .js,.html
+%
+```
+
+### ESLint による自動修正
+
+ESLint が自動修正できる内容については、以下のコマンドで修正できます。  
+
+```
+% npm run lint:fix
+
+> lint:fix
+> eslint . --ext .js,.html --fix
+%
+```
+
+**(※) 補足**  
+- `npm run lint` は静的解析のみを行い、ファイルは変更しません。  
+- `npm run lint:fix` は ESLint が自動修正可能な内容のみを修正します。  
+- 2026年4月時点では、`npm run lint` 実行時にエラーなく完了することを確認しています。  
 
 ---
 
