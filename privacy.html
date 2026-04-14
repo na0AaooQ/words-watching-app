@@ -11,38 +11,57 @@
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
   <meta http-equiv="X-Frame-Options" content="DENY">
   <link rel="stylesheet" href="assets/css/common.css">
+
   <style>
-    /* ===== ダークモード（OS設定 or 手動切り替え） ===== */
-    @media (prefers-color-scheme: dark) {
-      :root:not([data-theme="light"]) {
-        --bg:        #0f1117;
-        --surface:   #1a1d27;
-        --surface2:  #22263a;
-        --border:    #2e3350;
-        --text:      #e8eaf6;
-        --muted:     #8b93b8;
-        --accent:    #6b8aff;
-        --accent-lt: #1a2040;
-        --shadow:    0 4px 24px rgba(0,0,0,0.3);
-        --shadow-md: 0 8px 40px rgba(0,0,0,0.45);
+    .privacy-lead {
+      font-size: 0.95rem;
+      color: var(--text);
+      margin-bottom: 1.75rem;
+      line-height: 1.9;
+    }
+
+    .privacy-note-box {
+      display: flex;
+      gap: 0.5rem;
+      align-items: flex-start;
+      margin-top: 0.75rem;
+      padding: 0.95rem 1rem;
+      border-radius: 12px;
+      background: var(--green-lt);
+      border: 1px solid rgba(34, 196, 138, 0.3);
+      color: var(--text);
+    }
+
+    .privacy-note-icon {
+      flex-shrink: 0;
+      line-height: 1.6;
+    }
+
+    .privacy-note-text {
+      font-size: 0.9rem;
+      line-height: 1.85;
+      color: var(--text);
+    }
+
+    @media (max-width: 768px) {
+      .privacy-lead,
+      .privacy-note-text {
+        font-size: 0.95rem;
       }
-      :root:not([data-theme="light"]) .page-hero h1 { color: var(--text); }
-      :root:not([data-theme="light"]) .page-hero p  { color: var(--muted); }
     }
-    :root[data-theme="dark"] {
-      --bg:        #0f1117;
-      --surface:   #1a1d27;
-      --surface2:  #22263a;
-      --border:    #2e3350;
-      --text:      #e8eaf6;
-      --muted:     #8b93b8;
-      --accent:    #6b8aff;
-      --accent-lt: #1a2040;
-      --shadow:    0 4px 24px rgba(0,0,0,0.3);
-      --shadow-md: 0 8px 40px rgba(0,0,0,0.45);
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) .privacy-note-box {
+        background: #183126;
+        border-color: rgba(34, 196, 138, 0.22);
+      }
     }
-    :root[data-theme="dark"] .page-hero h1 { color: var(--text); }
-    :root[data-theme="dark"] .page-hero p  { color: var(--muted); }
+
+    :root[data-theme="dark"] .privacy-note-box {
+      background: #183126;
+      border-color: rgba(34, 196, 138, 0.22);
+    }
+
     .btn-theme {
       display: inline-flex;
       align-items: center;
@@ -59,6 +78,7 @@
       transition: all 0.2s;
       white-space: nowrap;
     }
+
     .btn-theme:hover {
       background: var(--accent-lt);
       border-color: var(--accent);
@@ -101,16 +121,16 @@
     <div class="card">
       <span class="updated-badge">最終更新日：2026年4月</span>
 
-      <p style="font-size:0.9rem;color:var(--muted);margin-bottom:1.75rem;line-height:1.85;">
+      <p class="privacy-lead">
         このプライバシーポリシー（以下「本ポリシー」）は、<strong>「ことばみまもり」</strong>（以下「本サービス」）における個人情報・入力データの取り扱いについて定めるものです。
       </p>
 
       <div class="doc-section">
         <h2>1. 入力されたテキストデータについて</h2>
         <p>本サービスに入力された文章はシステム内に保存しません。また、入力された文章についてAIによる文章解析を行いますが、AIによる学習利用は行いません。</p>
-        <div style="background:var(--green-lt);border:1px solid rgba(34,196,138,0.3);border-radius:8px;padding:0.85rem 1rem;margin-top:0.75rem;font-size:0.82rem;color:#15a372;display:flex;gap:0.5rem;">
-          <span>🔒</span>
-          <span>入力された文章はシステムやサーバー内に保存されません。AI（LLM）の学習にも利用されません。</span>
+        <div class="privacy-note-box">
+          <span class="privacy-note-icon">🔒</span>
+          <span class="privacy-note-text">入力された文章はシステムやサーバー内に保存されません。AI（LLM）の学習にも利用されません。</span>
         </div>
       </div>
 

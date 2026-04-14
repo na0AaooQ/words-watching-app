@@ -15,15 +15,15 @@
   <style>
     .manual-intro {
       font-size: 0.98rem;
-      color: var(--muted);
-      line-height: 1.9;
+      color: var(--text);
+      line-height: 1.95;
       margin-bottom: 2rem;
     }
 
     .manual-step {
       margin-top: 2rem;
       padding-top: 1.5rem;
-      border-top: 1px solid rgba(0, 0, 0, 0.06);
+      border-top: 1px solid rgba(74, 108, 247, 0.18);
     }
 
     .manual-step:first-of-type {
@@ -37,23 +37,26 @@
       margin-bottom: 0.85rem;
       padding: 0.35rem 0.8rem;
       border-radius: 999px;
-      background: #eef4ff;
-      color: #4f6edb;
+      background: var(--accent-lt);
+      color: var(--accent);
       font-size: 0.88rem;
       font-weight: 700;
       letter-spacing: 0.02em;
+      border: 1px solid rgba(74, 108, 247, 0.18);
     }
 
     .manual-step h2 {
       margin-bottom: 0.8rem;
       font-size: 1.25rem;
       line-height: 1.6;
+      color: var(--text);
     }
 
     .manual-step p {
       margin-bottom: 1rem;
-      line-height: 1.9;
-      color: #333;
+      line-height: 1.95;
+      color: var(--text);
+      font-size: 0.95rem;
     }
 
     .manual-image {
@@ -65,23 +68,24 @@
       width: 100%;
       height: auto;
       border-radius: 16px;
-      border: 1px solid rgba(0, 0, 0, 0.08);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
-      background: #fff;
+      border: 1px solid var(--border);
+      box-shadow: 0 8px 24px rgba(35, 54, 108, 0.08);
+      background: var(--surface);
     }
 
     .manual-caption {
       margin-top: 0.6rem;
       font-size: 0.9rem;
-      color: var(--muted);
-      line-height: 1.7;
+      color: var(--text);
+      line-height: 1.8;
     }
 
     .manual-points {
       margin: 0.75rem 0 0;
       padding-left: 1.25rem;
-      color: #333;
-      line-height: 1.9;
+      color: var(--text);
+      line-height: 1.95;
+      font-size: 0.95rem;
     }
 
     .manual-points li {
@@ -92,21 +96,21 @@
       margin-top: 2rem;
       padding: 1rem 1.1rem;
       border-radius: 14px;
-      background: #f8fbff;
-      border: 1px solid #dbe8ff;
+      background: var(--surface2);
+      border: 1px solid var(--border);
     }
 
     .manual-note-box h3 {
       margin: 0 0 0.6rem;
       font-size: 1rem;
-      color: #3556b8;
+      color: var(--accent);
     }
 
     .manual-note-box p,
     .manual-note-box li {
       font-size: 0.95rem;
-      line-height: 1.8;
-      color: #444;
+      line-height: 1.85;
+      color: var(--text);
     }
 
     .manual-note-box ul {
@@ -118,28 +122,30 @@
       margin-bottom: 2rem;
       padding: 1.15rem 1.2rem;
       border-radius: 16px;
-      background: #fcfcff;
-      border: 1px solid rgba(79, 110, 219, 0.14);
+      background: var(--surface2);
+      border: 1px solid var(--border);
     }
 
     .manual-usage-box h2 {
       margin: 0 0 0.8rem;
       font-size: 1.12rem;
       line-height: 1.6;
-      color: #334;
+      color: var(--text);
     }
 
     .manual-usage-box p {
       margin: 0 0 0.9rem;
-      line-height: 1.9;
-      color: #444;
+      line-height: 1.95;
+      color: var(--text);
+      font-size: 0.95rem;
     }
 
     .manual-usage-box ul {
       margin: 0;
       padding-left: 1.2rem;
-      line-height: 1.9;
-      color: #333;
+      line-height: 1.95;
+      color: var(--text);
+      font-size: 0.95rem;
     }
 
     .manual-usage-box li {
@@ -175,32 +181,34 @@
         --muted:     #8b93b8;
         --accent:    #6b8aff;
         --accent-lt: #1a2040;
-        --shadow:    0 4px 24px rgba(0,0,0,0.3);
-        --shadow-md: 0 8px 40px rgba(0,0,0,0.45);
+        --shadow:    0 4px 24px rgba(0, 0, 0, 0.3);
+        --shadow-md: 0 8px 40px rgba(0, 0, 0, 0.45);
       }
-      :root:not([data-theme="light"]) .page-hero h1 { color: var(--text); }
-      :root:not([data-theme="light"]) .page-hero p  { color: var(--muted); }
 
-      /* manual.html固有のハードコード色を上書き */
-      :root:not([data-theme="light"]) .manual-step p,
-      :root:not([data-theme="light"]) .manual-points,
-      :root:not([data-theme="light"]) .manual-points li,
-      :root:not([data-theme="light"]) .manual-usage-box h2,
-      :root:not([data-theme="light"]) .manual-usage-box p,
-      :root:not([data-theme="light"]) .manual-usage-box ul,
-      :root:not([data-theme="light"]) .manual-usage-box li,
-      :root:not([data-theme="light"]) .manual-note-box p,
-      :root:not([data-theme="light"]) .manual-note-box li { color: var(--text); }
-
-      :root:not([data-theme="light"]) .manual-note-box h3 { color: var(--accent); }
-
-      :root:not([data-theme="light"]) .manual-note-box {
-        background: var(--surface2);
-        border-color: var(--border);
-      }
       :root:not([data-theme="light"]) .manual-usage-box {
-        background: var(--surface2);
-        border-color: var(--border);
+        background: #242a40;
+        border-color: #3a4263;
+      }
+
+      :root[data-theme="dark"] .manual-usage-box {
+        background: #242a40;
+        border-color: #3a4263;
+      }
+
+      :root:not([data-theme="light"]) .page-hero h1 {
+        color: var(--text);
+      }
+
+      :root:not([data-theme="light"]) .page-hero p {
+        color: var(--muted);
+      }
+
+      :root:not([data-theme="light"]) .manual-step {
+        border-top-color: rgba(107, 138, 255, 0.16);
+      }
+
+      :root:not([data-theme="light"]) .manual-image img {
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
       }
     }
 
@@ -213,33 +221,26 @@
       --muted:     #8b93b8;
       --accent:    #6b8aff;
       --accent-lt: #1a2040;
-      --shadow:    0 4px 24px rgba(0,0,0,0.3);
-      --shadow-md: 0 8px 40px rgba(0,0,0,0.45);
+      --shadow:    0 4px 24px rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 8px 40px rgba(0, 0, 0, 0.45);
     }
-    :root[data-theme="dark"] .page-hero h1 { color: var(--text); }
-    :root[data-theme="dark"] .page-hero p  { color: var(--muted); }
 
-    /* manual.html固有のハードコード色を上書き */
-    :root[data-theme="dark"] .manual-step p,
-    :root[data-theme="dark"] .manual-points,
-    :root[data-theme="dark"] .manual-points li,
-    :root[data-theme="dark"] .manual-usage-box h2,
-    :root[data-theme="dark"] .manual-usage-box p,
-    :root[data-theme="dark"] .manual-usage-box ul,
-    :root[data-theme="dark"] .manual-usage-box li,
-    :root[data-theme="dark"] .manual-note-box p,
-    :root[data-theme="dark"] .manual-note-box li { color: var(--text); }
-
-    :root[data-theme="dark"] .manual-note-box h3 { color: var(--accent); }
-
-    :root[data-theme="dark"] .manual-note-box {
-      background: var(--surface2);
-      border-color: var(--border);
+    :root[data-theme="dark"] .page-hero h1 {
+      color: var(--text);
     }
-    :root[data-theme="dark"] .manual-usage-box {
-      background: var(--surface2);
-      border-color: var(--border);
+
+    :root[data-theme="dark"] .page-hero p {
+      color: var(--muted);
     }
+
+    :root[data-theme="dark"] .manual-step {
+      border-top-color: rgba(107, 138, 255, 0.16);
+    }
+
+    :root[data-theme="dark"] .manual-image img {
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+    }
+
     .btn-theme {
       display: inline-flex;
       align-items: center;
@@ -256,6 +257,7 @@
       transition: all 0.2s;
       white-space: nowrap;
     }
+
     .btn-theme:hover {
       background: var(--accent-lt);
       border-color: var(--accent);
@@ -296,7 +298,7 @@
 
   <main>
     <div class="card">
-      <span class="updated-badge">最終更新日：2026年3月</span>
+      <span class="updated-badge">最終更新日：2026年4月</span>
 
       <p class="manual-intro">
         <strong><a href="index.html" target="_blank" rel="noopener">「ことばみまもり」</a></strong> は、SNSへ投稿したい文章について、
@@ -349,7 +351,7 @@
         <ul class="manual-points">
           <li>ライトモード、ダークモードはいつでも好きなタイミングで、切り替え可能です。</li>
         </ul>
-      </section
+      </section>
 
       <section class="manual-step">
         <span class="step-badge">STEP 1</span>
@@ -483,7 +485,7 @@
         <ul class="manual-points">
           <li>SNSを「開く」ボタンをクリックしても、選択したSNS画面を表示するだけです。</li>
           <li>ボタンをクリックしても、文章を自動的に投稿しないようにしております。ご安心ください。</li>
-          <li>最終的にSNSへ文章を投稿するかどうかの判断はご利用者さまに委ねられています。<br>
+          <li>最終的にSNSへ文章を投稿するかどうかの判断はご利用者さまに委ねられています。</li>
         </ul>
       </section>
 

@@ -12,10 +12,11 @@
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
   <meta http-equiv="X-Frame-Options" content="DENY">
   <link rel="stylesheet" href="assets/css/common.css">
+
   <style>
     .about-lead {
       font-size: 0.98rem;
-      color: var(--muted);
+      color: var(--text);
       line-height: 1.95;
       margin-bottom: 2rem;
     }
@@ -42,71 +43,12 @@
     .about-section p {
       margin-bottom: 1rem;
       line-height: 1.95;
-      color: #333;
-      font-size: 0.95rem;
-    }
-
-    .about-section p:last-child {
-      margin-bottom: 0;
-    }
-
-    .about-note-box {
-      margin: 1.2rem 0 0;
-      padding: 1rem 1.1rem;
-      border-radius: 14px;
-      background: #f8fbff;
-      border: 1px solid #dbe8ff;
-    }
-
-    .about-note-box p,
-    .about-note-box li {
-      font-size: 0.93rem;
-      line-height: 1.85;
-      color: #444;
-    }
-
-    .about-points {
-      margin: 0.8rem 0 0;
-      padding-left: 1.2rem;
-      line-height: 1.9;
-      color: #333;
-    }
-
-    .about-points li {
-      margin-bottom: 0.45rem;
-    }
-
-    .about-lead {
-      font-size: 0.98rem;
-      color: var(--muted);
-      line-height: 1.95;
-      margin-bottom: 2rem;
-    }
-
-    .about-section {
-      margin-bottom: 2rem;
-    }
-
-    .about-section:last-child {
-      margin-bottom: 0;
-    }
-
-    .about-section h2 {
-      font-family: 'Noto Serif JP', serif;
-      font-size: 1.02rem;
-      font-weight: 600;
       color: var(--text);
-      margin-bottom: 0.85rem;
-      padding-left: 0.85rem;
-      border-left: 3px solid var(--accent);
-      line-height: 1.6;
+      font-size: 0.95rem;
     }
 
-    .about-section p {
-      margin-bottom: 1rem;
-      line-height: 1.95;
-      color: #333;
-      font-size: 0.95rem;
+    .about-paragraph-spaced {
+      margin-top: 1rem;
     }
 
     .about-section p:last-child {
@@ -117,22 +59,23 @@
       margin: 1.2rem 0 0;
       padding: 1rem 1.1rem;
       border-radius: 14px;
-      background: #f8fbff;
-      border: 1px solid #dbe8ff;
+      background: var(--surface2);
+      border: 1px solid var(--border);
     }
 
     .about-note-box p,
     .about-note-box li {
-      font-size: 0.93rem;
+      font-size: 0.95rem;
       line-height: 1.85;
-      color: #444;
+      color: var(--text);
     }
 
     .about-points {
       margin: 0.8rem 0 0;
       padding-left: 1.2rem;
-      line-height: 1.9;
-      color: #333;
+      line-height: 1.95;
+      color: var(--text);
+      font-size: 0.95rem;
     }
 
     .about-points li {
@@ -143,8 +86,8 @@
       margin-top: 2rem;
       padding: 1.15rem 1.2rem;
       border-radius: 16px;
-      background: #fcfcff;
-      border: 1px solid rgba(79, 110, 219, 0.14);
+      background: var(--surface2);
+      border: 1px solid var(--border);
     }
 
     .about-profile-box h2 {
@@ -153,8 +96,8 @@
 
     .about-profile-box p {
       margin: 0 0 0.85rem;
-      line-height: 1.9;
-      color: #444;
+      line-height: 1.95;
+      color: var(--text);
       font-size: 0.95rem;
     }
 
@@ -173,7 +116,7 @@
       grid-template-columns: 140px 1fr;
       gap: 1rem;
       padding: 0.9rem 0;
-      border-top: 1px solid rgba(79, 110, 219, 0.14);
+      border-top: 1px solid var(--border);
     }
 
     .about-business-row:first-child {
@@ -190,11 +133,12 @@
       margin: 0;
       font-size: 0.94rem;
       line-height: 1.9;
-      color: #444;
+      color: var(--text);
     }
 
     .about-business-note {
       margin-top: 1rem !important;
+      color: var(--text);
     }
 
     @media (max-width: 768px) {
@@ -219,81 +163,18 @@
       }
     }
 
-    /* ===== ダークモード（OS設定 or 手動切り替え） ===== */
     @media (prefers-color-scheme: dark) {
-      :root:not([data-theme="light"]) {
-        --bg:        #0f1117;
-        --surface:   #1a1d27;
-        --surface2:  #22263a;
-        --border:    #2e3350;
-        --text:      #e8eaf6;
-        --muted:     #8b93b8;
-        --accent:    #6b8aff;
-        --accent-lt: #1a2040;
-        --shadow:    0 4px 24px rgba(0,0,0,0.3);
-        --shadow-md: 0 8px 40px rgba(0,0,0,0.45);
-      }
-
-      :root:not([data-theme="light"]) .page-hero h1 { color: var(--text); }
-      :root:not([data-theme="light"]) .page-hero p  { color: var(--muted); }
-
-      :root:not([data-theme="light"]) .about-section p,
-      :root:not([data-theme="light"]) .about-points,
-      :root:not([data-theme="light"]) .about-points li,
-      :root:not([data-theme="light"]) .about-note-box p,
-      :root:not([data-theme="light"]) .about-note-box li,
-      :root:not([data-theme="light"]) .about-profile-box p,
-      :root:not([data-theme="light"]) .about-business-row dt,
-      :root:not([data-theme="light"]) .about-business-row dd {
-        color: var(--text);
-      }
-
-      :root:not([data-theme="light"]) .about-note-box {
-        background: var(--surface2);
-        border-color: var(--border);
-      }
-
+      :root:not([data-theme="light"]) .about-note-box,
       :root:not([data-theme="light"]) .about-profile-box {
-        background: var(--surface2);
-        border-color: var(--border);
+        background: #242a40;
+        border-color: #3a4263;
       }
     }
 
-    :root[data-theme="dark"] {
-      --bg:        #0f1117;
-      --surface:   #1a1d27;
-      --surface2:  #22263a;
-      --border:    #2e3350;
-      --text:      #e8eaf6;
-      --muted:     #8b93b8;
-      --accent:    #6b8aff;
-      --accent-lt: #1a2040;
-      --shadow:    0 4px 24px rgba(0,0,0,0.3);
-      --shadow-md: 0 8px 40px rgba(0,0,0,0.45);
-    }
-
-    :root[data-theme="dark"] .page-hero h1 { color: var(--text); }
-    :root[data-theme="dark"] .page-hero p  { color: var(--muted); }
-
-    :root[data-theme="dark"] .about-section p,
-    :root[data-theme="dark"] .about-points,
-    :root[data-theme="dark"] .about-points li,
-    :root[data-theme="dark"] .about-note-box p,
-    :root[data-theme="dark"] .about-note-box li,
-    :root[data-theme="dark"] .about-profile-box p,
-    :root[data-theme="dark"] .about-business-row dt,
-    :root[data-theme="dark"] .about-business-row dd {
-      color: var(--text);
-    }
-
-    :root[data-theme="dark"] .about-note-box {
-      background: var(--surface2);
-      border-color: var(--border);
-    }
-
+    :root[data-theme="dark"] .about-note-box,
     :root[data-theme="dark"] .about-profile-box {
-      background: var(--surface2);
-      border-color: var(--border);
+      background: #242a40;
+      border-color: #3a4263;
     }
 
     .btn-theme {
@@ -428,11 +309,12 @@
           </ul>
         </div>
 
-        <p style="margin-top:1rem;">
+        <p class="about-paragraph-spaced">
           なお、本ツールでは、24時間365日、必要に応じて、いつでもご利用いただけるようにするため、AIを利用しています。<br>
           AIを利用して文章の解析や、気になりそうな点、改善のヒントを表示しておりますが、
           投稿する文章の全文は生成しておりません。
         </p>
+
         <p>
           なぜなら、あなたの言葉は、あなたの想いがこもった、あなただけの大切な言葉だからです。<br>
           あなただけの想いや言葉を尊重したいと考え、AIで投稿文の全文を生成しない形にしています。
@@ -468,7 +350,7 @@
             <li>どこからが「過度」なのか</li>
           </ul>
         </div>
-        <p style="margin-top:1rem;">
+        <p class="about-paragraph-spaced">
           こうしたことを今後も調査・検討しながら、必要に応じて小さな仕組みを作り、試し、改善していくつもりです。
         </p>
         <p>

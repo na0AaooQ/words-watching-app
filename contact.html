@@ -11,30 +11,47 @@
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
   <meta http-equiv="X-Frame-Options" content="DENY">
   <link rel="stylesheet" href="assets/css/common.css">
+
   <style>
-    @media (prefers-color-scheme: dark) {
-      :root:not([data-theme="light"]) {
-        --bg:#0f1117;--surface:#1a1d27;--surface2:#22263a;--border:#2e3350;
-        --text:#e8eaf6;--muted:#8b93b8;--accent:#6b8aff;--accent-lt:#1a2040;
-        --shadow:0 4px 24px rgba(0,0,0,0.3);--shadow-md:0 8px 40px rgba(0,0,0,0.45);
+    .contact-lead {
+      font-size: 0.95rem;
+      color: var(--text);
+      margin-bottom: 1.75rem;
+      line-height: 1.9;
+    }
+
+    .contact-notes {
+      margin-top: 1.25rem;
+    }
+
+    @media (max-width: 768px) {
+      .contact-lead {
+        font-size: 0.95rem;
       }
-      :root:not([data-theme="light"]) .page-hero h1 { color: var(--text); }
-      :root:not([data-theme="light"]) .page-hero p  { color: var(--muted); }
     }
-    :root[data-theme="dark"] {
-      --bg:#0f1117;--surface:#1a1d27;--surface2:#22263a;--border:#2e3350;
-      --text:#e8eaf6;--muted:#8b93b8;--accent:#6b8aff;--accent-lt:#1a2040;
-      --shadow:0 4px 24px rgba(0,0,0,0.3);--shadow-md:0 8px 40px rgba(0,0,0,0.45);
-    }
-    :root[data-theme="dark"] .page-hero h1 { color: var(--text); }
-    :root[data-theme="dark"] .page-hero p  { color: var(--muted); }
+
     .btn-theme {
-      display:inline-flex;align-items:center;gap:0.35rem;
-      background:var(--surface2);border:1px solid var(--border);border-radius:100px;
-      color:var(--muted);font-family:inherit;font-size:0.78rem;font-weight:500;
-      padding:0.3rem 0.85rem;cursor:pointer;transition:all 0.2s;white-space:nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      color: var(--muted);
+      font-family: inherit;
+      font-size: 0.78rem;
+      font-weight: 500;
+      padding: 0.3rem 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
     }
-    .btn-theme:hover { background:var(--accent-lt);border-color:var(--accent);color:var(--accent); }
+
+    .btn-theme:hover {
+      background: var(--accent-lt);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
   </style>
 </head>
 
@@ -69,7 +86,7 @@
 
   <main>
     <div class="card">
-      <p style="font-size:0.9rem;color:var(--muted);margin-bottom:1.5rem;line-height:1.85;">
+      <p class="contact-lead">
         <strong>「ことばみまもり」</strong>をご利用いただき、ありがとうございます。<br>
         本サービスは一人の開発者が個人で開発・運営しております。<br>
         ご意見・ご感想・お気づきの点がありましたら、以下のいずれかの方法で、お気軽にお問い合わせください。<br>
@@ -97,7 +114,7 @@
         </div>
       </div>
 
-      <div style="margin-top:1.25rem;">
+      <div class="contact-notes">
         <p class="contact-note">※ すべてのお問い合わせに必ずお返事できるとは限りません。</p>
         <p class="contact-note">※ 内容によっては回答を控えさせていただく場合があります。</p>
         <p class="contact-note">※ また「ことばみまもり」に関係しないお問い合わせについては、ご返信を控えさせていただきます。</p>
