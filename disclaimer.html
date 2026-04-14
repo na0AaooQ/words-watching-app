@@ -11,38 +11,8 @@
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
   <meta http-equiv="X-Frame-Options" content="DENY">
   <link rel="stylesheet" href="assets/css/common.css">
+
   <style>
-    /* ===== ダークモード（OS設定 or 手動切り替え） ===== */
-    @media (prefers-color-scheme: dark) {
-      :root:not([data-theme="light"]) {
-        --bg:        #0f1117;
-        --surface:   #1a1d27;
-        --surface2:  #22263a;
-        --border:    #2e3350;
-        --text:      #e8eaf6;
-        --muted:     #8b93b8;
-        --accent:    #6b8aff;
-        --accent-lt: #1a2040;
-        --shadow:    0 4px 24px rgba(0,0,0,0.3);
-        --shadow-md: 0 8px 40px rgba(0,0,0,0.45);
-      }
-      :root:not([data-theme="light"]) .page-hero h1 { color: var(--text); }
-      :root:not([data-theme="light"]) .page-hero p  { color: var(--muted); }
-    }
-    :root[data-theme="dark"] {
-      --bg:        #0f1117;
-      --surface:   #1a1d27;
-      --surface2:  #22263a;
-      --border:    #2e3350;
-      --text:      #e8eaf6;
-      --muted:     #8b93b8;
-      --accent:    #6b8aff;
-      --accent-lt: #1a2040;
-      --shadow:    0 4px 24px rgba(0,0,0,0.3);
-      --shadow-md: 0 8px 40px rgba(0,0,0,0.45);
-    }
-    :root[data-theme="dark"] .page-hero h1 { color: var(--text); }
-    :root[data-theme="dark"] .page-hero p  { color: var(--muted); }
     .btn-theme {
       display: inline-flex;
       align-items: center;
@@ -59,6 +29,7 @@
       transition: all 0.2s;
       white-space: nowrap;
     }
+
     .btn-theme:hover {
       background: var(--accent-lt);
       border-color: var(--accent);

@@ -2,22 +2,31 @@
 @import url('https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Noto+Serif+JP:wght@400;600&display=swap');
 
 :root {
-  --bg:        #f7f8fc;
+  --bg:        #f4f6fb;
   --surface:   #ffffff;
-  --surface2:  #f0f2fa;
-  --border:    #dde1f0;
-  --text:      #1e2340;
-  --muted:     #6b7299;
+  --surface2:  #eef2f8;
+  --border:    #cfd7e6;
+  --text:      #182033;
+  --muted:     #56607a;
   --accent:    #4a6cf7;
-  --accent-lt: #eef1ff;
+  --accent-lt: #e9efff;
   --green:     #22c48a;
-  --green-lt:  #e6faf3;
+  --green-lt:  #e8faf3;
   --radius:    14px;
-  --shadow:    0 4px 24px rgba(74,108,247,0.08);
+  --shadow:    0 6px 24px rgba(35, 54, 108, 0.08);
 }
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
 
 body {
   font-family: 'Zen Kaku Gothic New', sans-serif;
@@ -27,8 +36,14 @@ body {
   min-height: 100vh;
 }
 
-a { color: var(--accent); text-decoration: none; }
-a:hover { text-decoration: underline; }
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
 
 /* ===== Header ===== */
 header {
@@ -41,7 +56,7 @@ header {
   position: sticky;
   top: 0;
   z-index: 100;
-  box-shadow: 0 2px 12px rgba(74,108,247,0.06);
+  box-shadow: 0 2px 12px rgba(74, 108, 247, 0.06);
 }
 
 .header-logo {
@@ -55,15 +70,25 @@ header {
   text-decoration: none;
 }
 
-.header-logo:hover { text-decoration: none; }
+.header-logo:hover {
+  text-decoration: none;
+}
 
 @keyframes pulse-ring {
-  0%   { transform: scale(1); opacity: 0.5; }
-  100% { transform: scale(1.5); opacity: 0; }
+  0% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
 }
 
 .logo-dot {
-  width: 8px; height: 8px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   background: var(--accent);
   animation: pulse-ring 2s ease-out infinite;
@@ -75,9 +100,33 @@ header {
   color: var(--muted);
 }
 
+/* ===== Theme Button ===== */
+.btn-theme {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  color: var(--muted);
+  font-family: 'Zen Kaku Gothic New', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 500;
+  padding: 0.3rem 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.btn-theme:hover {
+  background: var(--accent-lt);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
 /* ===== Page Hero ===== */
 .page-hero {
-  background: linear-gradient(160deg, #eef1ff 0%, #f7f8fc 60%);
+  background: linear-gradient(160deg, #edf2ff 0%, #f7f9fe 60%);
   border-bottom: 1px solid var(--border);
   padding: 3rem 1.5rem 2rem;
   text-align: center;
@@ -85,15 +134,17 @@ header {
 
 .page-hero h1 {
   font-family: 'Noto Serif JP', serif;
-  font-size: clamp(1.5rem, 4vw, 2.2rem);
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
   font-weight: 600;
   color: var(--text);
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.35;
 }
 
 .page-hero p {
   color: var(--muted);
-  font-size: 0.88rem;
+  font-size: 0.92rem;
+  font-weight: 400;
 }
 
 /* ===== Main ===== */
@@ -113,7 +164,7 @@ main {
   margin-bottom: 1.5rem;
 }
 
-/* ===== Document Content (利用規約・免責・プライバシー) ===== */
+/* ===== Document Content (利用規約・免責・プライバシー・説明・マニュアル) ===== */
 .doc-section {
   margin-bottom: 2rem;
 }
@@ -124,44 +175,62 @@ main {
 
 .doc-section h2 {
   font-family: 'Noto Serif JP', serif;
-  font-size: 1rem;
+  font-size: 1.04rem;
   font-weight: 600;
   color: var(--text);
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.85rem;
   padding-left: 0.85rem;
   border-left: 3px solid var(--accent);
-  line-height: 1.5;
+  line-height: 1.55;
+}
+
+.doc-section h3 {
+  font-size: 0.96rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-top: 1.1rem;
+  margin-bottom: 0.45rem;
+  line-height: 1.6;
 }
 
 .doc-section p {
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   color: var(--muted);
-  margin-bottom: 0.6rem;
-  line-height: 1.85;
+  margin-bottom: 0.7rem;
+  line-height: 1.95;
 }
 
-.doc-section p:last-child { margin-bottom: 0; }
+.doc-section p:last-child {
+  margin-bottom: 0;
+}
 
 .doc-section ul {
-  padding-left: 1.4rem;
-  font-size: 0.9rem;
+  padding-left: 1.45rem;
+  font-size: 0.95rem;
   color: var(--muted);
-  line-height: 1.85;
+  line-height: 1.95;
+  margin-top: 0.2rem;
 }
 
-.doc-section ul li { margin-bottom: 0.3rem; }
+.doc-section ul li {
+  margin-bottom: 0.35rem;
+}
 
-.doc-section strong { color: var(--text); font-weight: 500; }
+.doc-section strong {
+  color: var(--text);
+  font-weight: 700;
+}
 
 /* 更新日バッジ */
 .updated-badge {
   display: inline-block;
   background: var(--surface2);
   border: 1px solid var(--border);
-  border-radius: 6px;
-  font-size: 0.75rem;
+  border-radius: 8px;
+  font-size: 0.78rem;
   color: var(--muted);
-  padding: 0.25rem 0.75rem;
+  font-weight: 500;
+  padding: 0.35rem 0.9rem;
   margin-bottom: 1.75rem;
 }
 
@@ -172,13 +241,17 @@ main {
   gap: 1rem;
   background: var(--surface2);
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: 12px;
   padding: 1.25rem;
   margin-bottom: 1rem;
-  transition: border-color 0.2s;
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
 }
 
-.contact-method:hover { border-color: var(--accent); }
+.contact-method:hover {
+  border-color: var(--accent);
+  box-shadow: 0 8px 24px rgba(74, 108, 247, 0.10);
+  transform: translateY(-1px);
+}
 
 .contact-icon {
   font-size: 1.5rem;
@@ -187,23 +260,26 @@ main {
 }
 
 .contact-body h3 {
-  font-size: 0.92rem;
+  font-size: 0.98rem;
   font-weight: 700;
+  color: var(--text);
   margin-bottom: 0.25rem;
+  line-height: 1.6;
 }
 
 .contact-body p {
-  font-size: 0.83rem;
+  font-size: 0.88rem;
   color: var(--muted);
-  line-height: 1.65;
+  line-height: 1.75;
 }
 
 .contact-note {
-  font-size: 0.78rem;
+  font-size: 0.8rem;
   color: var(--muted);
   margin-top: 0.25rem;
   display: flex;
   gap: 0.3rem;
+  line-height: 1.7;
 }
 
 /* ===== Footer ===== */
@@ -223,20 +299,44 @@ footer {
   font-size: 0.8rem;
 }
 
-.footer-links a { color: var(--muted); }
-.footer-links a:hover { color: var(--accent); }
+.footer-links a {
+  color: var(--muted);
+}
+
+.footer-links a:hover {
+  color: var(--accent);
+}
 
 .footer-copy {
   font-size: 0.75rem;
-  color: #b0b6cc;
+  color: #8b95ad;
 }
 
 /* ===== Responsive ===== */
 @media (max-width: 600px) {
-  header { padding: 0.85rem 1rem; }
-  .page-hero { padding: 2rem 1rem 1.5rem; }
-  main { padding: 1.5rem 1rem 3rem; }
-  .card { padding: 1.25rem; }
+  header {
+    padding: 0.85rem 1rem;
+  }
+
+  .page-hero {
+    padding: 2rem 1rem 1.5rem;
+  }
+
+  main {
+    padding: 1.5rem 1rem 3rem;
+  }
+
+  .card {
+    padding: 1.25rem;
+  }
+
+  .page-hero h1 {
+    font-size: 1.7rem;
+  }
+
+  .contact-method {
+    padding: 1rem;
+  }
 }
 
 /* ===== ダークモード（OS設定 or 手動切り替え） ===== */
@@ -251,10 +351,15 @@ footer {
     --accent:    #6b8aff;
     --accent-lt: #1a2040;
     --green-lt:  #0d2b22;
-    --shadow:    0 4px 24px rgba(0,0,0,0.3);
+    --shadow:    0 4px 24px rgba(0, 0, 0, 0.30);
   }
+
   :root:not([data-theme="light"]) .page-hero {
     background: linear-gradient(160deg, #13172a 0%, #0f1117 60%);
+  }
+
+  :root:not([data-theme="light"]) .contact-method {
+    background: var(--surface2);
   }
 }
 
@@ -268,9 +373,13 @@ footer {
   --accent:    #6b8aff;
   --accent-lt: #1a2040;
   --green-lt:  #0d2b22;
-  --shadow:    0 4px 24px rgba(0,0,0,0.3);
+  --shadow:    0 4px 24px rgba(0, 0, 0, 0.30);
 }
 
 :root[data-theme="dark"] .page-hero {
   background: linear-gradient(160deg, #13172a 0%, #0f1117 60%);
+}
+
+:root[data-theme="dark"] .contact-method {
+  background: var(--surface2);
 }
