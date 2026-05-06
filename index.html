@@ -125,7 +125,9 @@
         <button class="sample-btn" onclick="setSample('このサービス最悪。使えない。運営は何してるの？')">ちょっとキツめ系</button>
         <button class="sample-btn" onclick="setSample('今日ランチで行ったお店、すごく美味しかった！またぜひ行きたいな😊')">ポジティブ系</button>
         <button class="sample-btn" onclick="setSample('なんでこういう人って存在するんだろう。本当に理解できない。')">モヤっとした系</button>
-        <button class="sample-btn" onclick="setSample('SNSはじめました。これから、日々の出来事や興味関心をSNSで共有していきます。よろしくお願いします！')">はじめまして系</button>
+        <button class="sample-btn" onclick="setSample('SNSはじめました。これから、日々の出来事や興味関心をSNSで共有していきます。よろしくお願いします！')">SNSはじめました系</button>
+        <button class="sample-btn" onclick="setSample('はじめまして。\nXXと申します。\nプロフィールやコメントを見て、共感しましたので、フォローさせていただきました。\nよろしくお願いいたします。')">フォローの挨拶系</button>
+        <button class="sample-btn" onclick="setSample('はじめまして。\nXXと申します。\nこのたびはフォローいただきありがとうございます。\n私もフォローバックしました。\n今後、交流させていただけると嬉しいです。\nよろしくお願いいたします。')">フォローのお礼系</button>
       </div>
 
       <!-- テキストエリア -->
@@ -154,6 +156,8 @@
         <span class="sns-guide-item" id="guide-tiktok">TikTok 2,200字</span>
         <span class="sns-guide-item" id="guide-threads">Threads 500字</span>
         <span class="sns-guide-item" id="guide-line">LINE 1,000字</span>
+        <span class="sns-guide-item" id="guide-linkedin">Linkedin 3,000字</span>
+        <span class="sns-guide-item" id="guide-youtube">YouTube 350字</span>
       </div>
 
       <!-- 確認ボタン -->
@@ -333,7 +337,7 @@
       } else {
         guide.style.display = 'flex';
         // SNSごとの上限文字数
-        const limits = { x: 280, threads: 500, tiktok: 2200, instagram: 2200, facebook: 50000, line: 1000 };
+        const limits = { x: 280, threads: 500, tiktok: 2200, instagram: 2200, facebook: 50000, line: 1000, linkedin: 3000, youtube: 350 };
         Object.entries(limits).forEach(([key, limit]) => {
           const el = document.getElementById('guide-' + key);
           if (el) el.classList.toggle('over-limit', len > limit);
@@ -515,6 +519,14 @@
       const shareUrlLine =
         'https://line.me/R/nv/chat';
 
+      // Linkedin URL (Linkedin画面表示用のリンクURL）
+      const shareUrlLinkedin =
+        'https://www.linkedin.com/';
+
+      // YouTube URL (YouTube画面表示用のリンクURL）
+      const shareUrlYoutube =
+        'https://www.youtube.com/';
+
       // 結果エリアを innerHTML で組み立て
       // ユーザー入力（textareaの値）は一切含めない
       // APIレスポンスの文字列はすべて escapeHtml() を通す
@@ -583,6 +595,8 @@
             <option value="${escapeHtml(shareUrlFacebook)}">Facebook</option>
             <option value="${escapeHtml(shareUrlTiktok)}">TikTok</option>
             <option value="${escapeHtml(shareUrlLine)}">LINE（※アプリ必要）</option>
+            <option value="${escapeHtml(shareUrlLinkedin)}">Linkedin</option>
+            <option value="${escapeHtml(shareUrlYoutube)}">YouTube</option>
           </select>
           <button class="btn-sns-open" onclick="openSns()">開く ↗</button>
         </div>

@@ -24,6 +24,18 @@ function onTextInput() {
   cc.textContent = len + ' / ' + inputMaxNumberOfChar;
   cc.className   = 'char-count' + (len > 1800 ? ' warn' : '') + (len >= inputMaxNumberOfChar ? ' over' : '');
   btn.disabled   = len === 0;
+
+  const guide = document.getElementById('sns-guide');
+  if (len === 0) {
+    guide.style.display = 'none';
+  } else {
+    guide.style.display = 'flex';
+    const limits = { x: 280, threads: 500, tiktok: 2200, instagram: 2200, facebook: 50000, line: 1000, linkedin: 3000, youtube: 350 };
+    Object.entries(limits).forEach(([key, limit]) => {
+      const el = document.getElementById('guide-' + key);
+      if (el) el.classList.toggle('over-limit', len > limit);
+    });
+  }
 }
 
 function setSample(text) {
@@ -121,6 +133,9 @@ function renderResult(data) {
   const shareUrlInstagram = 'https://www.instagram.com/';
   const shareUrlTiktok    = 'https://www.tiktok.com/';
   const shareUrlThreads   = 'https://www.threads.com/';
+  const shareUrlLine      = 'https://line.me/R/nv/chat';
+  const shareUrlLinkedin  = 'https://www.linkedin.com/';
+  const shareUrlYoutube   = 'https://www.youtube.com/';
 
   resultArea.innerHTML = `
     <div class="result-header">
@@ -136,13 +151,19 @@ function renderResult(data) {
     </div>
     ${reasonsHtml ? `<div class="score-item" style="margin-top:1rem;">${reasonsHtml}</div>` : ''}
     ${suggestionsHtml}
-    <div class="share-row" style="margin-top:1.5rem;">
-      <a href="${escapeHtml(shareUrlX)}" target="_blank" rel="noopener" class="btn-share-x">𝕏 を開く</a>
-      <a href="${escapeHtml(shareUrlFacebook)}" target="_blank" rel="noopener" class="btn-share-facebook">Facebook を開く</a>
-      <a href="${escapeHtml(shareUrlInstagram)}" target="_blank" rel="noopener" class="btn-share-instagram">Instagram を開く</a>
-      <a href="${escapeHtml(shareUrlTiktok)}" target="_blank" rel="noopener" class="btn-share-tiktok">TikTok を開く</a>
-      <a href="${escapeHtml(shareUrlThreads)}" target="_blank" rel="noopener" class="btn-share-threads">Threads を開く</a>
-      <button class="btn-share-copy" onclick="copyUrl()">🔗 ツール共有用URLコピー</button>
+    <div class="sns-open-row" style="margin-top:1rem;">
+      <select class="sns-select" id="sns-select" aria-label="投稿先SNSを選択">
+        <option value="">── SNSを選ぶ ──</option>
+        <option value="${escapeHtml(shareUrlX)}">𝕏（Twitter）</option>
+        <option value="${escapeHtml(shareUrlThreads)}">Threads</option>
+        <option value="${escapeHtml(shareUrlInstagram)}">Instagram</option>
+        <option value="${escapeHtml(shareUrlFacebook)}">Facebook</option>
+        <option value="${escapeHtml(shareUrlTiktok)}">TikTok</option>
+        <option value="${escapeHtml(shareUrlLine)}">LINE（※アプリ必要）</option>
+        <option value="${escapeHtml(shareUrlLinkedin)}">Linkedin</option>
+        <option value="${escapeHtml(shareUrlYoutube)}">YouTube</option>
+      </select>
+      <button class="btn-sns-open" onclick="openSns()">開く ↗</button>
     </div>
   `;
 
@@ -196,6 +217,16 @@ function setupDom() {
     <textarea id="input-text"></textarea>
     <span id="char-count" class="char-count"></span>
     <button id="submit-btn" disabled></button>
+    <div id="sns-guide" style="display:none;">
+      <span id="guide-x"></span>
+      <span id="guide-facebook"></span>
+      <span id="guide-instagram"></span>
+      <span id="guide-tiktok"></span>
+      <span id="guide-threads"></span>
+      <span id="guide-line"></span>
+      <span id="guide-linkedin"></span>
+      <span id="guide-youtube"></span>
+    </div>
     <div id="loading" style="display:none;"></div>
     <div id="result-area" style="display:none;"></div>
   `;
@@ -217,6 +248,7 @@ describe('onTextInput()', () => {
 
     expect(document.getElementById('char-count').textContent).toBe('0 / 50000');
     expect(document.getElementById('submit-btn').disabled).toBe(true);
+    expect(document.getElementById('sns-guide').style.display).toBe('none');
   });
 
   test('1文字以上入力するとボタンが enabled になる', () => {
@@ -224,6 +256,7 @@ describe('onTextInput()', () => {
     onTextInput();
 
     expect(document.getElementById('submit-btn').disabled).toBe(false);
+    expect(document.getElementById('sns-guide').style.display).toBe('flex');
   });
 
   test('1800文字以内は warn クラスなし', () => {
@@ -255,6 +288,20 @@ describe('onTextInput()', () => {
 
     // 絵文字はサロゲートペアで length=2 になるため実際の length を使用
     expect(document.getElementById('char-count').textContent).toBe(input.length + ' / 50000');
+  });
+
+  test('351文字で YouTube の文字数ガイドに over-limit クラスが付く', () => {
+    document.getElementById('input-text').value = 'a'.repeat(351);
+    onTextInput();
+
+    expect(document.getElementById('guide-youtube').classList.contains('over-limit')).toBe(true);
+  });
+
+  test('3001文字で Linkedin の文字数ガイドに over-limit クラスが付く', () => {
+    document.getElementById('input-text').value = 'a'.repeat(3001);
+    onTextInput();
+
+    expect(document.getElementById('guide-linkedin').classList.contains('over-limit')).toBe(true);
   });
 });
 
@@ -604,6 +651,25 @@ describe('renderResult()', () => {
   test('Threads リンクが結果エリアに含まれる', () => {
     renderResult(baseData);
     expect(document.getElementById('result-area').innerHTML).toContain('www.threads.com');
+  });
+
+  test('Linkedin リンクが結果エリアに含まれる', () => {
+    renderResult(baseData);
+    expect(document.getElementById('result-area').innerHTML).toContain('www.linkedin.com');
+  });
+
+  test('YouTube リンクが結果エリアに含まれる', () => {
+    renderResult(baseData);
+    expect(document.getElementById('result-area').innerHTML).toContain('www.youtube.com');
+  });
+
+  test('SNSプルダウンで Linkedin と YouTube は LINE の下に表示される', () => {
+    renderResult(baseData);
+    const optionTexts = Array.from(document.querySelectorAll('#sns-select option')).map(option => option.textContent);
+    const lineIndex = optionTexts.indexOf('LINE（※アプリ必要）');
+
+    expect(optionTexts[lineIndex + 1]).toBe('Linkedin');
+    expect(optionTexts[lineIndex + 2]).toBe('YouTube');
   });
 
 });
