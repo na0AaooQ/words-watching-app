@@ -26,6 +26,10 @@ if [ -d "${BASE_DIR}" ] ; then
   echo "S3バケット [${S3_BUKKET_NAME}] へデプロイする対象ファイルです。"
   aws s3 sync . ${S3_BUKKET_NAME} --exclude "*" --include "*.html" --include "*.css" \
     --delete \
+    --size-only \
+    --exclude ".git/*" \
+    --exclude ".env.example" \
+    --exclude ".env" \
     --exclude "node_modules/*" \
     --exclude "${ENV_FILE}" \
     --exclude "aws/*" \
@@ -43,6 +47,10 @@ if [ -d "${BASE_DIR}" ] ; then
       echo "S3バケット [${S3_BUKKET_NAME}] へデプロイします。"
       aws s3 sync . ${S3_BUKKET_NAME} --exclude "*" --include "*.html" --include "*.css" \
         --delete \
+        --size-only \
+        --exclude ".git/*" \
+        --exclude ".env.example" \
+        --exclude ".env" \
         --exclude "node_modules/*" \
         --exclude "${ENV_FILE}" \
         --exclude "aws/*" \
