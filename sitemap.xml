@@ -28,4 +28,8 @@
     <loc>https://words-watching-app.na0aaooq.com/privacy.html</loc>
     <priority>0.5</priority>
   </url>
-  </urlset>
+  <url>
+    <loc>https://words-watching-app.na0aaooq.com/consultation.html</loc>
+    <priority>0.5</priority>
+  </url>
+</urlset>
