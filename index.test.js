@@ -175,9 +175,17 @@ function recheck() {
   document.getElementById('input-text').focus();
 }
 
+function getSelectedAdviceTone() {
+  const allowedTones = ['standard', 'soft', 'business'];
+  const selected = document.querySelector('input[name="advice-tone"]:checked');
+  const tone = selected ? selected.value : 'standard';
+  return allowedTones.includes(tone) ? tone : 'standard';
+}
+
 async function checkText() {
   const text = document.getElementById('input-text').value.trim();
   if (!text) return;
+  const tone = getSelectedAdviceTone();
 
   document.getElementById('submit-btn').disabled        = true;
   document.getElementById('loading').style.display       = 'flex';
@@ -187,7 +195,7 @@ async function checkText() {
     const res = await fetch('/prod/check', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text })
+      body: JSON.stringify({ text, tone })
     });
 
     if (!res.ok) throw new Error('API error: ' + res.status);
@@ -229,6 +237,21 @@ function setupDom() {
     </div>
     <div id="loading" style="display:none;"></div>
     <div id="result-area" style="display:none;"></div>
+    <fieldset class="advice-tone" aria-label="アドバイスのトーン">
+      <legend class="advice-tone-label">アドバイスのトーン</legend>
+      <label>
+        <input type="radio" name="advice-tone" value="standard" checked>
+        <span>バランスよく確認したい（標準）</span>
+      </label>
+      <label>
+        <input type="radio" name="advice-tone" value="soft">
+        <span>やわらかめに整えたい</span>
+      </label>
+      <label>
+        <input type="radio" name="advice-tone" value="business">
+        <span>丁寧・ビジネス向けに整えたい</span>
+      </label>
+    </fieldset>
   `;
 }
 
@@ -531,7 +554,35 @@ describe('generateDemoData()', () => {
 });
 
 // ================================================================
-// 7. renderResult — 結果レンダリング
+// 7. getSelectedAdviceTone — アドバイスのトーン取得
+// ================================================================
+describe('getSelectedAdviceTone()', () => {
+  beforeEach(setupDom);
+
+  test('初期値は standard を返す', () => {
+    expect(getSelectedAdviceTone()).toBe('standard');
+  });
+
+  test('soft 選択時は soft を返す', () => {
+    document.querySelector('input[name="advice-tone"][value="soft"]').checked = true;
+    expect(getSelectedAdviceTone()).toBe('soft');
+  });
+
+  test('business 選択時は business を返す', () => {
+    document.querySelector('input[name="advice-tone"][value="business"]').checked = true;
+    expect(getSelectedAdviceTone()).toBe('business');
+  });
+
+  test('不正な値の場合は standard に戻す', () => {
+    const selected = document.querySelector('input[name="advice-tone"][value="standard"]');
+    selected.value = 'invalid';
+    selected.checked = true;
+    expect(getSelectedAdviceTone()).toBe('standard');
+  });
+});
+
+// ================================================================
+// 8. renderResult — 結果レンダリング
 // ================================================================
 describe('renderResult()', () => {
   beforeEach(setupDom);
@@ -827,5 +878,30 @@ describe('checkText()', () => {
     expect(url).toBe('/prod/check');
     expect(options.method).toBe('POST');
     expect(JSON.parse(options.body).text).toBe(inputText);
+    expect(JSON.parse(options.body).tone).toBe('standard');
+  });
+
+  test('soft 選択時は tone: "soft" が送信される', async () => {
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ risk: 'low', summary: 'ok', reasons: [], suggestions: [] })
+    });
+
+    document.querySelector('input[name="advice-tone"][value="soft"]').checked = true;
+    await checkText();
+
+    expect(JSON.parse(global.fetch.mock.calls[0][1].body).tone).toBe('soft');
+  });
+
+  test('business 選択時は tone: "business" が送信される', async () => {
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ risk: 'low', summary: 'ok', reasons: [], suggestions: [] })
+    });
+
+    document.querySelector('input[name="advice-tone"][value="business"]').checked = true;
+    await checkText();
+
+    expect(JSON.parse(global.fetch.mock.calls[0][1].body).tone).toBe('business');
   });
 });

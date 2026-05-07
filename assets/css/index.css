@@ -652,6 +652,79 @@ textarea::placeholder {
   font-weight: 700;
 }
 
+/* ===== アドバイスのトーン ===== */
+.advice-tone {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface2);
+  padding: 0.85rem;
+  margin: 0.9rem 0 1rem;
+}
+
+.advice-tone-label {
+  display: table;
+  margin: 0 auto;
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0 0.35rem;
+  text-align: center;
+}
+
+.advice-tone-options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.advice-tone-option {
+  position: relative;
+  display: block;
+  min-width: 0;
+}
+
+.advice-tone-option input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.advice-tone-option span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.5rem;
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 700;
+  line-height: 1.45;
+  text-align: center;
+  padding: 0.45rem 0.6rem;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s, color 0.2s, box-shadow 0.2s;
+}
+
+.advice-tone-option input:checked + span {
+  background: var(--accent-lt);
+  border-color: var(--accent);
+  color: var(--accent);
+  box-shadow: 0 4px 14px rgba(74, 108, 247, 0.12);
+}
+
+.advice-tone-option input:focus-visible + span {
+  outline: 3px solid rgba(74, 108, 247, 0.22);
+  outline-offset: 2px;
+}
+
+.advice-tone-option span:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
 /* ===== プライバシー注記（テキストエリア直下） ===== */
 .privacy-note {
   display: flex;
@@ -1198,6 +1271,20 @@ footer {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.5rem;
+  }
+
+  .advice-tone {
+    padding: 0.75rem;
+  }
+
+  .advice-tone-options {
+    grid-template-columns: 1fr;
+  }
+
+  .advice-tone-option span {
+    justify-content: flex-start;
+    min-height: 2.35rem;
+    text-align: left;
   }
 
   .sns-open-row {

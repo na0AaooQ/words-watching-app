@@ -15,6 +15,19 @@ bedrock = boto3.client("bedrock-runtime")
 # CloudWatch クライアント
 cloudwatch = boto3.client("cloudwatch")
 
+ALLOWED_TONES = {"standard", "soft", "business"}
+TONE_INSTRUCTIONS = {
+    "standard": "従来通り、読み手への伝わり方をバランスよく確認してください。",
+    "soft": "フランクでやわらかめの印象になるように、やさしい言い換えの方向性を提案してください。",
+    "business": "ビジネス向けに、丁寧で失礼の少ない表現になるように改善の方向性を提案してください。"
+}
+
+
+def normalize_tone(tone: object) -> str:
+    if isinstance(tone, str) and tone in ALLOWED_TONES:
+        return tone
+    return "standard"
+
 
 # Amazon Bedrockレスポンスのパース失敗時、CloudWatchにメトリクスを送信する
 def put_parse_error_metric():
@@ -471,6 +484,7 @@ def lambda_handler(event, context):
             body = raw_body
 
         text = body.get("text", "").strip()
+        tone = normalize_tone(body.get("tone", "standard"))
 
         if not text:
             return {
@@ -485,6 +499,8 @@ def lambda_handler(event, context):
         # -----------------------------
         # 2. プロンプト構築
         # -----------------------------
+        tone_instruction = TONE_INSTRUCTIONS[tone]
+
         system_prompt = (
             "あなたは、日本語テキストの受け取られ方を確認するアシスタントです。\n"
             "目的は、投稿前の文章について、誤解や反発を招く可能性がある点を整理して提示することです。\n\n"
@@ -503,6 +519,12 @@ def lambda_handler(event, context):
             "- 何らかの利用規約上、問題ない表現か\n"
             "- 倫理的に問題ない表現か\n"
             "- 明らかな誤字脱字\n\n"
+            "【改善アドバイスの方針】\n"
+            "- AIが投稿文の完成版を生成するのではなく、ユーザー自身の言葉を見直すための補助に徹する\n"
+            "- suggestions は、改善のヒントや言い換えの方向性に留める\n"
+            "- 投稿するかどうかの判断を強制しない\n\n"
+            "【アドバイスのトーン】\n"
+            f"{tone_instruction}\n\n"
             "【JSONで返却する情報】\n"
             "- risk (low / medium / high)\n"
             "- summary\n"

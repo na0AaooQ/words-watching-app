@@ -160,6 +160,25 @@
         <span class="sns-guide-item" id="guide-youtube">YouTube 350字</span>
       </div>
 
+      <!-- アドバイスのトーン -->
+      <fieldset class="advice-tone" aria-label="文章アドバイスのトーン">
+        <legend class="advice-tone-label">文章アドバイスのトーン</legend>
+        <div class="advice-tone-options">
+          <label class="advice-tone-option">
+            <input type="radio" name="advice-tone" value="standard" checked>
+            <span>バランスよく確認したい（標準）</span>
+          </label>
+          <label class="advice-tone-option">
+            <input type="radio" name="advice-tone" value="soft">
+            <span>やわらかめに整えたい</span>
+          </label>
+          <label class="advice-tone-option">
+            <input type="radio" name="advice-tone" value="business">
+            <span>丁寧・ビジネス向けに整えたい</span>
+          </label>
+        </div>
+      </fieldset>
+
       <!-- 確認ボタン -->
       <button class="btn-primary" id="submit-btn" onclick="checkText()" disabled>
         確認してみる
@@ -370,9 +389,17 @@
     }
 
     /* ---------- チェック実行 ---------- */
+    function getSelectedAdviceTone() {
+      const allowedTones = ['standard', 'soft', 'business'];
+      const selected = document.querySelector('input[name="advice-tone"]:checked');
+      const tone = selected ? selected.value : 'standard';
+      return allowedTones.includes(tone) ? tone : 'standard';
+    }
+
     async function checkText() {
       const text = document.getElementById('input-text').value.trim();
       if (!text) return;
+      const tone = getSelectedAdviceTone();
 
       // UI切り替え
       document.getElementById('submit-btn').disabled   = true;
@@ -394,7 +421,7 @@
         const res = await fetch(API_ENDPOINT, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ text })
+          body: JSON.stringify({ text, tone })
         });
 
         if (!res.ok) throw new Error('API error: ' + res.status);
