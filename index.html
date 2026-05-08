@@ -488,6 +488,29 @@
         .replace(/'/g, '&#039;');
     }
 
+    /* ---------- 次にできること（フロント固定表示） ---------- */
+    const nextActionTipsByRisk = {
+      low: [
+        'このまま投稿する前に、誤字や言い回しを軽く確認する',
+        '読み手に伝えたいことが一番目立っているか見直す',
+        '必要に応じて、少しだけ言葉を整える'
+      ],
+      medium: [
+        '少し時間を置いてから、もう一度読み返す',
+        '強く見える表現があれば、少しやわらかい言葉に置き換える',
+        '相手の人格ではなく、具体的な出来事や行動に焦点を当てる'
+      ],
+      high: [
+        '今すぐ投稿せず、少し時間を置いてから見直す',
+        '感情が強く出ている部分を、事実と気持ちに分けて整理する',
+        '公開投稿ではなく、下書きやメモとして残すことも検討する'
+      ]
+    };
+
+    function getNextActionTips(risk) {
+      return nextActionTipsByRisk[risk] || nextActionTipsByRisk.medium;
+    }
+
     /* ---------- 結果レンダリング ---------- */
     // APIレスポンス形式: { risk: string, summary: string, reasons: string[], suggestions?: string[] }
     function renderResult(data) {
@@ -521,6 +544,13 @@
              <ul class="result-list">${data.suggestions.map(s => `<li>${escapeHtml(s)}</li>`).join('')}</ul>
            </div>`
         : '';
+
+      const nextActionTipsHtml = `
+        <div class="next-action-card">
+          <h4>次にできること</h4>
+          <p>必要に応じて、投稿前の見直しに使ってください。</p>
+          <ul class="result-list">${getNextActionTips(data.risk).map(tip => `<li>${escapeHtml(tip)}</li>`).join('')}</ul>
+        </div>`;
 
       // X URL（X投稿画面表示用のリンクURL）
       const shareUrlX =
@@ -604,6 +634,8 @@
         </div>` : ''}
 
         ${suggestionsHtml}
+
+        ${nextActionTipsHtml}
 
         <br>
         <p class="share-info-label">

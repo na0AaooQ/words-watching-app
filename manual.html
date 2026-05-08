@@ -267,6 +267,38 @@
       border-color: var(--accent);
       color: var(--accent);
     }
+
+    .header-logo,
+    .header-link {
+      white-space: nowrap;
+    }
+
+    .header-link {
+      flex-shrink: 0;
+    }
+
+    @media (max-width: 600px) {
+      header {
+        gap: 0.6rem;
+      }
+
+      header > div {
+        gap: 0.5rem !important;
+        flex-shrink: 0;
+      }
+
+      .btn-theme {
+        padding: 0.3rem 0.65rem;
+      }
+
+      #theme-label {
+        display: none;
+      }
+
+      .header-link {
+        font-size: 0.74rem;
+      }
+    }
   </style>
 </head>
 
@@ -424,6 +456,9 @@
           <strong>気になりそうな点</strong> や
           <strong>改善のヒント</strong>
           が表示されます。<br>
+          文章の確認後、投稿前に見直せる行動のヒントとして
+          <strong>次にできること</strong>
+          も表示されます。<br>
           必要に応じて文章を見直し、より伝わりやすく、やわらかい表現に整えてみてください。
         </p>
         <p>

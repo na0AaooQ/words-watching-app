@@ -360,6 +360,7 @@ header {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  white-space: nowrap;
 }
 
 .header-logo .logo-dot {
@@ -374,6 +375,8 @@ header {
 .header-link {
   font-size: 0.8rem;
   color: var(--muted);
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 /* ===== Hero ===== */
@@ -1009,6 +1012,30 @@ textarea::placeholder {
   margin-bottom: 0;
 }
 
+/* ===== 次にできること ===== */
+.next-action-card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.next-action-card h4 {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 0.3rem;
+}
+
+.next-action-card p {
+  font-size: 0.84rem;
+  color: var(--muted);
+  line-height: 1.7;
+  margin-bottom: 0.45rem;
+}
+
 /* ===== 各種SNSを開くボタンの文章 ===== */
 .share-info-label {
   font-size: 0.79rem;
@@ -1244,6 +1271,24 @@ footer {
 @media (max-width: 600px) {
   header {
     padding: 0.85rem 1rem;
+    gap: 0.6rem;
+  }
+
+  header > div {
+    gap: 0.5rem !important;
+    flex-shrink: 0;
+  }
+
+  .btn-theme {
+    padding: 0.3rem 0.65rem;
+  }
+
+  #theme-label {
+    display: none;
+  }
+
+  .header-link {
+    font-size: 0.74rem;
   }
 
   .hero {

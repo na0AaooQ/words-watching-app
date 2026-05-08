@@ -75,6 +75,28 @@ function escapeHtml(str) {
     .replace(/'/g, '&#039;');
 }
 
+const nextActionTipsByRisk = {
+  low: [
+    'このまま投稿する前に、誤字や言い回しを軽く確認する',
+    '読み手に伝えたいことが一番目立っているか見直す',
+    '必要に応じて、少しだけ言葉を整える'
+  ],
+  medium: [
+    '少し時間を置いてから、もう一度読み返す',
+    '強く見える表現があれば、少しやわらかい言葉に置き換える',
+    '相手の人格ではなく、具体的な出来事や行動に焦点を当てる'
+  ],
+  high: [
+    '今すぐ投稿せず、少し時間を置いてから見直す',
+    '感情が強く出ている部分を、事実と気持ちに分けて整理する',
+    '公開投稿ではなく、下書きやメモとして残すことも検討する'
+  ]
+};
+
+function getNextActionTips(risk) {
+  return nextActionTipsByRisk[risk] || nextActionTipsByRisk.medium;
+}
+
 function generateDemoData(text) {
   const hasNegative = /最悪|無駄|バカ|死|消えろ|うざ|最低|嫌い/.test(text);
   if (hasNegative) {
@@ -128,6 +150,13 @@ function renderResult(data) {
        </div>`
     : '';
 
+  const nextActionTipsHtml = `
+    <div class="next-action-card">
+      <h4>次にできること</h4>
+      <p>必要に応じて、投稿前の見直しに使ってください。</p>
+      <ul class="result-list">${getNextActionTips(data.risk).map(tip => `<li>${escapeHtml(tip)}</li>`).join('')}</ul>
+    </div>`;
+
   const shareUrlX         = 'https://x.com/intent/tweet';
   const shareUrlFacebook  = 'https://www.facebook.com/sharer/sharer.php';
   const shareUrlInstagram = 'https://www.instagram.com/';
@@ -151,6 +180,7 @@ function renderResult(data) {
     </div>
     ${reasonsHtml ? `<div class="score-item" style="margin-top:1rem;">${reasonsHtml}</div>` : ''}
     ${suggestionsHtml}
+    ${nextActionTipsHtml}
     <div class="sns-open-row" style="margin-top:1rem;">
       <select class="sns-select" id="sns-select" aria-label="投稿先SNSを選択">
         <option value="">── SNSを選ぶ ──</option>
@@ -582,7 +612,32 @@ describe('getSelectedAdviceTone()', () => {
 });
 
 // ================================================================
-// 8. renderResult — 結果レンダリング
+// 8. getNextActionTips — risk 別の次にできること
+// ================================================================
+describe('getNextActionTips()', () => {
+  test('risk: low のとき low 用の3項目を返す', () => {
+    expect(getNextActionTips('low')).toEqual(nextActionTipsByRisk.low);
+  });
+
+  test('risk: medium のとき medium 用の3項目を返す', () => {
+    expect(getNextActionTips('medium')).toEqual(nextActionTipsByRisk.medium);
+  });
+
+  test('risk: high のとき high 用の3項目を返す', () => {
+    expect(getNextActionTips('high')).toEqual(nextActionTipsByRisk.high);
+  });
+
+  test('想定外の risk のとき medium 用の3項目を返す', () => {
+    expect(getNextActionTips('unexpected')).toEqual(nextActionTipsByRisk.medium);
+  });
+
+  test('risk 未指定のとき medium 用の3項目を返す', () => {
+    expect(getNextActionTips(undefined)).toEqual(nextActionTipsByRisk.medium);
+  });
+});
+
+// ================================================================
+// 9. renderResult — 結果レンダリング
 // ================================================================
 describe('renderResult()', () => {
   beforeEach(setupDom);
@@ -665,6 +720,57 @@ describe('renderResult()', () => {
     expect(document.getElementById('result-area').innerHTML).not.toContain('改善のヒント');
   });
 
+  test('「次にできること」カードが表示される', () => {
+    renderResult(baseData);
+    expect(document.querySelector('.next-action-card h4').textContent).toBe('次にできること');
+    expect(document.querySelector('.next-action-card').textContent).toContain('必要に応じて、投稿前の見直しに使ってください。');
+  });
+
+  test('risk: low のとき low 用の3項目が表示される', () => {
+    renderResult({ ...baseData, risk: 'low' });
+    const cardText = document.querySelector('.next-action-card').textContent;
+    expect(document.querySelectorAll('.next-action-card li')).toHaveLength(3);
+    nextActionTipsByRisk.low.forEach(tip => {
+      expect(cardText).toContain(tip);
+    });
+  });
+
+  test('risk: medium のとき medium 用の3項目が表示される', () => {
+    renderResult({ ...baseData, risk: 'medium' });
+    const cardText = document.querySelector('.next-action-card').textContent;
+    expect(document.querySelectorAll('.next-action-card li')).toHaveLength(3);
+    nextActionTipsByRisk.medium.forEach(tip => {
+      expect(cardText).toContain(tip);
+    });
+  });
+
+  test('risk: high のとき high 用の3項目が表示される', () => {
+    renderResult({ ...baseData, risk: 'high' });
+    const cardText = document.querySelector('.next-action-card').textContent;
+    expect(document.querySelectorAll('.next-action-card li')).toHaveLength(3);
+    nextActionTipsByRisk.high.forEach(tip => {
+      expect(cardText).toContain(tip);
+    });
+  });
+
+  test('risk が想定外のとき medium 相当の3項目が表示される', () => {
+    renderResult({ ...baseData, risk: 'unknown' });
+    const cardText = document.querySelector('.next-action-card').textContent;
+    expect(document.querySelectorAll('.next-action-card li')).toHaveLength(3);
+    nextActionTipsByRisk.medium.forEach(tip => {
+      expect(cardText).toContain(tip);
+    });
+  });
+
+  test('risk が未指定のとき medium 相当の3項目が表示される', () => {
+    renderResult({ ...baseData, risk: undefined });
+    const cardText = document.querySelector('.next-action-card').textContent;
+    expect(document.querySelectorAll('.next-action-card li')).toHaveLength(3);
+    nextActionTipsByRisk.medium.forEach(tip => {
+      expect(cardText).toContain(tip);
+    });
+  });
+
   test('XSS: summary の <script> タグがエスケープされる', () => {
     renderResult({ ...baseData, summary: '<script>alert(1)</script>' });
     const html = document.getElementById('result-area').innerHTML;
@@ -726,7 +832,7 @@ describe('renderResult()', () => {
 });
 
 // ================================================================
-// 8. recheck — 再チェック（結果エリア非表示 & textarea フォーカス）
+// 10. recheck — 再チェック（結果エリア非表示 & textarea フォーカス）
 // ================================================================
 describe('recheck()', () => {
   beforeEach(() => {
@@ -748,7 +854,7 @@ describe('recheck()', () => {
 });
 
 // ================================================================
-// 9. checkText — API通信・ローディング制御・フォールバック
+// 11. checkText — API通信・ローディング制御・フォールバック
 // ================================================================
 describe('checkText()', () => {
   beforeEach(() => {
