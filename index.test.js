@@ -97,6 +97,13 @@ function getNextActionTips(risk) {
   return nextActionTipsByRisk[risk] || nextActionTipsByRisk.medium;
 }
 
+const prePostChecklistItems = [
+  '相手の人格ではなく、具体的な出来事や行動について書いている',
+  '主語が大きすぎたり、曖昧だったりしないか確認している',
+  '公開範囲や送る相手に合った表現になっている',
+  '今の感情が落ち着いてから見ても、同じ文章を出せそう'
+];
+
 function generateDemoData(text) {
   const hasNegative = /最悪|無駄|バカ|死|消えろ|うざ|最低|嫌い/.test(text);
   if (hasNegative) {
@@ -157,6 +164,22 @@ function renderResult(data) {
       <ul class="result-list">${getNextActionTips(data.risk).map(tip => `<li>${escapeHtml(tip)}</li>`).join('')}</ul>
     </div>`;
 
+  const prePostChecklistHtml = `
+    <div class="pre-post-checklist-card" aria-labelledby="pre-post-checklist-title">
+      <h4 id="pre-post-checklist-title">投稿前セルフチェック</h4>
+      <p>投稿・送信前に、必要に応じて確認してみてください。</p>
+      <ul class="pre-post-checklist">
+        ${prePostChecklistItems.map((item, index) => `
+          <li>
+            <label class="pre-post-checklist-item" for="pre-post-check-${index + 1}">
+              <input type="checkbox" id="pre-post-check-${index + 1}" autocomplete="off">
+              <span>${escapeHtml(item)}</span>
+            </label>
+          </li>
+        `).join('')}
+      </ul>
+    </div>`;
+
   const shareUrlX         = 'https://x.com/intent/tweet';
   const shareUrlFacebook  = 'https://www.facebook.com/sharer/sharer.php';
   const shareUrlInstagram = 'https://www.instagram.com/';
@@ -181,6 +204,7 @@ function renderResult(data) {
     ${reasonsHtml ? `<div class="score-item" style="margin-top:1rem;">${reasonsHtml}</div>` : ''}
     ${suggestionsHtml}
     ${nextActionTipsHtml}
+    ${prePostChecklistHtml}
     <div class="sns-open-row" style="margin-top:1rem;">
       <select class="sns-select" id="sns-select" aria-label="投稿先SNSを選択">
         <option value="">── SNSを選ぶ ──</option>
@@ -771,6 +795,44 @@ describe('renderResult()', () => {
     });
   });
 
+  test('「投稿前セルフチェック」カードが次にできることの下に表示される', () => {
+    renderResult(baseData);
+    expect(document.querySelector('.pre-post-checklist-card h4').textContent).toBe('投稿前セルフチェック');
+    expect(document.querySelector('.pre-post-checklist-card').textContent).toContain('投稿・送信前に、必要に応じて確認してみてください。');
+    expect(document.querySelector('.next-action-card + .pre-post-checklist-card')).not.toBeNull();
+  });
+
+  test('投稿前セルフチェックの4項目がチェックボックス付きで表示される', () => {
+    renderResult(baseData);
+    const checklist = document.querySelector('.pre-post-checklist-card');
+    const checkboxes = checklist.querySelectorAll('input[type="checkbox"]');
+    const labels = Array.from(checklist.querySelectorAll('.pre-post-checklist-item span')).map(item => item.textContent.trim());
+
+    expect(checkboxes).toHaveLength(4);
+    expect(labels).toEqual(prePostChecklistItems);
+  });
+
+  test('投稿前セルフチェックは任意でチェックできる', () => {
+    renderResult(baseData);
+    const checkbox = document.querySelector('.pre-post-checklist-card input[type="checkbox"]');
+
+    expect(checkbox.checked).toBe(false);
+    checkbox.click();
+    expect(checkbox.checked).toBe(true);
+  });
+
+  test('投稿前セルフチェックの状態は localStorage や sessionStorage に保存されない', () => {
+    window.localStorage.clear();
+    window.sessionStorage.clear();
+    renderResult(baseData);
+
+    document.querySelector('.pre-post-checklist-card input[type="checkbox"]').click();
+
+    expect(window.localStorage.length).toBe(0);
+    expect(window.sessionStorage.length).toBe(0);
+    expect(document.cookie).not.toContain('pre-post-check');
+  });
+
   test('XSS: summary の <script> タグがエスケープされる', () => {
     renderResult({ ...baseData, summary: '<script>alert(1)</script>' });
     const html = document.getElementById('result-area').innerHTML;
@@ -983,8 +1045,7 @@ describe('checkText()', () => {
     const [url, options] = global.fetch.mock.calls[0];
     expect(url).toBe('/prod/check');
     expect(options.method).toBe('POST');
-    expect(JSON.parse(options.body).text).toBe(inputText);
-    expect(JSON.parse(options.body).tone).toBe('standard');
+    expect(JSON.parse(options.body)).toEqual({ text: inputText, tone: 'standard' });
   });
 
   test('soft 選択時は tone: "soft" が送信される', async () => {
