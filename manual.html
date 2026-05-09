@@ -71,6 +71,19 @@
       border: 1px solid var(--border);
       box-shadow: 0 8px 24px rgba(35, 54, 108, 0.08);
       background: var(--surface);
+      cursor: zoom-in;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+
+    .manual-image img:hover {
+      border-color: var(--accent);
+      box-shadow: 0 10px 30px rgba(35, 54, 108, 0.14);
+      transform: translateY(-1px);
+    }
+
+    .manual-image img:focus-visible {
+      outline: 3px solid rgba(74, 108, 247, 0.32);
+      outline-offset: 3px;
     }
 
     .manual-caption {
@@ -174,6 +187,85 @@
       }
     }
 
+    .manual-image-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1.25rem;
+    }
+
+    .manual-image-modal.open {
+      display: flex;
+    }
+
+    .manual-image-modal-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(15, 17, 23, 0.72);
+      backdrop-filter: blur(3px);
+    }
+
+    .manual-image-modal-dialog {
+      position: relative;
+      z-index: 1;
+      width: min(1180px, 96vw);
+      max-height: 92vh;
+      padding: 2.7rem 1rem 1rem;
+      overflow: auto;
+      border-radius: 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.28);
+    }
+
+    .manual-image-modal-close {
+      position: absolute;
+      top: 0.7rem;
+      right: 0.7rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2rem;
+      height: 2rem;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: var(--surface2);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 1.25rem;
+      font-weight: 700;
+      line-height: 1;
+      cursor: pointer;
+      transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    }
+
+    .manual-image-modal-close:hover {
+      background: var(--accent-lt);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .manual-image-modal-close:focus-visible {
+      outline: 3px solid rgba(74, 108, 247, 0.32);
+      outline-offset: 2px;
+    }
+
+    .manual-image-modal-img {
+      display: block;
+      width: 100%;
+      max-height: calc(92vh - 4.2rem);
+      object-fit: contain;
+      border-radius: 10px;
+      background: var(--surface);
+    }
+
+    body.manual-modal-open {
+      overflow: hidden;
+    }
+
     /* ===== ダークモード（OS設定 or 手動切り替え） ===== */
     @media (prefers-color-scheme: dark) {
       :root:not([data-theme="light"]) {
@@ -214,6 +306,10 @@
       :root:not([data-theme="light"]) .manual-image img {
         box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
       }
+
+      :root:not([data-theme="light"]) .manual-image img:hover {
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.36);
+      }
     }
 
     :root[data-theme="dark"] {
@@ -243,6 +339,10 @@
 
     :root[data-theme="dark"] .manual-image img {
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+    }
+
+    :root[data-theme="dark"] .manual-image img:hover {
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.36);
     }
 
     .btn-theme {
@@ -297,6 +397,20 @@
 
       .header-link {
         font-size: 0.74rem;
+      }
+
+      .manual-image-modal {
+        padding: 0.7rem;
+      }
+
+      .manual-image-modal-dialog {
+        width: 96vw;
+        padding: 2.55rem 0.65rem 0.65rem;
+        border-radius: 12px;
+      }
+
+      .manual-image-modal-img {
+        max-height: calc(92vh - 3.7rem);
       }
     }
   </style>
@@ -621,6 +735,14 @@
     <p class="footer-copy">&copy; ことばみまもり 2026 青木直之 (@na0AaooQ) All Rights Reserved.</p>
   </footer>
 
+  <div class="manual-image-modal" id="manual-image-modal" aria-hidden="true">
+    <div class="manual-image-modal-backdrop" data-modal-close></div>
+    <div class="manual-image-modal-dialog" role="dialog" aria-modal="true" aria-label="マニュアル画像の拡大表示">
+      <button type="button" class="manual-image-modal-close" id="manual-image-modal-close" aria-label="拡大画像を閉じる">×</button>
+      <img class="manual-image-modal-img" id="manual-image-modal-img" src="" alt="">
+    </div>
+  </div>
+
   <script>
     /* ---------- テーマ切り替え ---------- */
     (function () {
@@ -657,7 +779,72 @@
       const osDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
       const theme  = saved || (osDark ? 'dark' : 'light');
       updateThemeButton(theme);
+
+      setupManualImageModal();
     });
+
+    function setupManualImageModal() {
+      const modal = document.getElementById('manual-image-modal');
+      const modalImg = document.getElementById('manual-image-modal-img');
+      const closeBtn = document.getElementById('manual-image-modal-close');
+      const manualImages = document.querySelectorAll('.manual-image img');
+
+      if (!modal || !modalImg || !closeBtn || manualImages.length === 0) return;
+
+      let lastFocusedElement = null;
+
+      function openManualImageModal(img) {
+        lastFocusedElement = document.activeElement;
+        modalImg.src = img.currentSrc || img.src;
+        modalImg.alt = img.alt || 'マニュアル画像';
+        modal.classList.add('open');
+        modal.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('manual-modal-open');
+        closeBtn.focus();
+      }
+
+      function closeManualImageModal() {
+        modal.classList.remove('open');
+        modal.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('manual-modal-open');
+        modalImg.removeAttribute('src');
+        modalImg.alt = '';
+
+        if (lastFocusedElement && typeof lastFocusedElement.focus === 'function') {
+          lastFocusedElement.focus();
+        }
+      }
+
+      manualImages.forEach(img => {
+        img.setAttribute('tabindex', '0');
+        img.setAttribute('role', 'button');
+        img.setAttribute('aria-label', '画像を拡大表示：' + (img.alt || 'マニュアル画像'));
+
+        img.addEventListener('click', function () {
+          openManualImageModal(img);
+        });
+
+        img.addEventListener('keydown', function (event) {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            openManualImageModal(img);
+          }
+        });
+      });
+
+      closeBtn.addEventListener('click', closeManualImageModal);
+      modal.addEventListener('click', function (event) {
+        if (event.target && event.target.getAttribute && event.target.getAttribute('data-modal-close') !== null) {
+          closeManualImageModal();
+        }
+      });
+
+      document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape' && modal.classList.contains('open')) {
+          closeManualImageModal();
+        }
+      });
+    }
   </script>
 
 </body>
