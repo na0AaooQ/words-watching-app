@@ -511,6 +511,14 @@
       return nextActionTipsByRisk[risk] || nextActionTipsByRisk.medium;
     }
 
+    /* ---------- 投稿前セルフチェック（フロント固定表示） ---------- */
+    const prePostChecklistItems = [
+      '相手の人格ではなく、具体的な出来事や行動について書いている',
+      '主語が大きすぎたり、曖昧だったりしないか確認している',
+      '公開範囲や送る相手に合った表現になっている',
+      '今の感情が落ち着いてから見ても、同じ文章を出せそう'
+    ];
+
     /* ---------- 結果レンダリング ---------- */
     // APIレスポンス形式: { risk: string, summary: string, reasons: string[], suggestions?: string[] }
     function renderResult(data) {
@@ -550,6 +558,22 @@
           <h4>次にできること</h4>
           <p>必要に応じて、投稿前の見直しに使ってください。</p>
           <ul class="result-list">${getNextActionTips(data.risk).map(tip => `<li>${escapeHtml(tip)}</li>`).join('')}</ul>
+        </div>`;
+
+      const prePostChecklistHtml = `
+        <div class="pre-post-checklist-card" aria-labelledby="pre-post-checklist-title">
+          <h4 id="pre-post-checklist-title">投稿前セルフチェック</h4>
+          <p>投稿・送信前に、必要に応じて確認してみてください。</p>
+          <ul class="pre-post-checklist">
+            ${prePostChecklistItems.map((item, index) => `
+              <li>
+                <label class="pre-post-checklist-item" for="pre-post-check-${index + 1}">
+                  <input type="checkbox" id="pre-post-check-${index + 1}" autocomplete="off">
+                  <span>${escapeHtml(item)}</span>
+                </label>
+              </li>
+            `).join('')}
+          </ul>
         </div>`;
 
       // X URL（X投稿画面表示用のリンクURL）
@@ -636,6 +660,8 @@
         ${suggestionsHtml}
 
         ${nextActionTipsHtml}
+
+        ${prePostChecklistHtml}
 
         <br>
         <p class="share-info-label">
