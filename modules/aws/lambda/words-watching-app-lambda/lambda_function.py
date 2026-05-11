@@ -22,11 +22,26 @@ TONE_INSTRUCTIONS = {
     "business": "ビジネス向けに、丁寧で失礼の少ない表現になるように改善の方向性を提案してください。"
 }
 
+ALLOWED_SCENES = {"general", "sns", "reply", "business", "apology"}
+SCENE_INSTRUCTIONS = {
+    "general": "文章全体について、読み手への伝わり方、誤解されやすさ、強すぎる表現がないかをバランスよく確認してください。",
+    "sns": "SNS上で不特定多数に読まれる可能性を前提に、主語が大きすぎないか、断定が強すぎないか、誤解や反感につながりやすい表現がないかを確認してください。",
+    "reply": "相手への返信として、責める印象が強すぎないか、相手の人格を否定して見えないか、対話を続けやすい表現になっているかを確認してください。",
+    "business": "仕事や問い合わせで使う文章として、失礼に見えないか、依頼内容が明確か、相手に過度な圧を与えない表現になっているかを確認してください。",
+    "apology": "謝罪や説明の文章として、言い訳や責任回避に見えないか、相手の受け止め方に配慮できているか、事実と気持ちが分かりやすく整理されているかを確認してください。"
+}
+
 
 def normalize_tone(tone: object) -> str:
     if isinstance(tone, str) and tone in ALLOWED_TONES:
         return tone
     return "standard"
+
+
+def normalize_scene(scene: object) -> str:
+    if isinstance(scene, str) and scene in ALLOWED_SCENES:
+        return scene
+    return "general"
 
 
 # Amazon Bedrockレスポンスのパース失敗時、CloudWatchにメトリクスを送信する
@@ -485,6 +500,7 @@ def lambda_handler(event, context):
 
         text = body.get("text", "").strip()
         tone = normalize_tone(body.get("tone", "standard"))
+        scene = normalize_scene(body.get("scene", "general"))
 
         if not text:
             return {
@@ -500,6 +516,7 @@ def lambda_handler(event, context):
         # 2. プロンプト構築
         # -----------------------------
         tone_instruction = TONE_INSTRUCTIONS[tone]
+        scene_instruction = SCENE_INSTRUCTIONS[scene]
 
         system_prompt = (
             "あなたは、日本語テキストの受け取られ方を確認するアシスタントです。\n"
@@ -519,6 +536,8 @@ def lambda_handler(event, context):
             "- 何らかの利用規約上、問題ない表現か\n"
             "- 倫理的に問題ない表現か\n"
             "- 明らかな誤字脱字\n\n"
+            "【利用シーンに応じた確認観点】\n"
+            f"{scene_instruction}\n\n"
             "【改善アドバイスの方針】\n"
             "- AIが投稿文の完成版を生成するのではなく、ユーザー自身の言葉を見直すための補助に徹する\n"
             "- suggestions は、改善のヒントや言い換えの方向性に留める\n"

@@ -236,10 +236,18 @@ function getSelectedAdviceTone() {
   return allowedTones.includes(tone) ? tone : 'standard';
 }
 
+function getSelectedUsageScene() {
+  const allowedScenes = ['general', 'sns', 'reply', 'business', 'apology'];
+  const selected = document.querySelector('input[name="usage-scene"]:checked');
+  const scene = selected ? selected.value : 'general';
+  return allowedScenes.includes(scene) ? scene : 'general';
+}
+
 async function checkText() {
   const text = document.getElementById('input-text').value.trim();
   if (!text) return;
   const tone = getSelectedAdviceTone();
+  const scene = getSelectedUsageScene();
 
   document.getElementById('submit-btn').disabled        = true;
   document.getElementById('loading').style.display       = 'flex';
@@ -249,7 +257,7 @@ async function checkText() {
     const res = await fetch('/prod/check', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text, tone })
+      body: JSON.stringify({ text, tone, scene })
     });
 
     if (!res.ok) throw new Error('API error: ' + res.status);
@@ -291,6 +299,32 @@ function setupDom() {
     </div>
     <div id="loading" style="display:none;"></div>
     <div id="result-area" style="display:none;"></div>
+    <fieldset class="usage-scene" aria-label="利用シーン">
+      <legend class="usage-scene-label">利用シーン</legend>
+      <p class="usage-scene-note">文章を使う場面に合わせて、確認する観点を調整します。</p>
+      <div class="usage-scene-options">
+        <label class="usage-scene-option">
+          <input type="radio" name="usage-scene" value="general" checked>
+          <span>指定なし・おまかせ</span>
+        </label>
+        <label class="usage-scene-option">
+          <input type="radio" name="usage-scene" value="sns">
+          <span>SNSの投稿</span>
+        </label>
+        <label class="usage-scene-option">
+          <input type="radio" name="usage-scene" value="reply">
+          <span>返信・コメント</span>
+        </label>
+        <label class="usage-scene-option">
+          <input type="radio" name="usage-scene" value="business">
+          <span>仕事・依頼文</span>
+        </label>
+        <label class="usage-scene-option">
+          <input type="radio" name="usage-scene" value="apology">
+          <span>謝罪・説明文</span>
+        </label>
+      </div>
+    </fieldset>
     <fieldset class="advice-tone" aria-label="アドバイスのトーン">
       <legend class="advice-tone-label">アドバイスのトーン</legend>
       <label>
@@ -636,7 +670,47 @@ describe('getSelectedAdviceTone()', () => {
 });
 
 // ================================================================
-// 8. getNextActionTips — risk 別の次にできること
+// 8. getSelectedUsageScene — 利用シーン取得
+// ================================================================
+describe('getSelectedUsageScene()', () => {
+  beforeEach(setupDom);
+
+  test('初期値は general を返す', () => {
+    expect(getSelectedUsageScene()).toBe('general');
+  });
+
+  test.each([
+    ['sns', 'sns'],
+    ['reply', 'reply'],
+    ['business', 'business'],
+    ['apology', 'apology']
+  ])('%s 選択時は %s を返す', (value, expected) => {
+    document.querySelector(`input[name="usage-scene"][value="${value}"]`).checked = true;
+    expect(getSelectedUsageScene()).toBe(expected);
+  });
+
+  test('不正な値の場合は general に戻す', () => {
+    const selected = document.querySelector('input[name="usage-scene"][value="general"]');
+    selected.value = 'invalid';
+    selected.checked = true;
+    expect(getSelectedUsageScene()).toBe('general');
+  });
+
+  test('利用シーン選択UIは5つの選択肢を表示する', () => {
+    const labels = Array.from(document.querySelectorAll('.usage-scene-option span')).map(item => item.textContent.trim());
+
+    expect(labels).toEqual([
+      '指定なし・おまかせ',
+      'SNSの投稿',
+      '返信・コメント',
+      '仕事・依頼文',
+      '謝罪・説明文'
+    ]);
+  });
+});
+
+// ================================================================
+// 9. getNextActionTips — risk 別の次にできること
 // ================================================================
 describe('getNextActionTips()', () => {
   test('risk: low のとき low 用の3項目を返す', () => {
@@ -661,7 +735,7 @@ describe('getNextActionTips()', () => {
 });
 
 // ================================================================
-// 9. renderResult — 結果レンダリング
+// 10. renderResult — 結果レンダリング
 // ================================================================
 describe('renderResult()', () => {
   beforeEach(setupDom);
@@ -894,7 +968,7 @@ describe('renderResult()', () => {
 });
 
 // ================================================================
-// 10. recheck — 再チェック（結果エリア非表示 & textarea フォーカス）
+// 11. recheck — 再チェック（結果エリア非表示 & textarea フォーカス）
 // ================================================================
 describe('recheck()', () => {
   beforeEach(() => {
@@ -916,7 +990,7 @@ describe('recheck()', () => {
 });
 
 // ================================================================
-// 11. checkText — API通信・ローディング制御・フォールバック
+// 12. checkText — API通信・ローディング制御・フォールバック
 // ================================================================
 describe('checkText()', () => {
   beforeEach(() => {
@@ -1045,7 +1119,7 @@ describe('checkText()', () => {
     const [url, options] = global.fetch.mock.calls[0];
     expect(url).toBe('/prod/check');
     expect(options.method).toBe('POST');
-    expect(JSON.parse(options.body)).toEqual({ text: inputText, tone: 'standard' });
+    expect(JSON.parse(options.body)).toEqual({ text: inputText, tone: 'standard', scene: 'general' });
   });
 
   test('soft 選択時は tone: "soft" が送信される', async () => {
@@ -1070,5 +1144,17 @@ describe('checkText()', () => {
     await checkText();
 
     expect(JSON.parse(global.fetch.mock.calls[0][1].body).tone).toBe('business');
+  });
+
+  test('SNS投稿選択時は scene: "sns" が送信される', async () => {
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ risk: 'low', summary: 'ok', reasons: [], suggestions: [] })
+    });
+
+    document.querySelector('input[name="usage-scene"][value="sns"]').checked = true;
+    await checkText();
+
+    expect(JSON.parse(global.fetch.mock.calls[0][1].body).scene).toBe('sns');
   });
 });

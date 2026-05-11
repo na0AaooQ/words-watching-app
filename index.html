@@ -160,6 +160,34 @@
         <span class="sns-guide-item" id="guide-youtube">YouTube 350字</span>
       </div>
 
+      <!-- 利用シーン -->
+      <fieldset class="usage-scene" aria-label="利用シーン">
+        <legend class="usage-scene-label">利用シーン</legend>
+        <p class="usage-scene-note">文章を使う場面に合わせて、確認する観点を調整します。</p>
+        <div class="usage-scene-options">
+          <label class="usage-scene-option">
+            <input type="radio" name="usage-scene" value="general" checked>
+            <span>指定なし・おまかせ</span>
+          </label>
+          <label class="usage-scene-option">
+            <input type="radio" name="usage-scene" value="sns">
+            <span>SNSの投稿</span>
+          </label>
+          <label class="usage-scene-option">
+            <input type="radio" name="usage-scene" value="reply">
+            <span>返信・コメント</span>
+          </label>
+          <label class="usage-scene-option">
+            <input type="radio" name="usage-scene" value="business">
+            <span>仕事・依頼文</span>
+          </label>
+          <label class="usage-scene-option">
+            <input type="radio" name="usage-scene" value="apology">
+            <span>謝罪・説明文</span>
+          </label>
+        </div>
+      </fieldset>
+
       <!-- アドバイスのトーン -->
       <fieldset class="advice-tone" aria-label="文章アドバイスのトーン">
         <legend class="advice-tone-label">文章アドバイスのトーン</legend>
@@ -396,10 +424,18 @@
       return allowedTones.includes(tone) ? tone : 'standard';
     }
 
+    function getSelectedUsageScene() {
+      const allowedScenes = ['general', 'sns', 'reply', 'business', 'apology'];
+      const selected = document.querySelector('input[name="usage-scene"]:checked');
+      const scene = selected ? selected.value : 'general';
+      return allowedScenes.includes(scene) ? scene : 'general';
+    }
+
     async function checkText() {
       const text = document.getElementById('input-text').value.trim();
       if (!text) return;
       const tone = getSelectedAdviceTone();
+      const scene = getSelectedUsageScene();
 
       // UI切り替え
       document.getElementById('submit-btn').disabled   = true;
@@ -421,7 +457,7 @@
         const res = await fetch(API_ENDPOINT, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ text, tone })
+          body: JSON.stringify({ text, tone, scene })
         });
 
         if (!res.ok) throw new Error('API error: ' + res.status);
