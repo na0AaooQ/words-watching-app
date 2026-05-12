@@ -121,13 +121,13 @@
       <!-- サンプル文章 -->
       <p class="sample-label">💡 サンプル文章で試してみる</p>
       <div class="sample-btns">
-        <button class="sample-btn" onclick="setSample('今日の会議、無駄すぎて時間の無駄だった。こんな会議に付き合わされる身にもなってほしい。')">言いすぎかも系</button>
-        <button class="sample-btn" onclick="setSample('このサービス最悪。使えない。運営は何してるの？')">ちょっとキツめ系</button>
-        <button class="sample-btn" onclick="setSample('今日ランチで行ったお店、すごく美味しかった！またぜひ行きたいな😊')">ポジティブ系</button>
-        <button class="sample-btn" onclick="setSample('なんでこういう人って存在するんだろう。本当に理解できない。')">モヤっとした系</button>
-        <button class="sample-btn" onclick="setSample('SNSはじめました。これから、日々の出来事や興味関心をSNSで共有していきます。よろしくお願いします！')">SNSはじめました系</button>
-        <button class="sample-btn" onclick="setSample('はじめまして。\nXXと申します。\nプロフィールやコメントを見て、共感しましたので、フォローさせていただきました。\nよろしくお願いいたします。')">フォローの挨拶系</button>
-        <button class="sample-btn" onclick="setSample('はじめまして。\nXXと申します。\nこのたびはフォローいただきありがとうございます。\n私もフォローバックしました。\n今後、交流させていただけると嬉しいです。\nよろしくお願いいたします。')">フォローのお礼系</button>
+        <button class="sample-btn" onclick="setSample('今日の会議、無駄すぎて時間の無駄だった。こんな会議に付き合わされる身にもなってほしい。')">強く伝わりそうな文章</button>
+        <button class="sample-btn" onclick="setSample('このサービス最悪。使えない。運営は何してるの？')">表現を整えたい文章</button>
+        <button class="sample-btn" onclick="setSample('今日ランチで行ったお店、すごく美味しかった！またぜひ行きたいな😊')">前向きな文章</button>
+        <button class="sample-btn" onclick="setSample('なんでこういう人って存在するんだろう。本当に理解できない。')">気持ちを整理したい文章</button>
+        <button class="sample-btn" onclick="setSample('SNSはじめました。これから、日々の出来事や興味関心をSNSで共有していきます。よろしくお願いします！')">はじめての挨拶</button>
+        <button class="sample-btn" onclick="setSample('はじめまして。\nXXと申します。\nプロフィールやコメントを見て、共感しましたので、フォローさせていただきました。\nよろしくお願いいたします。')">フォロー時の挨拶</button>
+        <button class="sample-btn" onclick="setSample('はじめまして。\nXXと申します。\nこのたびはフォローいただきありがとうございます。\n私もフォローバックしました。\n今後、交流させていただけると嬉しいです。\nよろしくお願いいたします。')">フォローのお礼</button>
       </div>
 
       <!-- テキストエリア -->
@@ -547,6 +547,12 @@
       return nextActionTipsByRisk[risk] || nextActionTipsByRisk.medium;
     }
 
+    function getRiskLabel(risk) {
+      if (risk === 'low') return '低リスク（おだやかに伝わりそう）';
+      if (risk === 'medium') return '中リスク（少し見直すと安心）';
+      return '高リスク（ひと呼吸おいて見直したい）';
+    }
+
     /* ---------- 投稿前セルフチェック（フロント固定表示） ---------- */
     const prePostChecklistItems = [
       '相手の人格ではなく、具体的な出来事や行動について書いている',
@@ -571,10 +577,7 @@
         data.risk === 'medium' ? '🤔' :
                                  '⚠️';
 
-      const riskLabel =
-        data.risk === 'low'    ? '低リスク'  :
-        data.risk === 'medium' ? '要注意'    :
-                                 '高リスク';
+      const riskLabel = getRiskLabel(data.risk);
 
       // reasons リストの生成（escapeHtml でエスケープ）
       const reasonsHtml = Array.isArray(data.reasons) && data.reasons.length
@@ -584,7 +587,7 @@
       // suggestions リストの生成（任意項目、escapeHtml でエスケープ）
       const suggestionsHtml = Array.isArray(data.suggestions) && data.suggestions.length
         ? `<div class="advice-box">
-             <h4>💡 改善のヒント</h4>
+             <h4>💡 言葉を整えるヒント</h4>
              <ul class="result-list">${data.suggestions.map(s => `<li>${escapeHtml(s)}</li>`).join('')}</ul>
            </div>`
         : '';
@@ -652,7 +655,7 @@
       let riskChangeBannerHtml = '';
       if (previousRisk !== null && previousRisk !== data.risk) {
         const prevIcon  = previousRisk === 'low' ? '😊' : previousRisk === 'medium' ? '🤔' : '⚠️';
-        const prevLabel = previousRisk === 'low' ? '低リスク' : previousRisk === 'medium' ? '要注意' : '高リスク';
+        const prevLabel = getRiskLabel(previousRisk);
         const riskOrder = { low: 0, medium: 1, high: 2 };
         const improved  = riskOrder[data.risk] < riskOrder[previousRisk];
         riskChangeBannerHtml = `
@@ -689,7 +692,7 @@
 
         ${reasonsHtml ? `
         <div class="score-item" style="margin-top:1rem;">
-          <p style="font-size:0.95rem;font-weight:700;margin-bottom:0.5rem;color:var(--text);">🔍 気になりそうな点</p>
+          <p style="font-size:0.95rem;font-weight:700;margin-bottom:0.5rem;color:var(--text);">🔍 読み手によって気になりそうな点</p>
           ${reasonsHtml}
         </div>` : ''}
 
