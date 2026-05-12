@@ -97,6 +97,12 @@ function getNextActionTips(risk) {
   return nextActionTipsByRisk[risk] || nextActionTipsByRisk.medium;
 }
 
+function getRiskLabel(risk) {
+  if (risk === 'low') return '低リスク（おだやかに伝わりそう）';
+  if (risk === 'medium') return '中リスク（少し見直すと安心）';
+  return '高リスク（ひと呼吸おいて見直したい）';
+}
+
 const prePostChecklistItems = [
   '相手の人格ではなく、具体的な出来事や行動について書いている',
   '主語が大きすぎたり、曖昧だったりしないか確認している',
@@ -141,10 +147,7 @@ function renderResult(data) {
     data.risk === 'medium' ? '🤔' :
                              '⚠️';
 
-  const riskLabel =
-    data.risk === 'low'    ? '低リスク'  :
-    data.risk === 'medium' ? '要注意'    :
-                             '高リスク';
+  const riskLabel = getRiskLabel(data.risk);
 
   const reasonsHtml = Array.isArray(data.reasons) && data.reasons.length
     ? `<ul class="result-list">${data.reasons.map(r => `<li>${escapeHtml(r)}</li>`).join('')}</ul>`
@@ -152,7 +155,7 @@ function renderResult(data) {
 
   const suggestionsHtml = Array.isArray(data.suggestions) && data.suggestions.length
     ? `<div class="advice-box">
-         <h4>💡 改善のヒント</h4>
+         <h4>💡 言葉を整えるヒント</h4>
          <ul class="result-list">${data.suggestions.map(s => `<li>${escapeHtml(s)}</li>`).join('')}</ul>
        </div>`
     : '';
@@ -201,7 +204,11 @@ function renderResult(data) {
         <p>${escapeHtml(data.summary)}</p>
       </div>
     </div>
-    ${reasonsHtml ? `<div class="score-item" style="margin-top:1rem;">${reasonsHtml}</div>` : ''}
+    ${reasonsHtml ? `
+    <div class="score-item" style="margin-top:1rem;">
+      <p style="font-size:0.95rem;font-weight:700;margin-bottom:0.5rem;color:var(--text);">🔍 読み手によって気になりそうな点</p>
+      ${reasonsHtml}
+    </div>` : ''}
     ${suggestionsHtml}
     ${nextActionTipsHtml}
     ${prePostChecklistHtml}
@@ -782,19 +789,19 @@ describe('renderResult()', () => {
     expect(document.getElementById('result-area').innerHTML).toContain('⚠️');
   });
 
-  test('risk: low のとき「低リスク」ラベルが表示される', () => {
+  test('risk: low のとき「低リスク（おだやかに伝わりそう）」ラベルが表示される', () => {
     renderResult({ ...baseData, risk: 'low' });
-    expect(document.getElementById('result-area').innerHTML).toContain('低リスク');
+    expect(document.getElementById('result-area').innerHTML).toContain('低リスク（おだやかに伝わりそう）');
   });
 
-  test('risk: medium のとき「要注意」ラベルが表示される', () => {
+  test('risk: medium のとき「中リスク（少し見直すと安心）」ラベルが表示される', () => {
     renderResult({ ...baseData, risk: 'medium' });
-    expect(document.getElementById('result-area').innerHTML).toContain('要注意');
+    expect(document.getElementById('result-area').innerHTML).toContain('中リスク（少し見直すと安心）');
   });
 
-  test('risk: high のとき「高リスク」ラベルが表示される', () => {
+  test('risk: high のとき「高リスク（ひと呼吸おいて見直したい）」ラベルが表示される', () => {
     renderResult({ ...baseData, risk: 'high' });
-    expect(document.getElementById('result-area').innerHTML).toContain('高リスク');
+    expect(document.getElementById('result-area').innerHTML).toContain('高リスク（ひと呼吸おいて見直したい）');
   });
 
   test('summary が表示される', () => {
@@ -808,14 +815,19 @@ describe('renderResult()', () => {
     expect(items.length).toBeGreaterThanOrEqual(2);
   });
 
-  test('suggestions がある場合「改善のヒント」セクションが表示される', () => {
-    renderResult({ ...baseData, suggestions: ['改善策A'] });
-    expect(document.getElementById('result-area').innerHTML).toContain('改善のヒント');
+  test('reasons がある場合「読み手によって気になりそうな点」セクションが表示される', () => {
+    renderResult({ ...baseData, reasons: ['理由A'] });
+    expect(document.getElementById('result-area').innerHTML).toContain('読み手によって気になりそうな点');
   });
 
-  test('suggestions が空のとき「改善のヒント」セクションが表示されない', () => {
+  test('suggestions がある場合「言葉を整えるヒント」セクションが表示される', () => {
+    renderResult({ ...baseData, suggestions: ['改善策A'] });
+    expect(document.getElementById('result-area').innerHTML).toContain('言葉を整えるヒント');
+  });
+
+  test('suggestions が空のとき「言葉を整えるヒント」セクションが表示されない', () => {
     renderResult({ ...baseData, suggestions: [] });
-    expect(document.getElementById('result-area').innerHTML).not.toContain('改善のヒント');
+    expect(document.getElementById('result-area').innerHTML).not.toContain('言葉を整えるヒント');
   });
 
   test('「次にできること」カードが表示される', () => {

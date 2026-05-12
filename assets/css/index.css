@@ -594,13 +594,19 @@ textarea::placeholder {
 /* ===== リスク変化バナー ===== */
 .risk-change-banner {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 0.6rem;
   border-radius: 10px;
   padding: 0.65rem 1rem;
   font-size: 0.85rem;
   font-weight: 600;
+  line-height: 1.7;
   margin-bottom: 1rem;
+}
+
+.risk-change-banner span:last-child {
+  flex: 1;
+  min-width: 0;
 }
 
 .risk-change-banner.improved {
@@ -988,9 +994,14 @@ textarea::placeholder {
   font-size: 1.8rem;
 }
 
+.verdict-text {
+  min-width: 0;
+}
+
 .verdict-text h3 {
   font-size: 0.95rem;
   font-weight: 700;
+  line-height: 1.6;
 }
 
 .verdict-text p {
