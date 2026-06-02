@@ -75,6 +75,22 @@ header {
   text-decoration: none;
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  flex: 0 1 auto;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.header-action {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+}
+
 @keyframes pulse-ring {
   0% {
     transform: scale(1);
@@ -409,9 +425,8 @@ footer {
     gap: 0.6rem;
   }
 
-  header > div {
-    gap: 0.5rem !important;
-    flex-shrink: 0;
+  .header-actions {
+    gap: 0.5rem;
   }
 
   .btn-theme {

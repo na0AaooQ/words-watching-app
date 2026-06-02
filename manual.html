@@ -382,9 +382,8 @@
         gap: 0.6rem;
       }
 
-      header > div {
-        gap: 0.5rem !important;
-        flex-shrink: 0;
+      .header-actions {
+        gap: 0.5rem;
       }
 
       .btn-theme {
@@ -432,12 +431,14 @@
       <span class="logo-dot"></span>
       ことばみまもり
     </a>
-    <div style="display:flex; align-items:center; gap:0.75rem;">
-      <button class="btn-theme" id="btn-theme" onclick="toggleTheme()" aria-label="ダークモード切り替え">
-        <span id="theme-icon">🌙</span>
-        <span id="theme-label">ダークモード</span>
-      </button>
-      <a href="https://qiita.com/na0AaooQ" target="_blank" rel="noopener" class="header-link">開発者について</a>
+    <div class="header-actions">
+      <div class="header-action theme-toggle-wrapper">
+        <button class="btn-theme" id="btn-theme" onclick="toggleTheme()" aria-label="ダークモード切り替え">
+          <span id="theme-icon">🌙</span>
+          <span id="theme-label">ダークモード</span>
+        </button>
+      </div>
+      <a href="https://qiita.com/na0AaooQ" target="_blank" rel="noopener" class="header-action header-link">開発者について</a>
     </div>
   </header>
 
