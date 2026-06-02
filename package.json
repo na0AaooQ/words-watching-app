@@ -11,6 +11,7 @@
     "testEnvironment": "jsdom"
   },
   "scripts": {
+    "check:i18n": "node scripts/check-i18n-pages.js",
     "lint": "eslint . --ext .js,.html",
     "lint:fix": "eslint . --ext .js,.html --fix",
     "test": "jest"
