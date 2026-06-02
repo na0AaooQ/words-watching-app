@@ -8,6 +8,10 @@
   <link rel="icon" href="./favicon.svg" type="image/svg+xml">
   <meta name="description" content="ことばみまもりの使い方を説明するマニュアルページです。">
   <meta name="robots" content="noindex">
+  <link rel="canonical" href="https://words-watching-app.na0aaooq.com/manual.html">
+  <link rel="alternate" hreflang="ja" href="https://words-watching-app.na0aaooq.com/manual.html">
+  <link rel="alternate" hreflang="en" href="https://words-watching-app.na0aaooq.com/en/manual.html">
+  <link rel="alternate" hreflang="x-default" href="https://words-watching-app.na0aaooq.com/manual.html">
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
   <meta http-equiv="X-Frame-Options" content="DENY">
   <link rel="stylesheet" href="assets/css/common.css">
@@ -438,7 +442,13 @@
           <span id="theme-label">ダークモード</span>
         </button>
       </span>
-      <a href="https://qiita.com/na0AaooQ" target="_blank" rel="noopener" class="header-action header-link">開発者について</a>
+      <label class="header-action language-switcher">
+        <span class="language-label">表示言語</span>
+        <select class="language-select" aria-label="表示言語" onchange="if (this.value) window.location.href = this.value;">
+          <option value="" selected>日本語</option>
+          <option value="en/manual.html">English</option>
+        </select>
+      </label>
     </div>
   </header>
 

@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Kotoba Mimamori | Pre-post wording risk check for social media</title>
+  <link rel="icon" href="../favicon.png" type="image/png">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <meta name="description" content="A free AI-assisted tool that helps you pause before posting on social media. Check tone, emotional intensity, and potentially harmful wording. Your text is not stored or used for AI training.">
+  <meta name="keywords" content="social media wording check,pre-post check,online harassment prevention,AI writing risk check,free SNS tool">
+  <meta name="author" content="na0AaooQ">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://words-watching-app.na0aaooq.com/en/">
+  <link rel="alternate" hreflang="ja" href="https://words-watching-app.na0aaooq.com/">
+  <link rel="alternate" hreflang="en" href="https://words-watching-app.na0aaooq.com/en/">
+  <link rel="alternate" hreflang="x-default" href="https://words-watching-app.na0aaooq.com/">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="X-Frame-Options" content="DENY">
+
+  <meta property="og:title" content="Kotoba Mimamori | Pre-post wording check">
+  <meta property="og:description" content="Pause before you post. Gently review the tone and risk of your wording before sharing it online.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://words-watching-app.na0aaooq.com/en/">
+  <meta property="og:site_name" content="Kotoba Mimamori">
+  <meta property="og:image" content="https://words-watching-app.na0aaooq.com/ogp-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@na0AaooQ">
+  <meta name="twitter:title" content="Kotoba Mimamori | Pre-post wording check">
+  <meta name="twitter:description" content="Pause before you post. Gently review the tone and risk of your wording before sharing it online.">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Kotoba Mimamori",
+    "alternateName": ["Kotoba Mimamori", "ことばみまもり"],
+    "url": "https://words-watching-app.na0aaooq.com/en/",
+    "description": "A free AI-assisted tool for checking the tone and risk of wording before posting on social media.",
+    "applicationCategory": "UtilityApplication",
+    "operatingSystem": "Web",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "JPY"
+    },
+    "author": {
+      "@type": "Person",
+      "name": "na0AaooQ",
+      "url": "https://qiita.com/na0AaooQ"
+    }
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Noto+Serif+JP:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/common.css">
+  <link rel="stylesheet" href="../assets/css/index.css">
+</head>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V947PLZR3S"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-V947PLZR3S');
+</script>
+
+<body>
+  <header>
+    <a href="index.html" class="header-logo">
+      <span class="logo-dot"></span>
+      Kotoba Mimamori
+    </a>
+    <div class="header-actions">
+      <span class="header-action theme-toggle-wrapper">
+        <button class="btn-theme" id="btn-theme" onclick="toggleTheme()" aria-label="Toggle dark mode">
+          <span id="theme-icon">🌙</span>
+          <span id="theme-label">Dark Mode</span>
+        </button>
+      </span>
+      <label class="header-action language-switcher">
+        <span class="language-label">Language</span>
+        <select class="language-select" aria-label="Language" onchange="if (this.value) window.location.href = this.value;">
+          <option value="../index.html">日本語</option>
+          <option value="index.html" selected>English</option>
+        </select>
+      </label>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-tag fade-up">AI powered · Free · No login or sign-up required</div>
+    <h1 class="fade-up delay-1">Before posting, <span>take a breath.</span></h1>
+    <p class="hero-sub fade-up delay-2">
+      Check the tone, emotional intensity, and possible risk in text you plan to post online.<br>
+      A gentle cushion for your words.
+    </p>
+    <span class="privacy-badge fade-up delay-3">
+      Input text is not stored in the tool and is not used for AI training.
+    </span>
+
+    <p class="about-inline-link fade-up delay-4">
+      First time here:
+      <a href="manual.html" target="_blank" rel="noopener">How to use</a>
+      <span class="about-inline-separator">/</span>
+      <a href="about.html" target="_blank" rel="noopener">About</a>
+      <span class="about-inline-separator">/</span>
+      <a href="consultation.html" target="_blank" rel="noopener">Consultation guide</a>
+    </p>
+  </section>
+
+  <main>
+    <div class="card fade-up">
+      <p class="sample-label">Try a sample text</p>
+      <div class="sample-btns">
+        <button class="sample-btn" onclick="setSample('That meeting felt far too long, and I came away exhausted. I wish we could make it more focused next time.')">Strong wording</button>
+        <button class="sample-btn" onclick="setSample('This service is terrible. It does not work at all. What is the operator doing?')">Needs softer wording</button>
+        <button class="sample-btn" onclick="setSample('The restaurant I visited for lunch today was wonderful. I would love to go again.')">Positive post</button>
+        <button class="sample-btn" onclick="setSample('I do not understand why some people act this way. It is honestly difficult to accept.')">Organize feelings</button>
+        <button class="sample-btn" onclick="setSample('I have started using social media. I will share everyday moments and things I care about. Nice to meet you!')">First greeting</button>
+        <button class="sample-btn" onclick="setSample('Hello.\nMy name is XX.\nI saw your profile and comments and felt that I could relate to them, so I followed you.\nIt is nice to meet you.')">Follow greeting</button>
+        <button class="sample-btn" onclick="setSample('Hello.\nMy name is XX.\nThank you for following me.\nI have followed you back as well.\nI would be happy to stay connected.\nIt is nice to meet you.')">Thanks for the follow</button>
+      </div>
+
+      <div class="textarea-wrap">
+        <textarea
+          id="input-text"
+          placeholder="Enter the text you want to post on social media&#10;(Example: Today's meeting felt too long and I am tired. Could we improve it somehow?)"
+          maxlength="50000"
+          oninput="onTextInput()"
+          aria-label="Text to check"
+        ></textarea>
+      </div>
+
+      <div class="char-count-row">
+        <button class="btn-copy-text" id="btn-copy-text" onclick="copyText()" title="Copy text">Copy text</button>
+        <span class="char-count" id="char-count">0 / 50000</span>
+      </div>
+
+      <div class="sns-guide" id="sns-guide" style="display:none;">
+        <span class="sns-guide-label">Approximate character limits:</span>
+        <span class="sns-guide-item" id="guide-x">X 280 chars</span>
+        <span class="sns-guide-item" id="guide-facebook">Facebook 50,000 chars</span>
+        <span class="sns-guide-item" id="guide-instagram">Instagram 2,200 chars</span>
+        <span class="sns-guide-item" id="guide-tiktok">TikTok 2,200 chars</span>
+        <span class="sns-guide-item" id="guide-threads">Threads 500 chars</span>
+        <span class="sns-guide-item" id="guide-line">LINE 1,000 chars</span>
+        <span class="sns-guide-item" id="guide-linkedin">LinkedIn 3,000 chars</span>
+        <span class="sns-guide-item" id="guide-youtube">YouTube 350 chars</span>
+      </div>
+
+      <fieldset class="usage-scene" aria-label="Usage scene">
+        <legend class="usage-scene-label">Usage scene</legend>
+        <p class="usage-scene-note">Choose a context so the check can be framed more appropriately.</p>
+        <div class="usage-scene-options">
+          <label class="usage-scene-option">
+            <input type="radio" name="usage-scene" value="general" checked>
+            <span>General</span>
+          </label>
+          <label class="usage-scene-option">
+            <input type="radio" name="usage-scene" value="sns">
+            <span>Social media post</span>
+          </label>
+          <label class="usage-scene-option">
+            <input type="radio" name="usage-scene" value="reply">
+            <span>Reply or comment</span>
+          </label>
+          <label class="usage-scene-option">
+            <input type="radio" name="usage-scene" value="business">
+            <span>Work request</span>
+          </label>
+          <label class="usage-scene-option">
+            <input type="radio" name="usage-scene" value="apology">
+            <span>Apology or explanation</span>
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset class="advice-tone" aria-label="Advice tone">
+        <legend class="advice-tone-label">Advice tone</legend>
+        <div class="advice-tone-options">
+          <label class="advice-tone-option">
+            <input type="radio" name="advice-tone" value="standard" checked>
+            <span>Balanced check</span>
+          </label>
+          <label class="advice-tone-option">
+            <input type="radio" name="advice-tone" value="soft">
+            <span>Make it gentler</span>
+          </label>
+          <label class="advice-tone-option">
+            <input type="radio" name="advice-tone" value="business">
+            <span>Polite or business-like</span>
+          </label>
+        </div>
+      </fieldset>
+
+      <p class="notice">Analysis results are currently provided primarily in Japanese. English result support is planned for a later API update.</p>
+
+      <button class="btn-primary" id="submit-btn" onclick="checkText()" disabled>
+        Check my text
+      </button>
+
+      <div id="loading">
+        <div class="spinner"></div>
+        <p>AI is reviewing your text...</p>
+      </div>
+    </div>
+
+    <div id="result-area" class="card" style="display:none;"></div>
+
+    <div style="margin-bottom:2em;">
+      <p class="notice">The result is reference information. How wording is received can vary depending on context and the reader.</p>
+    </div>
+
+    <section class="faq-section fade-up">
+      <h2 class="faq-title">FAQ</h2>
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false" onclick="toggleFaq(this)">
+          <span><span class="q-icon">Q.</span> Is this tool free?</span>
+          <span class="faq-arrow">▼</span>
+        </button>
+        <div class="faq-a">Yes. It is free to use. No app installation, account registration, or login is required.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false" onclick="toggleFaq(this)">
+          <span><span class="q-icon">Q.</span> What should I avoid entering?</span>
+          <span class="faq-arrow">▼</span>
+        </button>
+        <div class="faq-a">This service is for checking text that you intend to publish on social media or the internet. Please do not enter text you would not post publicly, such as confidential company or organization information, personal information, or other sensitive information.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false" onclick="toggleFaq(this)">
+          <span><span class="q-icon">Q.</span> Is my text stored or used for AI training?</span>
+          <span class="faq-arrow">▼</span>
+        </button>
+        <div class="faq-a">No. Input text is not stored in the tool and is not used for AI training.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false" onclick="toggleFaq(this)">
+          <span><span class="q-icon">Q.</span> How are the check results displayed?</span>
+          <span class="faq-arrow">▼</span>
+        </button>
+        <div class="faq-a">The AI (LLM) analyzes the entered text and displays reference information such as potentially concerning points, possible aggressiveness, defamatory tone, emotional intensity, and suggestions for improvement. The result is only reference information, and the final decision about whether to post remains yours.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false" onclick="toggleFaq(this)">
+          <span><span class="q-icon">Q.</span> Can the tool stop me from posting?</span>
+          <span class="faq-arrow">▼</span>
+        </button>
+        <div class="faq-a">No. The tool does not prevent posting. The final decision about whether to post, based on the check result or your own judgment, remains yours.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false" onclick="toggleFaq(this)">
+          <span><span class="q-icon">Q.</span> What kinds of text is this tool useful for?</span>
+          <span class="faq-arrow">▼</span>
+        </button>
+        <div class="faq-a">It can be especially useful for complaints or criticism written while emotions are high, posts that include opinions or comments about others, and posts that may reach a wide audience. Please use it as a second opinion when you wonder, "Could this sound too strong?"</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false" onclick="toggleFaq(this)">
+          <span><span class="q-icon">Q.</span> Are there times when this tool cannot be used?</span>
+          <span class="faq-arrow">▼</span>
+        </button>
+        <div class="faq-a">Yes. If access is concentrated or stable operation becomes difficult, use of the tool may be temporarily restricted. Please wait a while and try again.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false" onclick="toggleFaq(this)">
+          <span><span class="q-icon">Q.</span> Which company operates this tool?</span>
+          <span class="faq-arrow">▼</span>
+        </button>
+        <div class="faq-a">This tool is not operated by a company. It is developed and operated by one <a href="https://portfolio.na0aaooq.com/about.html" target="_blank" rel="noopener">developer</a>, Naohisa Aoki, as a sole proprietorship under the trade name Kokoro Mimamori. It was created from the hope of reducing harm on social media and the internet, and of helping protect people's hearts. For more detail, please see the <a href="https://qiita.com/na0AaooQ/items/cc97a13993aebe4d28f3#%E9%96%8B%E7%99%BA%E8%80%85%E3%81%AE%E6%80%9D%E3%81%84%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6" target="_blank" rel="noopener">article written by the developer</a>.</div>
+      </div>
+    </section>
+
+    <section class="related-services-section fade-up" id="related-services" aria-labelledby="related-services-title">
+      <h2 id="related-services-title">Related gentle safety tools</h2>
+      <p class="related-services-lead">
+        Kotoba Mimamori helps you pause before posting words.<br>
+        The same personal project also explores small ways to make social media feel a little safer.
+      </p>
+      <div class="related-service-grid">
+        <a class="related-service-card" href="https://chromewebstore.google.com/detail/hcegagndgkhkghagpahffblnljmfcpbj?utm_source=item-share-cb" target="_blank" rel="noopener" aria-label="Open the Gazou Mimamori Chrome Web Store page in a new tab">
+          <span class="related-service-name">Gazou Mimamori</span>
+          <span class="related-service-description">A Chrome extension that places a soft cushion before viewing unpleasant or intense images on X.</span>
+          <span class="related-service-link-text">View on Chrome Web Store</span>
+        </a>
+        <a class="related-service-card" href="https://github.com/na0AaooQ/kotoba-uke-mimamori-for-x" target="_blank" rel="noopener" aria-label="Open the Kotoba Uke Mimamori GitHub repository in a new tab">
+          <span class="related-service-name">Kotoba Uke Mimamori</span>
+          <span class="related-service-description">A Chrome extension that helps protect your heart before reading strong words on X.</span>
+          <span class="related-service-link-text">View on GitHub</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-links">
+      <a href="index.html">Top</a>
+      <a href="about.html">About</a>
+      <a href="about.html#kokoro-mimamori-series">Related Services</a>
+      <a href="manual.html">Manual</a>
+      <a href="consultation.html">Consultation Guide</a>
+      <a href="terms_of_service.html">Terms</a>
+      <a href="disclaimer.html">Disclaimer</a>
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="contact.html">Contact</a>
+      <a href="https://portfolio.na0aaooq.com/" target="_blank" rel="noopener">Operator</a>
+    </div>
+    <p class="footer-copy">&copy; Kotoba Mimamori 2026 Naohisa Aoki (@na0AaooQ) All Rights Reserved.</p>
+  </footer>
+
+  <script>
+    (function () {
+      const saved = localStorage.getItem('theme');
+      if (saved) document.documentElement.setAttribute('data-theme', saved);
+    })();
+
+    function toggleTheme() {
+      const root = document.documentElement;
+      const current = root.getAttribute('data-theme');
+      const osDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const isDark = current === 'dark' || (!current && osDark);
+      const next = isDark ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+      updateThemeButton(next);
+    }
+
+    function updateThemeButton(theme) {
+      const icon = document.getElementById('theme-icon');
+      const label = document.getElementById('theme-label');
+      if (!icon || !label) return;
+      if (theme === 'dark') {
+        icon.textContent = '☀️';
+        label.textContent = 'Light Mode';
+      } else {
+        icon.textContent = '🌙';
+        label.textContent = 'Dark Mode';
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', function () {
+      const saved = localStorage.getItem('theme');
+      const osDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      updateThemeButton(saved || (osDark ? 'dark' : 'light'));
+    });
+
+    let previousRisk = null;
+
+    function onTextInput() {
+      const inputMaxNumberOfChar = 50000;
+      const ta = document.getElementById('input-text');
+      const cc = document.getElementById('char-count');
+      const btn = document.getElementById('submit-btn');
+      const len = ta.value.length;
+
+      cc.textContent = len + ' / ' + inputMaxNumberOfChar;
+      cc.className = 'char-count' + (len > 1800 ? ' warn' : '') + (len >= inputMaxNumberOfChar ? ' over' : '');
+      btn.disabled = len === 0;
+
+      const guide = document.getElementById('sns-guide');
+      if (len === 0) {
+        guide.style.display = 'none';
+      } else {
+        guide.style.display = 'flex';
+        const limits = { x: 280, threads: 500, tiktok: 2200, instagram: 2200, facebook: 50000, line: 1000, linkedin: 3000, youtube: 350 };
+        Object.entries(limits).forEach(([key, limit]) => {
+          const el = document.getElementById('guide-' + key);
+          if (el) el.classList.toggle('over-limit', len > limit);
+        });
+      }
+    }
+
+    function setSample(text) {
+      const ta = document.getElementById('input-text');
+      ta.value = text;
+      ta.dispatchEvent(new Event('input'));
+      ta.focus();
+      ta.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function toggleFaq(btn) {
+      const ans = btn.nextElementSibling;
+      const expanded = btn.getAttribute('aria-expanded') === 'true';
+      document.querySelectorAll('.faq-q').forEach(b => {
+        if (b !== btn) {
+          b.setAttribute('aria-expanded', 'false');
+          b.nextElementSibling.classList.remove('open');
+        }
+      });
+      btn.setAttribute('aria-expanded', !expanded);
+      ans.classList.toggle('open', !expanded);
+    }
+
+    function getSelectedAdviceTone() {
+      const allowedTones = ['standard', 'soft', 'business'];
+      const selected = document.querySelector('input[name="advice-tone"]:checked');
+      const tone = selected ? selected.value : 'standard';
+      return allowedTones.includes(tone) ? tone : 'standard';
+    }
+
+    function getSelectedUsageScene() {
+      const allowedScenes = ['general', 'sns', 'reply', 'business', 'apology'];
+      const selected = document.querySelector('input[name="usage-scene"]:checked');
+      const scene = selected ? selected.value : 'general';
+      return allowedScenes.includes(scene) ? scene : 'general';
+    }
+
+    async function checkText() {
+      const text = document.getElementById('input-text').value.trim();
+      if (!text) return;
+      const tone = getSelectedAdviceTone();
+      const scene = getSelectedUsageScene();
+
+      document.getElementById('submit-btn').disabled = true;
+      document.getElementById('loading').style.display = 'flex';
+      document.getElementById('result-area').style.display = 'none';
+
+      const oldNotice = document.getElementById('recheck-notice');
+      if (oldNotice) oldNotice.remove();
+      document.getElementById('loading').scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+      try {
+        const res = await fetch('/prod/check', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text, tone, scene })
+        });
+
+        if (!res.ok) throw new Error('API error: ' + res.status);
+        let data = await res.json();
+        if (data.body && typeof data.body === 'string') {
+          data = JSON.parse(data.body);
+        } else if (data.body && typeof data.body === 'object') {
+          data = data.body;
+        }
+        renderResult(data);
+      } catch (e) {
+        console.warn('Using demo data because API is unavailable:', e.message);
+        renderResult(generateDemoData(text));
+      } finally {
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('submit-btn').disabled = false;
+      }
+    }
+
+    function generateDemoData(text) {
+      const hasNegative = /terrible|useless|hate|awful|stupid|idiot|worst/i.test(text);
+      if (hasNegative) {
+        return {
+          risk: 'high',
+          summary: 'This text may sound emotionally strong or harsh. It may help to reread it before posting.',
+          reasons: [
+            'It includes strong negative wording.',
+            'Some readers may experience it as hurtful or confrontational.'
+          ],
+          suggestions: [
+            'Consider waiting until your feelings settle a little.',
+            'Try describing the specific situation instead of judging the person.'
+          ]
+        };
+      }
+      return {
+        risk: 'low',
+        summary: 'This text appears relatively calm. It is likely to be received gently.',
+        reasons: ['No especially concerning wording was found in this demo check.'],
+        suggestions: []
+      };
+    }
+
+    function escapeHtml(str) {
+      if (typeof str !== 'string') return '';
+      return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    const nextActionTipsByRisk = {
+      low: [
+        'Before posting, lightly check for typos or unclear wording.',
+        'Make sure the point you want to convey is easy to see.',
+        'Adjust small expressions if needed.'
+      ],
+      medium: [
+        'Wait a little, then read the text again.',
+        'Replace wording that may feel too strong with gentler words.',
+        'Focus on concrete events or actions rather than the other person as a whole.'
+      ],
+      high: [
+        'Avoid posting immediately and revisit the text after a pause.',
+        'Separate facts from feelings before rewriting.',
+        'Consider keeping it as a draft or private note instead of a public post.'
+      ]
+    };
+
+    function getNextActionTips(risk) {
+      return nextActionTipsByRisk[risk] || nextActionTipsByRisk.medium;
+    }
+
+    function getRiskLabel(risk) {
+      if (risk === 'low') return 'Low risk';
+      if (risk === 'medium') return 'Medium risk';
+      return 'High risk';
+    }
+
+    const prePostChecklistItems = [
+      'The text focuses on specific events or actions, not someone\'s personality.',
+      'The subject is not too broad or vague.',
+      'The wording fits the audience and visibility of the post.',
+      'You would still feel comfortable posting this after your feelings settle.'
+    ];
+
+    function listHtml(items) {
+      return '<ul class="result-list">' + items.map(item => '<li>' + escapeHtml(item) + '</li>').join('') + '</ul>';
+    }
+
+    function renderResult(data) {
+      const resultArea = document.getElementById('result-area');
+      const riskClass = data.risk === 'low' ? 'verdict safe' : data.risk === 'medium' ? 'verdict caution' : 'verdict danger';
+      const riskIcon = data.risk === 'low' ? '😊' : data.risk === 'medium' ? '🤔' : '⚠️';
+      const riskLabel = getRiskLabel(data.risk);
+      const reasonsHtml = Array.isArray(data.reasons) && data.reasons.length ? listHtml(data.reasons) : '';
+      const suggestionsHtml = Array.isArray(data.suggestions) && data.suggestions.length
+        ? '<div class="advice-box"><h4>Wording tips</h4>' + listHtml(data.suggestions) + '</div>'
+        : '';
+      const nextActionTipsHtml = '<div class="next-action-card"><h4>What you can do next</h4><p>Use these as gentle review prompts before posting.</p>' + listHtml(getNextActionTips(data.risk)) + '</div>';
+      const checklistHtml = '<div class="pre-post-checklist-card" aria-labelledby="pre-post-checklist-title"><h4 id="pre-post-checklist-title">Pre-post self check</h4><p>Check these if they are helpful before posting or sending.</p><ul class="pre-post-checklist">' + prePostChecklistItems.map((item, index) => '<li><label class="pre-post-checklist-item" for="pre-post-check-' + (index + 1) + '"><input type="checkbox" id="pre-post-check-' + (index + 1) + '" autocomplete="off"><span>' + escapeHtml(item) + '</span></label></li>').join('') + '</ul></div>';
+
+      let riskChangeBannerHtml = '';
+      if (previousRisk !== null && previousRisk !== data.risk) {
+        const prevLabel = getRiskLabel(previousRisk);
+        const riskOrder = { low: 0, medium: 1, high: 2 };
+        const improved = riskOrder[data.risk] < riskOrder[previousRisk];
+        riskChangeBannerHtml = '<div class="risk-change-banner ' + (improved ? 'improved' : 'worsened') + '"><span>' + (improved ? '🎉' : '📢') + '</span><span>Previous: ' + escapeHtml(prevLabel) + ' → Now: ' + escapeHtml(riskLabel) + ' ' + (improved ? 'The risk appears lower.' : 'The risk appears higher. Consider reviewing again.') + '</span></div>';
+      } else if (previousRisk !== null && previousRisk === data.risk) {
+        riskChangeBannerHtml = '<div class="risk-change-banner unchanged"><span>↔️</span><span>The result is the same as last time: ' + escapeHtml(riskLabel) + '</span></div>';
+      }
+      previousRisk = data.risk;
+
+      resultArea.innerHTML = '<div class="result-header"><p class="result-title">Check result</p><button class="btn-recheck" onclick="recheck()">Edit and recheck</button></div>' +
+        riskChangeBannerHtml +
+        '<div class="' + escapeHtml(riskClass) + '"><span class="verdict-icon">' + riskIcon + '</span><div class="verdict-text"><h3>Overall result: ' + escapeHtml(riskLabel) + '</h3><p>' + escapeHtml(data.summary) + '</p></div></div>' +
+        (reasonsHtml ? '<div class="score-item" style="margin-top:1rem;"><p style="font-size:0.95rem;font-weight:700;margin-bottom:0.5rem;color:var(--text);">Points that may concern readers</p>' + reasonsHtml + '</div>' : '') +
+        suggestionsHtml +
+        nextActionTipsHtml +
+        checklistHtml +
+        '<br><p class="share-info-label">If you want to post after reviewing your text, choose a service and click Open. The tool only opens the selected service; it does not post your text automatically. The final decision remains yours.</p>' +
+        '<div class="sns-open-row" style="margin-top:1rem;"><select class="sns-select" id="sns-select" aria-label="Choose social media destination"><option value="">-- Choose a service --</option><option value="https://x.com/intent/tweet">X</option><option value="https://www.threads.com/">Threads</option><option value="https://www.instagram.com/">Instagram</option><option value="https://www.facebook.com/sharer/sharer.php">Facebook</option><option value="https://www.tiktok.com/">TikTok</option><option value="https://line.me/R/nv/chat">LINE</option><option value="https://www.linkedin.com/">LinkedIn</option><option value="https://www.youtube.com/">YouTube</option></select><button class="btn-sns-open" onclick="openSns()">Open</button></div>';
+
+      resultArea.style.display = 'block';
+      resultArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function openSns() {
+      const sel = document.getElementById('sns-select');
+      if (!sel || !sel.value) {
+        sel.focus();
+        return;
+      }
+      window.open(sel.value, '_blank', 'noopener');
+    }
+
+    function recheck() {
+      const resultArea = document.getElementById('result-area');
+      if (resultArea.style.display !== 'none' && !document.getElementById('recheck-notice')) {
+        const notice = document.createElement('div');
+        notice.id = 'recheck-notice';
+        notice.style.cssText = 'background: var(--amber-lt); border: 1px solid var(--amber); border-radius: 10px; padding: 0.6rem 1rem; font-size: 0.85rem; color: #92600a; margin-bottom: 1rem;';
+        notice.innerHTML = '<strong>Editing</strong> Update the text above and click Check my text to refresh the result.';
+        resultArea.insertBefore(notice, resultArea.firstChild);
+      }
+      document.getElementById('input-text').focus();
+      document.getElementById('input-text').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function copyText() {
+      const text = document.getElementById('input-text').value;
+      if (!text) return;
+      const btn = document.getElementById('btn-copy-text');
+      navigator.clipboard.writeText(text)
+        .then(() => {
+          btn.textContent = 'Copied';
+          btn.classList.add('copied');
+          setTimeout(() => {
+            btn.textContent = 'Copy text';
+            btn.classList.remove('copied');
+          }, 2000);
+        })
+        .catch(() => {
+          const ta = document.getElementById('input-text');
+          ta.select();
+          document.execCommand('copy');
+          btn.textContent = 'Copied';
+          btn.classList.add('copied');
+          setTimeout(() => {
+            btn.textContent = 'Copy text';
+            btn.classList.remove('copied');
+          }, 2000);
+        });
+    }
+  </script>
+
+</body>
+</html>

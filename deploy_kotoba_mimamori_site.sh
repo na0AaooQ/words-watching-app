@@ -24,7 +24,7 @@ if [ -d "${BASE_DIR}" ] ; then
   cd ${BASE_DIR}
 
   echo "S3バケット [${S3_BUKKET_NAME}] へデプロイする対象ファイルです。"
-  aws s3 sync . ${S3_BUKKET_NAME} --exclude "*" --include "*.html" --include "*.css" \
+  aws s3 sync . ${S3_BUKKET_NAME} --exclude "*" --include "*.html" --include "*.css" --include "sitemap.xml" \
     --delete \
     --size-only \
     --exclude ".git/*" \
@@ -45,7 +45,7 @@ if [ -d "${BASE_DIR}" ] ; then
   case $ANS in
     [Yy]* )
       echo "S3バケット [${S3_BUKKET_NAME}] へデプロイします。"
-      aws s3 sync . ${S3_BUKKET_NAME} --exclude "*" --include "*.html" --include "*.css" \
+      aws s3 sync . ${S3_BUKKET_NAME} --exclude "*" --include "*.html" --include "*.css" --include "sitemap.xml" \
         --delete \
         --size-only \
         --exclude ".git/*" \
