@@ -23,6 +23,21 @@ module.exports = [
     },
   },
   {
+    files: ["scripts/**/*.js"],
+    ...js.configs.recommended,
+    languageOptions: {
+      ...js.configs.recommended.languageOptions,
+      ecmaVersion: "latest",
+      sourceType: "script",
+      globals: {
+        ...globals.node,
+      },
+    },
+    rules: {
+      "no-console": "off",
+    },
+  },
+  {
     files: ["**/*.html"],
     ...js.configs.recommended,
     plugins: {
