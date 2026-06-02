@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Terms of Service | Kotoba Mimamori</title>
+  <link rel="icon" href="../favicon.png" type="image/png">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <meta name="description" content="Terms of Service for Kotoba Mimamori.">
+  <meta name="robots" content="noindex">
+  <link rel="canonical" href="https://words-watching-app.na0aaooq.com/en/terms_of_service.html">
+  <link rel="alternate" hreflang="ja" href="https://words-watching-app.na0aaooq.com/terms_of_service.html">
+  <link rel="alternate" hreflang="en" href="https://words-watching-app.na0aaooq.com/en/terms_of_service.html">
+  <link rel="alternate" hreflang="x-default" href="https://words-watching-app.na0aaooq.com/terms_of_service.html">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="X-Frame-Options" content="DENY">
+  <link rel="stylesheet" href="../assets/css/common.css">
+
+</head>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V947PLZR3S"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-V947PLZR3S');
+</script>
+
+<body>
+  <header>
+    <a href="index.html" class="header-logo">
+      <span class="logo-dot"></span>
+      Kotoba Mimamori
+    </a>
+    <div class="header-actions">
+      <span class="header-action theme-toggle-wrapper">
+        <button class="btn-theme" id="btn-theme" onclick="toggleTheme()" aria-label="Toggle dark mode">
+          <span id="theme-icon">🌙</span>
+          <span id="theme-label">Dark Mode</span>
+        </button>
+      </span>
+      <a href="https://qiita.com/na0AaooQ" target="_blank" rel="noopener" class="header-action header-link">About the Developer</a>
+      <label class="header-action language-switcher">
+        <span class="language-label">Language</span>
+        <select class="language-select" aria-label="Language" onchange="if (this.value) window.location.href = this.value;">
+          <option value="../terms_of_service.html">日本語</option>
+          <option value="terms_of_service.html" selected>English</option>
+        </select>
+      </label>
+    </div>
+  </header>
+
+  <div class="page-hero">
+    <h1>Terms of Service</h1>
+    <p>Terms of Service</p>
+  </div>
+
+  <main>
+    <div class="card">
+      <span class="updated-badge">Last updated: March 2026</span>
+
+      <p class="terms-lead">
+        These Terms of Service define the conditions for using <strong>Kotoba Mimamori | Pre-post wording risk check for social media</strong> (the "Service").
+      </p>
+      <div class="doc-section">
+        <h2>1. Service content</h2>
+        <p>The Service analyzes text before it is posted online and provides reference information about emotional intensity, potentially aggressive wording, and possible communication risk. It does not restrict posting. It offers a gentle check before sending words out.</p>
+        <p><strong>Main functions</strong></p>
+        <ul>
+          <li>Reference analysis of emotional tone in text.</li>
+          <li>Detection of wording that may carry risk.</li>
+          <li>Display of hints for improving wording.</li>
+        </ul>
+      </div>
+      <div class="doc-section">
+        <h2>2. Information that should not be entered</h2>
+        <p>The Service is for checking text that you are considering publishing on social media or the internet. Please do not enter confidential company information, personal information, secrets, or any text you would not post publicly.</p>
+      </div>
+      <div class="doc-section">
+        <h2>3. Free use</h2>
+        <p>The Service is currently provided free of charge. The content or method of provision may be reviewed in the future.</p>
+      </div>
+      <div class="doc-section">
+        <h2>4. Usage restrictions</h2>
+        <p>If access is concentrated or stable operation becomes difficult, use of the Service may be temporarily restricted or suspended.</p>
+      </div>
+      <div class="doc-section">
+        <h2>5. Copyright</h2>
+        <p>Copyright in the Service belongs to the operator.</p>
+      </div>
+      <div class="doc-section">
+        <h2>6. Changes, interruption, and termination</h2>
+        <p>The Service may be changed, interrupted, or terminated without prior notice.</p>
+      </div>
+      <div class="doc-section">
+        <h2>7. Prohibited actions</h2>
+        <p>Actions that interfere with operation of the Service or place excessive load on it are prohibited.</p>
+      </div>
+      <div class="doc-section">
+        <h2>8. Changes to these Terms</h2>
+        <p>These Terms may be changed without prior notice.</p>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-links">
+      <a href="index.html">Top</a>
+      <a href="about.html">About</a>
+      <a href="about.html#kokoro-mimamori-series">Related Services</a>
+      <a href="manual.html">Manual</a>
+      <a href="consultation.html">Consultation Guide</a>
+      <a href="terms_of_service.html">Terms</a>
+      <a href="disclaimer.html">Disclaimer</a>
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="contact.html">Contact</a>
+      <a href="https://portfolio.na0aaooq.com/" target="_blank" rel="noopener">Operator</a>
+    </div>
+    <p class="footer-copy">&copy; Kotoba Mimamori 2026 Naohisa Aoki (@na0AaooQ) All Rights Reserved.</p>
+  </footer>
+
+  <script>
+    /* ---------- Theme toggle ---------- */
+    (function () {
+      const saved = localStorage.getItem('theme');
+      if (saved) document.documentElement.setAttribute('data-theme', saved);
+    })();
+
+    function toggleTheme() {
+      const root = document.documentElement;
+      const current = root.getAttribute('data-theme');
+      const osDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const isDark = current === 'dark' || (!current && osDark);
+      const next = isDark ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+      updateThemeButton(next);
+    }
+
+    function updateThemeButton(theme) {
+      const icon = document.getElementById('theme-icon');
+      const label = document.getElementById('theme-label');
+      if (!icon || !label) return;
+      if (theme === 'dark') {
+        icon.textContent = '☀️';
+        label.textContent = 'Light Mode';
+      } else {
+        icon.textContent = '🌙';
+        label.textContent = 'Dark Mode';
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', function () {
+      const saved = localStorage.getItem('theme');
+      const osDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      updateThemeButton(saved || (osDark ? 'dark' : 'light'));
+    });
+  </script>
+
+</body>
+</html>

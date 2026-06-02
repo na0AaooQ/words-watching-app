@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy | Kotoba Mimamori</title>
+  <link rel="icon" href="../favicon.png" type="image/png">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <meta name="description" content="Privacy Policy for Kotoba Mimamori.">
+  <meta name="robots" content="noindex">
+  <link rel="canonical" href="https://words-watching-app.na0aaooq.com/en/privacy.html">
+  <link rel="alternate" hreflang="ja" href="https://words-watching-app.na0aaooq.com/privacy.html">
+  <link rel="alternate" hreflang="en" href="https://words-watching-app.na0aaooq.com/en/privacy.html">
+  <link rel="alternate" hreflang="x-default" href="https://words-watching-app.na0aaooq.com/privacy.html">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="X-Frame-Options" content="DENY">
+  <link rel="stylesheet" href="../assets/css/common.css">
+
+  <style>
+    .privacy-lead {
+      font-size: 0.95rem;
+      color: var(--text);
+      margin-bottom: 1.75rem;
+      line-height: 1.9;
+    }
+
+    .privacy-note-box {
+      display: flex;
+      gap: 0.5rem;
+      align-items: flex-start;
+      margin-top: 0.75rem;
+      padding: 0.95rem 1rem;
+      border-radius: 12px;
+      background: var(--green-lt);
+      border: 1px solid rgba(34, 196, 138, 0.3);
+      color: var(--text);
+    }
+
+    .privacy-note-icon {
+      flex-shrink: 0;
+      line-height: 1.6;
+    }
+
+    .privacy-note-text {
+      font-size: 0.9rem;
+      line-height: 1.85;
+      color: var(--text);
+    }
+  </style>
+</head>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V947PLZR3S"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-V947PLZR3S');
+</script>
+
+<body>
+  <header>
+    <a href="index.html" class="header-logo">
+      <span class="logo-dot"></span>
+      Kotoba Mimamori
+    </a>
+    <div class="header-actions">
+      <span class="header-action theme-toggle-wrapper">
+        <button class="btn-theme" id="btn-theme" onclick="toggleTheme()" aria-label="Toggle dark mode">
+          <span id="theme-icon">🌙</span>
+          <span id="theme-label">Dark Mode</span>
+        </button>
+      </span>
+      <a href="https://qiita.com/na0AaooQ" target="_blank" rel="noopener" class="header-action header-link">About the Developer</a>
+      <label class="header-action language-switcher">
+        <span class="language-label">Language</span>
+        <select class="language-select" aria-label="Language" onchange="if (this.value) window.location.href = this.value;">
+          <option value="../privacy.html">日本語</option>
+          <option value="privacy.html" selected>English</option>
+        </select>
+      </label>
+    </div>
+  </header>
+
+  <div class="page-hero">
+    <h1>Privacy Policy</h1>
+    <p>Privacy Policy</p>
+  </div>
+
+  <main>
+    <div class="card">
+      <span class="updated-badge">Last updated: April 2026</span>
+
+      <p class="privacy-lead">
+        This Privacy Policy explains how personal information and input data are handled in <strong>Kotoba Mimamori | Pre-post wording risk check for social media</strong>.
+      </p>
+      <p class="privacy-lead">
+        This service is primarily provided for users in Japan, but it may also be accessed and used from outside Japan.
+      </p>
+      <div class="doc-section">
+        <h2>1. Input text data</h2>
+        <p>Text entered into the Service is not stored in the system. The Service performs AI-assisted text analysis, but entered text is not used for AI training.</p>
+        <div class="privacy-note-box">
+          <span class="privacy-note-icon">🔒</span>
+          <span class="privacy-note-text">Input text is not stored in the system or on the server. It is not used for AI or LLM training.</span>
+        </div>
+      </div>
+      <div class="doc-section">
+        <h2>2. Access analytics</h2>
+        <p>The Service uses Google Analytics for service improvement. Google Analytics uses cookies to collect access information, but it does not collect information that directly identifies individuals.</p>
+      </div>
+      <div class="doc-section">
+        <h2>3. Changes to this Policy</h2>
+        <p>This Policy may be changed without prior notice.</p>
+      </div>
+      <div class="doc-section">
+        <h2>4. Operator information</h2>
+        <p>Please see the <a href="about.html">About page</a> for developer and operator information.</p>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-links">
+      <a href="index.html">Top</a>
+      <a href="about.html">About</a>
+      <a href="about.html#kokoro-mimamori-series">Related Services</a>
+      <a href="manual.html">Manual</a>
+      <a href="consultation.html">Consultation Guide</a>
+      <a href="terms_of_service.html">Terms</a>
+      <a href="disclaimer.html">Disclaimer</a>
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="contact.html">Contact</a>
+      <a href="https://portfolio.na0aaooq.com/" target="_blank" rel="noopener">Operator</a>
+    </div>
+    <p class="footer-copy">&copy; Kotoba Mimamori 2026 Naohisa Aoki (@na0AaooQ) All Rights Reserved.</p>
+  </footer>
+
+  <script>
+    /* ---------- Theme toggle ---------- */
+    (function () {
+      const saved = localStorage.getItem('theme');
+      if (saved) document.documentElement.setAttribute('data-theme', saved);
+    })();
+
+    function toggleTheme() {
+      const root = document.documentElement;
+      const current = root.getAttribute('data-theme');
+      const osDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const isDark = current === 'dark' || (!current && osDark);
+      const next = isDark ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+      updateThemeButton(next);
+    }
+
+    function updateThemeButton(theme) {
+      const icon = document.getElementById('theme-icon');
+      const label = document.getElementById('theme-label');
+      if (!icon || !label) return;
+      if (theme === 'dark') {
+        icon.textContent = '☀️';
+        label.textContent = 'Light Mode';
+      } else {
+        icon.textContent = '🌙';
+        label.textContent = 'Dark Mode';
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', function () {
+      const saved = localStorage.getItem('theme');
+      const osDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      updateThemeButton(saved || (osDark ? 'dark' : 'light'));
+    });
+  </script>
+
+</body>
+</html>

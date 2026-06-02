@@ -119,6 +119,45 @@ header {
   white-space: nowrap;
 }
 
+.language-switcher {
+  gap: 0.35rem;
+  color: var(--muted);
+  font-size: 0.78rem;
+  white-space: nowrap;
+}
+
+.language-label {
+  font-weight: 500;
+}
+
+.language-select {
+  appearance: none;
+  background-color: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  color: var(--muted);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 500;
+  padding: 0.3rem 1.55rem 0.3rem 0.75rem;
+  background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%);
+  background-position: calc(100% - 0.8rem) 50%, calc(100% - 0.55rem) 50%;
+  background-repeat: no-repeat;
+  background-size: 0.25rem 0.25rem, 0.25rem 0.25rem;
+}
+
+.language-select:hover {
+  background-color: var(--accent-lt);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.language-select:focus-visible {
+  outline: 3px solid rgba(74, 108, 247, 0.22);
+  outline-offset: 2px;
+}
+
 /* ===== Theme Button ===== */
 .btn-theme {
   display: inline-flex;
@@ -439,6 +478,14 @@ footer {
 
   .header-link {
     font-size: 0.74rem;
+  }
+
+  .language-label {
+    display: none;
+  }
+
+  .language-select {
+    padding: 0.3rem 1.35rem 0.3rem 0.65rem;
   }
 
   .page-hero {

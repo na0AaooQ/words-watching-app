@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact | Kotoba Mimamori</title>
+  <link rel="icon" href="../favicon.png" type="image/png">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <meta name="description" content="How to contact the operator of Kotoba Mimamori.">
+  <meta name="robots" content="noindex">
+  <link rel="canonical" href="https://words-watching-app.na0aaooq.com/en/contact.html">
+  <link rel="alternate" hreflang="ja" href="https://words-watching-app.na0aaooq.com/contact.html">
+  <link rel="alternate" hreflang="en" href="https://words-watching-app.na0aaooq.com/en/contact.html">
+  <link rel="alternate" hreflang="x-default" href="https://words-watching-app.na0aaooq.com/contact.html">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="X-Frame-Options" content="DENY">
+  <link rel="stylesheet" href="../assets/css/common.css">
+
+  <style>
+    .contact-lead, .contact-note, .contact-method p {
+      font-size: 0.95rem;
+      line-height: 1.9;
+      color: var(--text);
+    }
+
+    .contact-method {
+      display: flex;
+      gap: 0.8rem;
+      padding: 1rem 1.1rem;
+      border-radius: 14px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      margin-bottom: 1rem;
+    }
+
+    .contact-icon {
+      flex: 0 0 auto;
+      font-weight: 700;
+      color: var(--accent);
+    }
+  </style>
+</head>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V947PLZR3S"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-V947PLZR3S');
+</script>
+
+<body>
+  <header>
+    <a href="index.html" class="header-logo">
+      <span class="logo-dot"></span>
+      Kotoba Mimamori
+    </a>
+    <div class="header-actions">
+      <span class="header-action theme-toggle-wrapper">
+        <button class="btn-theme" id="btn-theme" onclick="toggleTheme()" aria-label="Toggle dark mode">
+          <span id="theme-icon">🌙</span>
+          <span id="theme-label">Dark Mode</span>
+        </button>
+      </span>
+      <a href="https://qiita.com/na0AaooQ" target="_blank" rel="noopener" class="header-action header-link">About the Developer</a>
+      <label class="header-action language-switcher">
+        <span class="language-label">Language</span>
+        <select class="language-select" aria-label="Language" onchange="if (this.value) window.location.href = this.value;">
+          <option value="../contact.html">日本語</option>
+          <option value="contact.html" selected>English</option>
+        </select>
+      </label>
+    </div>
+  </header>
+
+  <div class="page-hero">
+    <h1>Contact</h1>
+    <p>Contact</p>
+  </div>
+
+  <main>
+    <div class="card">
+      <span class="updated-badge">Last updated: April 2026</span>
+
+      <p class="contact-lead">
+        Thank you for using <strong>Kotoba Mimamori | Pre-post wording risk check for social media</strong>.<br>
+        This service is developed and operated by one individual developer. If you have feedback, impressions, or questions, please contact the operator through one of the methods below.
+      </p>
+      <div class="contact-method">
+        <span class="contact-icon">X</span>
+        <div class="contact-body">
+          <h3>Contact via X</h3>
+          <p>Please contact the operator account on X.<br>
+          <a href="https://x.com/na0AaooQ" target="_blank" rel="noopener">X @na0AaooQ</a></p>
+        </div>
+      </div>
+      <div class="contact-method">
+        <span class="contact-icon">Mail</span>
+        <div class="contact-body">
+          <h3>Contact by email</h3>
+          <p>Please contact the operator by email.<br>
+          <a href="mailto:na0aaooq+contact@gmail.com">na0aaooq+contact@gmail.com</a></p>
+        </div>
+      </div>
+      <div class="contact-notes">
+        <p class="contact-note">* A reply is not guaranteed for every inquiry.</p>
+        <p class="contact-note">* Depending on the content, the operator may refrain from replying.</p>
+        <p class="contact-note">* Inquiries unrelated to Kotoba Mimamori may not receive a reply.</p>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-links">
+      <a href="index.html">Top</a>
+      <a href="about.html">About</a>
+      <a href="about.html#kokoro-mimamori-series">Related Services</a>
+      <a href="manual.html">Manual</a>
+      <a href="consultation.html">Consultation Guide</a>
+      <a href="terms_of_service.html">Terms</a>
+      <a href="disclaimer.html">Disclaimer</a>
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="contact.html">Contact</a>
+      <a href="https://portfolio.na0aaooq.com/" target="_blank" rel="noopener">Operator</a>
+    </div>
+    <p class="footer-copy">&copy; Kotoba Mimamori 2026 Naohisa Aoki (@na0AaooQ) All Rights Reserved.</p>
+  </footer>
+
+  <script>
+    /* ---------- Theme toggle ---------- */
+    (function () {
+      const saved = localStorage.getItem('theme');
+      if (saved) document.documentElement.setAttribute('data-theme', saved);
+    })();
+
+    function toggleTheme() {
+      const root = document.documentElement;
+      const current = root.getAttribute('data-theme');
+      const osDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const isDark = current === 'dark' || (!current && osDark);
+      const next = isDark ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+      updateThemeButton(next);
+    }
+
+    function updateThemeButton(theme) {
+      const icon = document.getElementById('theme-icon');
+      const label = document.getElementById('theme-label');
+      if (!icon || !label) return;
+      if (theme === 'dark') {
+        icon.textContent = '☀️';
+        label.textContent = 'Light Mode';
+      } else {
+        icon.textContent = '🌙';
+        label.textContent = 'Dark Mode';
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', function () {
+      const saved = localStorage.getItem('theme');
+      const osDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      updateThemeButton(saved || (osDark ? 'dark' : 'light'));
+    });
+  </script>
+
+</body>
+</html>

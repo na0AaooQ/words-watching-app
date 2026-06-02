@@ -32,4 +32,36 @@
     <loc>https://words-watching-app.na0aaooq.com/consultation.html</loc>
     <priority>0.5</priority>
   </url>
+  <url>
+    <loc>https://words-watching-app.na0aaooq.com/en/</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://words-watching-app.na0aaooq.com/en/about.html</loc>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://words-watching-app.na0aaooq.com/en/manual.html</loc>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://words-watching-app.na0aaooq.com/en/terms_of_service.html</loc>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://words-watching-app.na0aaooq.com/en/disclaimer.html</loc>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://words-watching-app.na0aaooq.com/en/contact.html</loc>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://words-watching-app.na0aaooq.com/en/privacy.html</loc>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://words-watching-app.na0aaooq.com/en/consultation.html</loc>
+    <priority>0.5</priority>
+  </url>
 </urlset>

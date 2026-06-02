@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About | Kotoba Mimamori</title>
+  <link rel="icon" href="../favicon.png" type="image/png">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <meta name="description" content="About Kotoba Mimamori, a free personal service for gently reviewing words before posting online.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://words-watching-app.na0aaooq.com/en/about.html">
+  <link rel="alternate" hreflang="ja" href="https://words-watching-app.na0aaooq.com/about.html">
+  <link rel="alternate" hreflang="en" href="https://words-watching-app.na0aaooq.com/en/about.html">
+  <link rel="alternate" hreflang="x-default" href="https://words-watching-app.na0aaooq.com/about.html">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="X-Frame-Options" content="DENY">
+  <link rel="stylesheet" href="../assets/css/common.css">
+
+  <style>
+    .about-lead, .about-section p, .about-points li, .about-note-box p, .about-note-box li, .about-profile-box p {
+      font-size: 0.95rem;
+      line-height: 1.9;
+      color: var(--text);
+    }
+
+    .about-section {
+      margin-bottom: 2rem;
+    }
+
+    .about-section h2, .about-profile-box h2 {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 1.02rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.85rem;
+      padding-left: 0.85rem;
+      border-left: 3px solid var(--accent);
+      line-height: 1.6;
+    }
+
+    .about-note-box, .about-profile-box {
+      margin: 1.2rem 0 0;
+      padding: 1rem 1.1rem;
+      border-radius: 14px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+    }
+
+    .about-points {
+      margin: 0.8rem 0 0;
+      padding-left: 1.2rem;
+    }
+
+    .about-business-list {
+      display: grid;
+      gap: 0;
+      margin: 1rem 0 0;
+    }
+
+    .about-business-row {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 1rem;
+      padding: 0.9rem 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .about-business-row dd {
+      margin: 0;
+    }
+
+    @media (max-width: 768px) {
+      .about-business-row {
+        grid-template-columns: 1fr;
+        gap: 0.35rem;
+      }
+    }
+  </style>
+</head>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V947PLZR3S"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-V947PLZR3S');
+</script>
+
+<body>
+  <header>
+    <a href="index.html" class="header-logo">
+      <span class="logo-dot"></span>
+      Kotoba Mimamori
+    </a>
+    <div class="header-actions">
+      <span class="header-action theme-toggle-wrapper">
+        <button class="btn-theme" id="btn-theme" onclick="toggleTheme()" aria-label="Toggle dark mode">
+          <span id="theme-icon">🌙</span>
+          <span id="theme-label">Dark Mode</span>
+        </button>
+      </span>
+      <a href="https://qiita.com/na0AaooQ" target="_blank" rel="noopener" class="header-action header-link">About the Developer</a>
+      <label class="header-action language-switcher">
+        <span class="language-label">Language</span>
+        <select class="language-select" aria-label="Language" onchange="if (this.value) window.location.href = this.value;">
+          <option value="../about.html">日本語</option>
+          <option value="about.html" selected>English</option>
+        </select>
+      </label>
+    </div>
+  </header>
+
+  <div class="page-hero">
+    <h1>About</h1>
+    <p>About Kotoba Mimamori</p>
+  </div>
+
+  <main>
+    <div class="card">
+      <span class="updated-badge">Last updated: April 2026</span>
+
+      <p class="about-lead">
+        <strong><a href="index.html" target="_blank" rel="noopener">Kotoba Mimamori</a></strong> is a free personal project that helps you gently review words before posting them on social media or elsewhere online.
+        This page explains why Naohisa Aoki (@na0AaooQ) created the service, why it is currently free, and what it is trying to protect.
+      </p>
+
+      <section class="about-section">
+        <h2>1. About this service</h2>
+        <p>Kotoba Mimamori shows reference information about the strength, tone, and possible reception of text you plan to post on X, Facebook, Instagram, TikTok, Threads, LINE, and other online spaces.</p>
+        <p>It is meant to be a gentle cushion before posting: a place to ask whether the wording feels too strong, whether it could hurt someone more than intended, or whether it might be misunderstood.</p>
+        <p>It does not decide what you may say. It helps you pause, look again, and choose your words with a little more calm.</p>
+      </section>
+
+      <section class="about-section">
+        <h2>2. Why it was created</h2>
+        <p>As an engineer and as an individual, Naohisa Aoki develops small systems with the hope of building social mechanisms where people are less likely to break in isolation.</p>
+        <p>Modern life can place invisible stress on many people. One source of that stress may be communication that loses sight of another person heart and feelings.</p>
+        <p>Kotoba Mimamori was created as one small step toward reducing that burden.</p>
+      </section>
+
+      <section class="about-section">
+        <h2>3. What this service values</h2>
+        <p>This service is not intended to restrict beliefs, opinions, language, or expression. It also does not judge correctness in a one-sided way.</p>
+        <p>People have emotions, and sometimes words become stronger than intended. This tool respects your freedom of expression while helping you communicate with more safety and care.</p>
+        <div class="about-note-box">
+          <p>At minimum, the project hopes to reduce one-sided and excessive burdens caused by words such as:</p>
+          <ul class="about-points">
+            <li>Words that hurt someone from a position of advantage or hierarchy.</li>
+            <li>Communication where several people corner one person.</li>
+            <li>Expressions that deny a person existence or character.</li>
+            <li>Strong wording aimed at people only because of a specific attribute.</li>
+          </ul>
+        </div>
+        <p>The tool uses AI so it can be available when needed. AI is used to analyze text and show points that may concern readers, but it does not generate a full post for you.</p>
+        <p>Your words carry your own thoughts. The service is designed to respect that.</p>
+      </section>
+
+      <section class="about-section">
+        <h2>4. Why it is free</h2>
+        <p>Kotoba Mimamori is a personal development project that is still being improved through small experiments.</p>
+        <p>At this stage, it is completely free so that people who may need it can try it and the service can be grown carefully.</p>
+      </section>
+
+      <section class="about-section" id="kokoro-mimamori-series" aria-labelledby="kokoro-mimamori-series-title">
+        <h2 id="kokoro-mimamori-series-title">5. Related Kokoro Mimamori projects</h2>
+        <p>The same idea is also being explored in small tools that support people before viewing intense images or reading strong words online.</p>
+        <div class="about-note-box">
+          <p><strong>Gazou Mimamori:</strong> a Chrome extension that places a soft cushion before viewing unpleasant or intense images on X.</p>
+          <p><strong>Kotoba Uke Mimamori:</strong> a Chrome extension that helps protect your heart before reading strong words on X.</p>
+        </div>
+      </section>
+
+      <section class="about-profile-box">
+        <h2>6. Developer and operator</h2>
+        <p>This service is developed and operated by the sole proprietorship Kokoro Mimamori.</p>
+        <dl class="about-business-list">
+          <div class="about-business-row"><dt>Trade name</dt><dd>Kokoro Mimamori</dd></div>
+          <div class="about-business-row"><dt>Representative</dt><dd>Naohisa Aoki</dd></div>
+          <div class="about-business-row"><dt>Role</dt><dd>Freelance engineer</dd></div>
+          <div class="about-business-row"><dt>Business</dt><dd>Planning, development, and operation of web services and software.</dd></div>
+          <div class="about-business-row"><dt>Address</dt><dd>2F Nishi-Shinjuku Mizuma Building, 3-3-13 Nishi-Shinjuku, Shinjuku-ku, Tokyo 160-0023, Japan</dd></div>
+          <div class="about-business-row"><dt>Contact</dt><dd>Please see the <a href="contact.html">contact page</a>.</dd></div>
+        </dl>
+        <p class="about-business-note">For more about the developer, please visit the <a href="https://portfolio.na0aaooq.com/" target="_blank" rel="noopener">portfolio site</a>.</p>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-links">
+      <a href="index.html">Top</a>
+      <a href="about.html">About</a>
+      <a href="about.html#kokoro-mimamori-series">Related Services</a>
+      <a href="manual.html">Manual</a>
+      <a href="consultation.html">Consultation Guide</a>
+      <a href="terms_of_service.html">Terms</a>
+      <a href="disclaimer.html">Disclaimer</a>
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="contact.html">Contact</a>
+      <a href="https://portfolio.na0aaooq.com/" target="_blank" rel="noopener">Operator</a>
+    </div>
+    <p class="footer-copy">&copy; Kotoba Mimamori 2026 Naohisa Aoki (@na0AaooQ) All Rights Reserved.</p>
+  </footer>
+
+  <script>
+    /* ---------- Theme toggle ---------- */
+    (function () {
+      const saved = localStorage.getItem('theme');
+      if (saved) document.documentElement.setAttribute('data-theme', saved);
+    })();
+
+    function toggleTheme() {
+      const root = document.documentElement;
+      const current = root.getAttribute('data-theme');
+      const osDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const isDark = current === 'dark' || (!current && osDark);
+      const next = isDark ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+      updateThemeButton(next);
+    }
+
+    function updateThemeButton(theme) {
+      const icon = document.getElementById('theme-icon');
+      const label = document.getElementById('theme-label');
+      if (!icon || !label) return;
+      if (theme === 'dark') {
+        icon.textContent = '☀️';
+        label.textContent = 'Light Mode';
+      } else {
+        icon.textContent = '🌙';
+        label.textContent = 'Dark Mode';
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', function () {
+      const saved = localStorage.getItem('theme');
+      const osDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      updateThemeButton(saved || (osDark ? 'dark' : 'light'));
+    });
+  </script>
+
+</body>
+</html>
