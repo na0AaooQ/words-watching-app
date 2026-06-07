@@ -593,16 +593,21 @@ def parse_model_json(output_text: str, language: str = "ja") -> dict:
     try:
         return json.loads(normalized_json_text)
     except JSONDecodeError as e:
-        # 個人情報配慮のため全文は出さず、エラー周辺だけ短くログ出し
-        error_start = max(0, e.pos - 80)
-        error_end = min(len(normalized_json_text), e.pos + 80)
         logger.warning(
-            "Broken JSON near parse error: %s",
-            normalized_json_text[error_start:error_end]
+            "event=bedrock_json_parse_error exception_type=%s parse_error_position=%s model_output_length=%s language=%s recovery_attempted=true",
+            type(e).__name__,
+            e.pos,
+            len(output_text),
+            normalize_language(language)
         )
 
     # 最後の保険: 壊れたJSON風文字列から必要項目だけ救出
-    return recover_result_from_broken_json(normalized_json_text, language)
+    recovered_result = recover_result_from_broken_json(normalized_json_text, language)
+    logger.info(
+        "event=bedrock_json_recovery_result recovery_succeeded=true language=%s",
+        normalize_language(language)
+    )
+    return recovered_result
 
 
 # 応答データの最低限の整形を行う
@@ -719,8 +724,7 @@ def lambda_handler(event, context):
         # Bedrockのレスポンスボディの解析結果には、本文を類推できる文章が含まれる可能性があるため、ログ出力しない
         response_body = json.loads(response["body"].read())
 
-        # Amazon Bedrockのレスポンスボディをデバッグ表示する場合の処理、開発時以外はコメントアウトしておく
-        # logger.info("Bedrock raw response: %s", response_body)
+        # 本文を類推できる可能性があるため、Bedrock raw response はログ出力しない
 
         # Amazon Bedrockのステータスコード
         bedrock_status_code = response["ResponseMetadata"]["HTTPStatusCode"]
