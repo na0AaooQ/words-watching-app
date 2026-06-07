@@ -197,8 +197,6 @@
         </div>
       </fieldset>
 
-      <p class="notice">Analysis results are currently provided primarily in Japanese. English result support is planned for a later API update.</p>
-
       <button class="btn-primary" id="submit-btn" onclick="checkText()" disabled>
         Check my text
       </button>
@@ -427,7 +425,7 @@
         const res = await fetch('/prod/check', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ text, tone, scene })
+          body: JSON.stringify({ text, tone, scene, language: 'en' })
         });
 
         if (!res.ok) throw new Error('API error: ' + res.status);
