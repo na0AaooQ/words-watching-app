@@ -114,6 +114,31 @@ class LambdaLanguageTests(unittest.TestCase):
         self.assertEqual(ja_result["summary"], "文章の受け取られ方について、注意が必要な可能性があります。")
         self.assertEqual(ja_result["reasons"], ["文章の受け取られ方について、注意が必要な可能性があります。"])
 
+    def test_parse_model_json_logs_metadata_without_model_output_fragment(self):
+        secret = "SECRET_USER_TEXT_SHOULD_NOT_APPEAR_IN_LOGS"
+        broken_json = (
+            '{"risk": "medium", '
+            f'"summary": "{secret}" '
+            '"reasons": ["review wording"], '
+            '"suggestions": []}'
+        )
+
+        with self.assertLogs(lambda_function.logger, level="INFO") as captured:
+            result = lambda_function.parse_model_json(broken_json, "en")
+
+        logs = "\n".join(captured.output)
+        self.assertEqual(set(result.keys()), {"risk", "summary", "reasons", "suggestions"})
+        self.assertNotIn(secret, logs)
+        self.assertNotIn("Broken JSON near parse error", logs)
+        self.assertIn("event=bedrock_json_parse_error", logs)
+        self.assertIn("exception_type=JSONDecodeError", logs)
+        self.assertIn("parse_error_position=", logs)
+        self.assertIn("model_output_length=", logs)
+        self.assertIn("language=en", logs)
+        self.assertIn("recovery_attempted=true", logs)
+        self.assertIn("event=bedrock_json_recovery_result", logs)
+        self.assertIn("recovery_succeeded=true", logs)
+
     def test_lambda_handler_sends_english_prompt_for_en(self):
         fake_bedrock = FakeBedrock()
         lambda_function.bedrock = fake_bedrock
