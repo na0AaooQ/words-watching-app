@@ -269,12 +269,26 @@ function checkDeployScript() {
   }
 }
 
+function checkApiRequestLanguages() {
+  const expectedLanguages = [
+    { file: "index.html", language: "ja" },
+    { file: "en/index.html", language: "en" },
+  ];
+
+  for (const { file, language } of expectedLanguages) {
+    const htmlText = readText(file);
+    const pattern = new RegExp(`JSON\\.stringify\\(\\{\\s*text,\\s*tone,\\s*scene,\\s*language:\\s*['"]${language}['"]\\s*\\}\\)`);
+    assert(pattern.test(htmlText), `${file}: API request body should include language: "${language}"`);
+  }
+}
+
 checkExpectedFiles();
 checkInternalHrefTargets();
 checkLanguageSwitchers();
 checkSeoAlternates();
 checkSitemap();
 checkDeployScript();
+checkApiRequestLanguages();
 
 if (failures.length > 0) {
   console.error("Static i18n checks failed:");

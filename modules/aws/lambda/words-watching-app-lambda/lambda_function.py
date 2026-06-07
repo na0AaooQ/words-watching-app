@@ -15,21 +15,63 @@ bedrock = boto3.client("bedrock-runtime")
 # CloudWatch クライアント
 cloudwatch = boto3.client("cloudwatch")
 
+ALLOWED_LANGUAGES = {"ja", "en"}
+
 ALLOWED_TONES = {"standard", "soft", "business"}
-TONE_INSTRUCTIONS = {
+TONE_INSTRUCTIONS_JA = {
     "standard": "従来通り、読み手への伝わり方をバランスよく確認してください。",
     "soft": "フランクでやわらかめの印象になるように、やさしい言い換えの方向性を提案してください。",
     "business": "ビジネス向けに、丁寧で失礼の少ない表現になるように改善の方向性を提案してください。"
 }
 
+TONE_INSTRUCTIONS_EN = {
+    "standard": "Review how the wording may be received in a balanced way.",
+    "soft": "Suggest gentle directions that could make the wording feel softer and more approachable.",
+    "business": "Suggest directions that could make the wording more polite, respectful, and suitable for business use."
+}
+
 ALLOWED_SCENES = {"general", "sns", "reply", "business", "apology"}
-SCENE_INSTRUCTIONS = {
+SCENE_INSTRUCTIONS_JA = {
     "general": "文章全体について、読み手への伝わり方、誤解されやすさ、強すぎる表現がないかをバランスよく確認してください。",
     "sns": "SNS上で不特定多数に読まれる可能性を前提に、主語が大きすぎないか、断定が強すぎないか、誤解や反感につながりやすい表現がないかを確認してください。",
     "reply": "相手への返信として、責める印象が強すぎないか、相手の人格を否定して見えないか、対話を続けやすい表現になっているかを確認してください。",
     "business": "仕事や問い合わせで使う文章として、失礼に見えないか、依頼内容が明確か、相手に過度な圧を与えない表現になっているかを確認してください。",
     "apology": "謝罪や説明の文章として、言い訳や責任回避に見えないか、相手の受け止め方に配慮できているか、事実と気持ちが分かりやすく整理されているかを確認してください。"
 }
+
+SCENE_INSTRUCTIONS_EN = {
+    "general": "Review the whole text for how it may be received, whether it may be misunderstood, and whether any wording may feel too strong.",
+    "sns": "Assume the text may be read by many people on social media. Check whether the subject is too broad, statements feel too absolute, or wording may invite misunderstanding or friction.",
+    "reply": "As a reply or comment, check whether it may sound overly blaming, deny the other person's character, or make continued conversation harder.",
+    "business": "As work or inquiry wording, check whether it may seem impolite, whether the request is clear, and whether it may put too much pressure on the recipient.",
+    "apology": "As an apology or explanation, check whether it may look like an excuse or avoidance of responsibility, whether it considers how the other person may receive it, and whether facts and feelings are easy to understand."
+}
+
+FALLBACK_MESSAGES = {
+    "ja": {
+        "empty_text_error": "文章が入力されていません。",
+        "summary": "文章の受け取られ方について、注意が必要な可能性があります。",
+        "reason": "文章の受け取られ方について、注意が必要な可能性があります。",
+        "parse_error_reason": "文章の解析結果の整形中に一時的な問題が発生しました。お手数ですが、時間をおいて再度お試しください。",
+        "lambda_error_reason": "文章の解析処理中に想定外の状態が発生しました。お手数おかけしますが、時間をおいて再度お試しください。"
+    },
+    "en": {
+        "empty_text_error": "Please enter some text to check.",
+        "summary": "This text may be worth reviewing before posting.",
+        "reason": "The wording may benefit from a gentle review before posting.",
+        "parse_error_reason": "We couldn't prepare the check result properly this time. Please wait a moment and try again.",
+        "lambda_error_reason": "An unexpected issue occurred while checking the text. Please wait a moment and try again."
+    }
+}
+
+
+def normalize_language(value: object) -> str:
+    if isinstance(value, str):
+        normalized = value.strip().lower()
+        if normalized in ALLOWED_LANGUAGES:
+            return normalized
+    # Default to Japanese to preserve existing client behavior.
+    return "ja"
 
 
 def normalize_tone(tone: object) -> str:
@@ -44,6 +86,27 @@ def normalize_scene(scene: object) -> str:
     return "general"
 
 
+def fallback_message(language: str, key: str) -> str:
+    normalized_language = normalize_language(language)
+    return FALLBACK_MESSAGES[normalized_language][key]
+
+
+def fallback_result(language: str, reason_type: str = "reason") -> dict:
+    reason_key = {
+        "parse_error": "parse_error_reason",
+        "lambda_error": "lambda_error_reason"
+    }.get(reason_type, "reason")
+
+    return {
+        "risk": "medium",
+        "summary": fallback_message(language, "summary"),
+        "reasons": [
+            fallback_message(language, reason_key)
+        ],
+        "suggestions": []
+    }
+
+
 # Amazon Bedrockレスポンスのパース失敗時、CloudWatchにメトリクスを送信する
 def put_parse_error_metric():
     cloudwatch.put_metric_data(
@@ -55,6 +118,115 @@ def put_parse_error_metric():
                 "Unit": "Count"
             }
         ]
+    )
+
+
+def build_system_prompt(language: str, tone: str, scene: str) -> str:
+    normalized_language = normalize_language(language)
+    normalized_tone = normalize_tone(tone)
+    normalized_scene = normalize_scene(scene)
+
+    if normalized_language == "en":
+        tone_instruction = TONE_INSTRUCTIONS_EN[normalized_tone]
+        scene_instruction = SCENE_INSTRUCTIONS_EN[normalized_scene]
+        return build_english_system_prompt(tone_instruction, scene_instruction)
+
+    tone_instruction = TONE_INSTRUCTIONS_JA[normalized_tone]
+    scene_instruction = SCENE_INSTRUCTIONS_JA[normalized_scene]
+    return build_japanese_system_prompt(tone_instruction, scene_instruction)
+
+
+def build_japanese_system_prompt(tone_instruction: str, scene_instruction: str) -> str:
+    return (
+        "あなたは、日本語テキストの受け取られ方を確認するアシスタントです。\n"
+        "目的は、投稿前の文章について、誤解や反発を招く可能性がある点を整理して提示することです。\n\n"
+        "以下を必ず守ってください：\n"
+        "- 表現を裁かない\n"
+        "- 正誤や善悪の判断をしない\n"
+        "- 投稿を禁止・指示しない\n"
+        "- 出力は必ずJSONのみ\n"
+        "- 不要な説明文は書かない\n"
+        "- JSONの構文に使う引用符は、必ず半角ダブルクォート (\") を使う\n\n"
+        "【チェック観点】\n"
+        "- 誤解されやすい表現\n"
+        "- 特定の属性や立場を一般化していないか\n"
+        "- 言い回しが強く見えないか\n"
+        "- 法律上、問題ない表現か\n"
+        "- 何らかの利用規約上、問題ない表現か\n"
+        "- 倫理的に問題ない表現か\n"
+        "- 明らかな誤字脱字\n\n"
+        "【利用シーンに応じた確認観点】\n"
+        f"{scene_instruction}\n\n"
+        "【改善アドバイスの方針】\n"
+        "- AIが投稿文の完成版を生成するのではなく、ユーザー自身の言葉を見直すための補助に徹する\n"
+        "- suggestions は、改善のヒントや言い換えの方向性に留める\n"
+        "- 投稿するかどうかの判断を強制しない\n\n"
+        "【アドバイスのトーン】\n"
+        f"{tone_instruction}\n\n"
+        "【JSONで返却する情報】\n"
+        "- risk (low / medium / high)\n"
+        "- summary\n"
+        "- reasons（最大3つ）\n"
+        "- suggestions（任意）\n\n"
+        "以下の形式と完全に一致するJSONのみを返してください。\n"
+        "{\n"
+        '  "risk": "medium",\n'
+        '  "summary": "文章の受け取られ方について、注意が必要な可能性があります。",\n'
+        '  "reasons": ["理由1", "理由2"],\n'
+        '  "suggestions": ["改善案1", "改善案2"]\n'
+        "}\n\n"
+        "表現はやさしい言い回しにしてください。"
+    )
+
+
+def build_english_system_prompt(tone_instruction: str, scene_instruction: str) -> str:
+    return (
+        "You are an assistant that helps review how text may be received before it is posted online.\n"
+        "The purpose is to organize points that may cause misunderstanding, friction, or overly strong impressions, and to offer gentle review hints.\n\n"
+        "Always follow these rules:\n"
+        "- Do not blame the user\n"
+        "- Do not judge the text as right or wrong, good or bad\n"
+        "- Do not prohibit, command, or force a posting decision\n"
+        "- Avoid aggressive, absolute, or accusatory wording\n"
+        "- Keep advice soft, practical, and supportive\n"
+        "- Present the result as a calm pre-post check that helps the user take a breath\n"
+        "- Return JSON only\n"
+        "- Do not write extra explanatory text\n"
+        "- Use standard half-width double quotes (\") for JSON syntax\n"
+        "- Do not add any keys other than risk, summary, reasons, suggestions\n"
+        "- risk must be one of low, medium, high\n"
+        "- summary, reasons, and suggestions must be written in English\n\n"
+        "Review perspectives:\n"
+        "- Wording that may be misunderstood\n"
+        "- Overgeneralization of a specific attribute, group, or position\n"
+        "- Wording that may feel too strong\n"
+        "- Possible legal concerns\n"
+        "- Possible terms-of-service concerns\n"
+        "- Possible ethical concerns\n"
+        "- Clear typos or unclear wording\n\n"
+        "Scene-specific perspective:\n"
+        f"{scene_instruction}\n\n"
+        "Advice policy:\n"
+        "- Do not generate a finished post on behalf of the user\n"
+        "- Keep suggestions as hints or directions for revision\n"
+        "- Do not force the user to decide whether to post\n"
+        "- Prefer possibility-based wording such as \"This may be received as...\", \"Consider softening...\", \"It may help to clarify...\", and \"You could make the wording feel more respectful by...\"\n"
+        "- Avoid phrases such as \"This is dangerous.\", \"You should not post this.\", \"This is offensive.\", and \"This will cause backlash.\"\n\n"
+        "Advice tone:\n"
+        f"{tone_instruction}\n\n"
+        "Return information:\n"
+        "- risk (low / medium / high)\n"
+        "- summary\n"
+        "- reasons (up to 3)\n"
+        "- suggestions (optional)\n\n"
+        "Return only JSON that exactly matches this format.\n"
+        "{\n"
+        '  "risk": "medium",\n'
+        '  "summary": "This text may be worth reviewing before posting.",\n'
+        '  "reasons": ["Reason 1", "Reason 2"],\n'
+        '  "suggestions": ["Suggestion 1", "Suggestion 2"]\n'
+        "}\n\n"
+        "Keep the wording gentle, practical, and reassuring."
     )
 
 
@@ -380,7 +552,7 @@ def extract_list_items_loose(source: str, field_name: str) -> list[str]:
 
 
 # JSONとして壊れていても、必要な4項目だけ救出する
-def recover_result_from_broken_json(text: str) -> dict:
+def recover_result_from_broken_json(text: str, language: str = "ja") -> dict:
     source = text.strip()
 
     risk_match = re.search(r'"risk"\s*:\s*"(low|medium|high)"', source, re.IGNORECASE)
@@ -391,11 +563,11 @@ def recover_result_from_broken_json(text: str) -> dict:
     suggestions = extract_list_items_loose(source, "suggestions")
 
     if not summary:
-        summary = "文章の受け取られ方について、注意が必要な可能性があります。"
+        summary = fallback_message(language, "summary")
 
     if not reasons:
         reasons = [
-            "文章の受け取られ方について、注意が必要な可能性があります。"
+            fallback_message(language, "reason")
         ]
 
     return {
@@ -407,7 +579,7 @@ def recover_result_from_broken_json(text: str) -> dict:
 
 
 # モデル出力からJSONを安全にパースする
-def parse_model_json(output_text: str) -> dict:
+def parse_model_json(output_text: str, language: str = "ja") -> dict:
     json_text = extract_json_block(output_text)
 
     # まずはそのまま厳密に読む
@@ -430,11 +602,11 @@ def parse_model_json(output_text: str) -> dict:
         )
 
     # 最後の保険: 壊れたJSON風文字列から必要項目だけ救出
-    return recover_result_from_broken_json(normalized_json_text)
+    return recover_result_from_broken_json(normalized_json_text, language)
 
 
 # 応答データの最低限の整形を行う
-def sanitize_result(result: dict) -> dict:
+def sanitize_result(result: dict, language: str = "ja") -> dict:
     if not isinstance(result, dict):
         raise ValueError("Parsed result is not a JSON object")
 
@@ -444,7 +616,7 @@ def sanitize_result(result: dict) -> dict:
 
     summary = result.get("summary", "")
     if not isinstance(summary, str) or not summary.strip():
-        summary = "文章の受け取られ方について、注意が必要な可能性があります。"
+        summary = fallback_message(language, "summary")
 
     reasons = result.get("reasons", [])
     if not isinstance(reasons, list):
@@ -460,7 +632,7 @@ def sanitize_result(result: dict) -> dict:
 
     if not reasons:
         reasons = [
-            "文章の受け取られ方について、注意が必要な可能性があります。"
+            fallback_message(language, "reason")
         ]
 
     suggestions = result.get("suggestions", [])
@@ -485,6 +657,8 @@ def sanitize_result(result: dict) -> dict:
 
 # Lambdaハンドラー
 def lambda_handler(event, context):
+    language = "ja"
+
     try:
         # -----------------------------
         # 1. リクエストボディの取得
@@ -501,6 +675,7 @@ def lambda_handler(event, context):
         text = body.get("text", "").strip()
         tone = normalize_tone(body.get("tone", "standard"))
         scene = normalize_scene(body.get("scene", "general"))
+        language = normalize_language(body.get("language", "ja"))
 
         if not text:
             return {
@@ -509,56 +684,13 @@ def lambda_handler(event, context):
                     "Content-Type": "application/json",
                     "Access-Control-Allow-Origin": "*"
                 },
-                "body": json.dumps({"error": "文章が入力されていません。"}, ensure_ascii=False)
+                "body": json.dumps({"error": fallback_message(language, "empty_text_error")}, ensure_ascii=False)
             }
 
         # -----------------------------
         # 2. プロンプト構築
         # -----------------------------
-        tone_instruction = TONE_INSTRUCTIONS[tone]
-        scene_instruction = SCENE_INSTRUCTIONS[scene]
-
-        system_prompt = (
-            "あなたは、日本語テキストの受け取られ方を確認するアシスタントです。\n"
-            "目的は、投稿前の文章について、誤解や反発を招く可能性がある点を整理して提示することです。\n\n"
-            "以下を必ず守ってください：\n"
-            "- 表現を裁かない\n"
-            "- 正誤や善悪の判断をしない\n"
-            "- 投稿を禁止・指示しない\n"
-            "- 出力は必ずJSONのみ\n"
-            "- 不要な説明文は書かない\n"
-            "- JSONの構文に使う引用符は、必ず半角ダブルクォート (\") を使う\n\n"
-            "【チェック観点】\n"
-            "- 誤解されやすい表現\n"
-            "- 特定の属性や立場を一般化していないか\n"
-            "- 言い回しが強く見えないか\n"
-            "- 法律上、問題ない表現か\n"
-            "- 何らかの利用規約上、問題ない表現か\n"
-            "- 倫理的に問題ない表現か\n"
-            "- 明らかな誤字脱字\n\n"
-            "【利用シーンに応じた確認観点】\n"
-            f"{scene_instruction}\n\n"
-            "【改善アドバイスの方針】\n"
-            "- AIが投稿文の完成版を生成するのではなく、ユーザー自身の言葉を見直すための補助に徹する\n"
-            "- suggestions は、改善のヒントや言い換えの方向性に留める\n"
-            "- 投稿するかどうかの判断を強制しない\n\n"
-            "【アドバイスのトーン】\n"
-            f"{tone_instruction}\n\n"
-            "【JSONで返却する情報】\n"
-            "- risk (low / medium / high)\n"
-            "- summary\n"
-            "- reasons（最大3つ）\n"
-            "- suggestions（任意）\n\n"
-            "以下の形式と完全に一致するJSONのみを返してください。\n"
-            "{\n"
-            '  "risk": "medium",\n'
-            '  "summary": "文章の受け取られ方について、注意が必要な可能性があります。",\n'
-            '  "reasons": ["理由1", "理由2"],\n'
-            '  "suggestions": ["改善案1", "改善案2"]\n'
-            "}\n\n"
-            "表現はやさしい言い回しにしてください。"
-        )
-
+        system_prompt = build_system_prompt(language, tone, scene)
         user_prompt = f"【文章】\n{text}"
 
         # -----------------------------
@@ -603,8 +735,8 @@ def lambda_handler(event, context):
         output_text = extract_bedrock_output_text(response_body)
 
         # モデル出力からJSONを抽出・パースする
-        result = parse_model_json(output_text)
-        result = sanitize_result(result)
+        result = parse_model_json(output_text, language)
+        result = sanitize_result(result, language)
 
         # -----------------------------
         # 5. 正常レスポンス返却
@@ -625,14 +757,7 @@ def lambda_handler(event, context):
         logger.exception("Failed to parse JSON")
         put_parse_error_metric()
 
-        fallback = {
-            "risk": "medium",
-            "summary": "文章の受け取られ方について、注意が必要な可能性があります。",
-            "reasons": [
-                "文章の解析結果の整形中に一時的な問題が発生しました。お手数ですが、時間をおいて再度お試しください。"
-            ],
-            "suggestions": []
-        }
+        fallback = fallback_result(language, "parse_error")
 
         return {
             "statusCode": 200,
@@ -649,14 +774,7 @@ def lambda_handler(event, context):
         # -----------------------------
         logger.exception("Lambda error")
 
-        fallback = {
-            "risk": "medium",
-            "summary": "文章の受け取られ方について、注意が必要な可能性があります。",
-            "reasons": [
-                "文章の解析処理中に想定外の状態が発生しました。お手数おかけしますが、時間をおいて再度お試しください。"
-            ],
-            "suggestions": []
-        }
+        fallback = fallback_result(language, "lambda_error")
 
         return {
             "statusCode": 500,

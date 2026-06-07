@@ -502,7 +502,7 @@
         const res = await fetch(API_ENDPOINT, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ text, tone, scene })
+          body: JSON.stringify({ text, tone, scene, language: 'ja' })
         });
 
         if (!res.ok) throw new Error('API error: ' + res.status);

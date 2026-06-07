@@ -264,7 +264,7 @@ async function checkText() {
     const res = await fetch('/prod/check', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text, tone, scene })
+      body: JSON.stringify({ text, tone, scene, language: 'ja' })
     });
 
     if (!res.ok) throw new Error('API error: ' + res.status);
@@ -1131,7 +1131,7 @@ describe('checkText()', () => {
     const [url, options] = global.fetch.mock.calls[0];
     expect(url).toBe('/prod/check');
     expect(options.method).toBe('POST');
-    expect(JSON.parse(options.body)).toEqual({ text: inputText, tone: 'standard', scene: 'general' });
+    expect(JSON.parse(options.body)).toEqual({ text: inputText, tone: 'standard', scene: 'general', language: 'ja' });
   });
 
   test('soft 選択時は tone: "soft" が送信される', async () => {
