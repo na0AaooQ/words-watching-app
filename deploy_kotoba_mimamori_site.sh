@@ -20,6 +20,7 @@ print_deploy_targets() {
     -path "./.git" -prune -o \
     -path "./node_modules" -prune -o \
     -path "./aws" -prune -o \
+    -path "./docs" -prune -o \
     -path "./BACKUP" -prune -o \
     -type f \( -name "*.html" -o -name "*.css" -o -name "sitemap.xml" \) -print | sort
 }
@@ -59,6 +60,8 @@ aws s3 sync . "${S3_BUKKET_NAME}" --exclude "*" --include "*.html" --include "en
     --exclude ".env.example" \
     --exclude ".env" \
     --exclude "node_modules/*" \
+    --exclude "docs/" \
+    --exclude "docs/**" \
     --exclude "${ENV_FILE}" \
     --exclude "aws/*" \
     --exclude "BACKUP/*" \
@@ -80,6 +83,8 @@ case $ANS in
         --exclude ".env.example" \
         --exclude ".env" \
         --exclude "node_modules/*" \
+        --exclude "docs/" \
+        --exclude "docs/**" \
         --exclude "${ENV_FILE}" \
         --exclude "aws/*" \
         --exclude "BACKUP/*" \
