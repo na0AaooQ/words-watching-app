@@ -907,6 +907,18 @@ textarea::placeholder {
   font-weight: 600;
 }
 
+.result-actions,
+.result-followup-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.result-followup-actions {
+  margin: 1rem 0 0.5rem;
+}
+
 /* 再チェックボタン */
 .btn-recheck {
   display: inline-flex;
@@ -928,6 +940,41 @@ textarea::placeholder {
   background: var(--accent-lt);
   border-color: var(--accent);
   color: var(--accent);
+}
+
+.result-editor {
+  margin-top: 1.5rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface2);
+}
+
+.result-editor h4 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 0.35rem;
+}
+
+.result-editor p {
+  font-size: 0.84rem;
+  color: var(--muted);
+  line-height: 1.7;
+  margin-bottom: 0.75rem;
+}
+
+.result-editor-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-top: 0.75rem;
+}
+
+.result-editor-actions .btn-primary {
+  width: auto;
+  min-width: 12rem;
 }
 
 /* ===== Score Items ===== */
@@ -1480,6 +1527,25 @@ footer {
   .result-header {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .result-actions,
+  .result-followup-actions,
+  .result-editor-actions {
+    align-items: stretch;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .result-actions button,
+  .result-followup-actions button,
+  .result-editor-actions button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .result-editor-actions .btn-primary {
+    width: 100%;
   }
 
   .char-count-row {

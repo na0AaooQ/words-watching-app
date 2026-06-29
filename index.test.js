@@ -195,7 +195,10 @@ function renderResult(data) {
   resultArea.innerHTML = `
     <div class="result-header">
       <p class="result-title">📋 チェック結果</p>
-      <button class="btn-recheck" onclick="recheck()">✏️ 文章を修正して再チェック</button>
+      <div class="result-actions">
+        <button class="btn-recheck" onclick="showResultEditor()">✏️ 結果を見ながら修正する</button>
+        <button class="btn-copy-text" id="btn-copy-text-result" onclick="copyText('btn-copy-text-result')">📋 文章をコピー</button>
+      </div>
     </div>
     <div class="${escapeHtml(riskClass)}">
       <span class="verdict-icon">${riskIcon}</span>
@@ -212,6 +215,24 @@ function renderResult(data) {
     ${suggestionsHtml}
     ${nextActionTipsHtml}
     ${prePostChecklistHtml}
+    <div class="result-followup-actions">
+      <button class="btn-recheck" onclick="showResultEditor()">✏️ 結果を見ながら修正する</button>
+      <button class="btn-copy-text" id="btn-copy-text-result-bottom" onclick="copyText('btn-copy-text-result-bottom')">📋 文章をコピー</button>
+    </div>
+    <div id="result-editor" class="result-editor" style="display:none;">
+      <h4>✏️ 結果を見ながら文章を修正する</h4>
+      <p>チェック結果を見ながら、必要に応じて文章を整えられます。</p>
+      <textarea
+        id="result-edit-text"
+        maxlength="50000"
+        oninput="syncResultEditorText()"
+        aria-label="チェック結果を見ながら修正する文章"
+      ></textarea>
+      <div class="result-editor-actions">
+        <button class="btn-primary" onclick="checkText()">🔍 修正した文章を再チェック</button>
+        <button class="btn-copy-text" id="btn-copy-text-editor" onclick="copyText('btn-copy-text-editor')">📋 文章をコピー</button>
+      </div>
+    </div>
     <div class="sns-open-row" style="margin-top:1rem;">
       <select class="sns-select" id="sns-select" aria-label="投稿先SNSを選択">
         <option value="">── SNSを選ぶ ──</option>
@@ -231,9 +252,71 @@ function renderResult(data) {
   resultArea.style.display = 'block';
 }
 
-function recheck() {
-  document.getElementById('result-area').style.display = 'none';
-  document.getElementById('input-text').focus();
+function showResultEditor() {
+  const editor = document.getElementById('result-editor');
+  const resultEditText = document.getElementById('result-edit-text');
+  const inputText = document.getElementById('input-text');
+
+  if (!editor || !resultEditText || !inputText) return;
+
+  resultEditText.value = inputText.value;
+  editor.style.display = 'block';
+  resultEditText.focus();
+}
+
+function syncResultEditorText() {
+  const resultEditText = document.getElementById('result-edit-text');
+  const inputText = document.getElementById('input-text');
+
+  if (!resultEditText || !inputText) return;
+
+  inputText.value = resultEditText.value;
+  inputText.dispatchEvent(new Event('input'));
+}
+
+function setCopyButtonCopied(btn) {
+  btn.textContent = '✅ 文章をコピーしました';
+  btn.classList.add('copied');
+  setTimeout(() => {
+    btn.textContent = '📋 文章をコピー';
+    btn.classList.remove('copied');
+  }, 2000);
+}
+
+function fallbackCopyText(text) {
+  const copyArea = document.createElement('textarea');
+  copyArea.value = text;
+  copyArea.setAttribute('readonly', '');
+  copyArea.style.position = 'fixed';
+  copyArea.style.top = '0';
+  copyArea.style.left = '0';
+  copyArea.style.opacity = '0';
+  document.body.appendChild(copyArea);
+  copyArea.select();
+  document.execCommand('copy');
+  copyArea.remove();
+}
+
+function copyText(buttonId = 'btn-copy-text') {
+  const inputText = document.getElementById('input-text');
+  if (!inputText) return;
+  const text = inputText.value;
+  if (!text) return;
+  const btn = document.getElementById(buttonId);
+  if (!btn) return;
+
+  const clipboard = navigator.clipboard && navigator.clipboard.writeText
+    ? navigator.clipboard.writeText(text)
+    : Promise.reject(new Error('Clipboard API is unavailable'));
+
+  clipboard
+    .then(() => {
+      setCopyButtonCopied(btn);
+    })
+    .catch(() => {
+      fallbackCopyText(text);
+      setCopyButtonCopied(btn);
+    });
 }
 
 function getSelectedAdviceTone() {
@@ -293,6 +376,7 @@ function setupDom() {
   document.body.innerHTML = `
     <textarea id="input-text"></textarea>
     <span id="char-count" class="char-count"></span>
+    <button class="btn-copy-text" id="btn-copy-text">📋 文章をコピー</button>
     <button id="submit-btn" disabled></button>
     <div id="sns-guide" style="display:none;">
       <span id="guide-x"></span>
@@ -348,6 +432,7 @@ function setupDom() {
       </label>
     </fieldset>
   `;
+  document.getElementById('input-text').addEventListener('input', onTextInput);
 }
 
 // ─────────────────────────────────────────────
@@ -919,6 +1004,28 @@ describe('renderResult()', () => {
     expect(document.cookie).not.toContain('pre-post-check');
   });
 
+  test('結果ヘッダーに修正ボタンとコピーボタンが表示される', () => {
+    renderResult(baseData);
+
+    expect(document.querySelector('.result-actions .btn-recheck').textContent).toBe('✏️ 結果を見ながら修正する');
+    expect(document.getElementById('btn-copy-text-result').textContent).toBe('📋 文章をコピー');
+  });
+
+  test('結果下にも修正ボタンとコピーボタンが表示される', () => {
+    renderResult(baseData);
+
+    expect(document.querySelector('.pre-post-checklist-card + .result-followup-actions')).not.toBeNull();
+    expect(document.querySelector('.result-followup-actions .btn-recheck').textContent).toBe('✏️ 結果を見ながら修正する');
+    expect(document.getElementById('btn-copy-text-result-bottom').textContent).toBe('📋 文章をコピー');
+  });
+
+  test('結果下の編集エリアは初期状態で非表示', () => {
+    renderResult(baseData);
+
+    expect(document.getElementById('result-editor').style.display).toBe('none');
+    expect(document.getElementById('result-edit-text').value).toBe('');
+  });
+
   test('XSS: summary の <script> タグがエスケープされる', () => {
     renderResult({ ...baseData, summary: '<script>alert(1)</script>' });
     const html = document.getElementById('result-area').innerHTML;
@@ -980,29 +1087,76 @@ describe('renderResult()', () => {
 });
 
 // ================================================================
-// 11. recheck — 再チェック（結果エリア非表示 & textarea フォーカス）
+// 11. result editor — 結果下編集エリア
 // ================================================================
-describe('recheck()', () => {
+describe('result editor', () => {
   beforeEach(() => {
     setupDom();
-    document.getElementById('result-area').style.display = 'block';
+    document.getElementById('input-text').value = '元の文章';
+    renderResult({ risk: 'low', summary: 'ok', reasons: [], suggestions: [] });
   });
 
-  test('result-area が非表示になる', () => {
-    recheck();
-    expect(document.getElementById('result-area').style.display).toBe('none');
+  test('showResultEditor() で編集エリアが表示され、現在の文章が入る', () => {
+    showResultEditor();
+
+    expect(document.getElementById('result-editor').style.display).toBe('block');
+    expect(document.getElementById('result-edit-text').value).toBe('元の文章');
   });
 
-  test('input-text にフォーカスが移る', () => {
-    const ta = document.getElementById('input-text');
-    const focusSpy = jest.spyOn(ta, 'focus');
-    recheck();
-    expect(focusSpy).toHaveBeenCalled();
+  test('syncResultEditorText() で上部 textarea と文字数カウントが更新される', () => {
+    const resultEditText = document.getElementById('result-edit-text');
+    resultEditText.value = '修正した文章';
+
+    syncResultEditorText();
+
+    expect(document.getElementById('input-text').value).toBe('修正した文章');
+    expect(document.getElementById('char-count').textContent).toBe('6 / 50000');
+    expect(document.getElementById('submit-btn').disabled).toBe(false);
   });
 });
 
 // ================================================================
-// 12. checkText — API通信・ローディング制御・フォールバック
+// 12. copyText — 文章コピー
+// ================================================================
+describe('copyText()', () => {
+  beforeEach(() => {
+    jest.useFakeTimers();
+    setupDom();
+    document.getElementById('input-text').value = 'コピー対象の文章';
+    navigator.clipboard = {
+      writeText: jest.fn().mockResolvedValue()
+    };
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
+    jest.restoreAllMocks();
+  });
+
+  test('指定したボタンだけ成功表示に変わる', async () => {
+    renderResult({ risk: 'low', summary: 'ok', reasons: [], suggestions: [] });
+
+    copyText('btn-copy-text-result-bottom');
+    await Promise.resolve();
+
+    expect(navigator.clipboard.writeText).toHaveBeenCalledWith('コピー対象の文章');
+    expect(document.getElementById('btn-copy-text-result-bottom').textContent).toBe('✅ 文章をコピーしました');
+    expect(document.getElementById('btn-copy-text-result').textContent).toBe('📋 文章をコピー');
+    expect(document.getElementById('btn-copy-text').textContent).toBe('📋 文章をコピー');
+  });
+
+  test('2秒後にボタン表示が戻る', async () => {
+    copyText();
+    await Promise.resolve();
+
+    expect(document.getElementById('btn-copy-text').textContent).toBe('✅ 文章をコピーしました');
+    jest.advanceTimersByTime(2000);
+    expect(document.getElementById('btn-copy-text').textContent).toBe('📋 文章をコピー');
+  });
+});
+
+// ================================================================
+// 13. checkText — API通信・ローディング制御・フォールバック
 // ================================================================
 describe('checkText()', () => {
   beforeEach(() => {

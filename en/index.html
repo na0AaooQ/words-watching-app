@@ -417,8 +417,6 @@
       document.getElementById('loading').style.display = 'flex';
       document.getElementById('result-area').style.display = 'none';
 
-      const oldNotice = document.getElementById('recheck-notice');
-      if (oldNotice) oldNotice.remove();
       document.getElementById('loading').scrollIntoView({ behavior: 'smooth', block: 'center' });
 
       try {
@@ -541,15 +539,76 @@
       }
       previousRisk = data.risk;
 
-      resultArea.innerHTML = '<div class="result-header"><p class="result-title">Check result</p><button class="btn-recheck" onclick="recheck()">Edit and recheck</button></div>' +
-        riskChangeBannerHtml +
-        '<div class="' + escapeHtml(riskClass) + '"><span class="verdict-icon">' + riskIcon + '</span><div class="verdict-text"><h3>Overall result: ' + escapeHtml(riskLabel) + '</h3><p>' + escapeHtml(data.summary) + '</p></div></div>' +
-        (reasonsHtml ? '<div class="score-item" style="margin-top:1rem;"><p style="font-size:0.95rem;font-weight:700;margin-bottom:0.5rem;color:var(--text);">Points that may concern readers</p>' + reasonsHtml + '</div>' : '') +
-        suggestionsHtml +
-        nextActionTipsHtml +
-        checklistHtml +
-        '<br><p class="share-info-label">If you want to post after reviewing your text, choose a service and click Open. The tool only opens the selected service; it does not post your text automatically. The final decision remains yours.</p>' +
-        '<div class="sns-open-row" style="margin-top:1rem;"><select class="sns-select" id="sns-select" aria-label="Choose social media destination"><option value="">-- Choose a service --</option><option value="https://x.com/intent/tweet">X</option><option value="https://www.threads.com/">Threads</option><option value="https://www.instagram.com/">Instagram</option><option value="https://www.facebook.com/sharer/sharer.php">Facebook</option><option value="https://www.tiktok.com/">TikTok</option><option value="https://line.me/R/nv/chat">LINE</option><option value="https://www.linkedin.com/">LinkedIn</option><option value="https://www.youtube.com/">YouTube</option></select><button class="btn-sns-open" onclick="openSns()">Open</button></div>';
+      resultArea.innerHTML = `
+        <div class="result-header">
+          <p class="result-title">Check result</p>
+          <div class="result-actions">
+            <button class="btn-recheck" onclick="showResultEditor()">Edit while viewing result</button>
+            <button class="btn-copy-text" id="btn-copy-text-result" onclick="copyText('btn-copy-text-result')">Copy text</button>
+          </div>
+        </div>
+
+        ${riskChangeBannerHtml}
+
+        <div class="${escapeHtml(riskClass)}">
+          <span class="verdict-icon">${riskIcon}</span>
+          <div class="verdict-text">
+            <h3>Overall result: ${escapeHtml(riskLabel)}</h3>
+            <p>${escapeHtml(data.summary)}</p>
+          </div>
+        </div>
+
+        ${reasonsHtml ? `
+        <div class="score-item" style="margin-top:1rem;">
+          <p style="font-size:0.95rem;font-weight:700;margin-bottom:0.5rem;color:var(--text);">Points that may concern readers</p>
+          ${reasonsHtml}
+        </div>` : ''}
+
+        ${suggestionsHtml}
+
+        ${nextActionTipsHtml}
+
+        ${checklistHtml}
+
+        <div class="result-followup-actions">
+          <button class="btn-recheck" onclick="showResultEditor()">Edit while viewing result</button>
+          <button class="btn-copy-text" id="btn-copy-text-result-bottom" onclick="copyText('btn-copy-text-result-bottom')">Copy text</button>
+        </div>
+
+        <div id="result-editor" class="result-editor" style="display:none;">
+          <h4>Edit your text while viewing the result</h4>
+          <p>You can adjust your wording while keeping the check result nearby.</p>
+
+          <textarea
+            id="result-edit-text"
+            maxlength="50000"
+            oninput="syncResultEditorText()"
+            aria-label="Text to edit while viewing the result"
+          ></textarea>
+
+          <div class="result-editor-actions">
+            <button class="btn-primary" onclick="checkText()">Recheck edited text</button>
+            <button class="btn-copy-text" id="btn-copy-text-editor" onclick="copyText('btn-copy-text-editor')">Copy text</button>
+          </div>
+        </div>
+
+        <br>
+        <p class="share-info-label">If you want to post after reviewing your text, choose a service and click Open. The tool only opens the selected service; it does not post your text automatically. The final decision remains yours.</p>
+        <div class="sns-open-row" style="margin-top:1rem;">
+          <select class="sns-select" id="sns-select" aria-label="Choose social media destination">
+            <option value="">-- Choose a service --</option>
+            <option value="https://x.com/intent/tweet">X</option>
+            <option value="https://www.threads.com/">Threads</option>
+            <option value="https://www.instagram.com/">Instagram</option>
+            <option value="https://www.facebook.com/sharer/sharer.php">Facebook</option>
+            <option value="https://www.tiktok.com/">TikTok</option>
+            <option value="https://line.me/R/nv/chat">LINE</option>
+            <option value="https://www.linkedin.com/">LinkedIn</option>
+            <option value="https://www.youtube.com/">YouTube</option>
+          </select>
+          <button class="btn-sns-open" onclick="openSns()">Open</button>
+        </div>
+      `;
 
       resultArea.style.display = 'block';
       resultArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -564,42 +623,71 @@
       window.open(sel.value, '_blank', 'noopener');
     }
 
-    function recheck() {
-      const resultArea = document.getElementById('result-area');
-      if (resultArea.style.display !== 'none' && !document.getElementById('recheck-notice')) {
-        const notice = document.createElement('div');
-        notice.id = 'recheck-notice';
-        notice.style.cssText = 'background: var(--amber-lt); border: 1px solid var(--amber); border-radius: 10px; padding: 0.6rem 1rem; font-size: 0.85rem; color: #92600a; margin-bottom: 1rem;';
-        notice.innerHTML = '<strong>Editing</strong> Update the text above and click Check my text to refresh the result.';
-        resultArea.insertBefore(notice, resultArea.firstChild);
-      }
-      document.getElementById('input-text').focus();
-      document.getElementById('input-text').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    function showResultEditor() {
+      const editor = document.getElementById('result-editor');
+      const resultEditText = document.getElementById('result-edit-text');
+      const inputText = document.getElementById('input-text');
+
+      if (!editor || !resultEditText || !inputText) return;
+
+      resultEditText.value = inputText.value;
+      editor.style.display = 'block';
+      resultEditText.focus();
+      editor.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
-    function copyText() {
-      const text = document.getElementById('input-text').value;
+    function syncResultEditorText() {
+      const resultEditText = document.getElementById('result-edit-text');
+      const inputText = document.getElementById('input-text');
+
+      if (!resultEditText || !inputText) return;
+
+      inputText.value = resultEditText.value;
+      inputText.dispatchEvent(new Event('input'));
+    }
+
+    function setCopyButtonCopied(btn) {
+      btn.textContent = 'Copied';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = 'Copy text';
+        btn.classList.remove('copied');
+      }, 2000);
+    }
+
+    function fallbackCopyText(text) {
+      const copyArea = document.createElement('textarea');
+      copyArea.value = text;
+      copyArea.setAttribute('readonly', '');
+      copyArea.style.position = 'fixed';
+      copyArea.style.top = '0';
+      copyArea.style.left = '0';
+      copyArea.style.opacity = '0';
+      document.body.appendChild(copyArea);
+      copyArea.select();
+      document.execCommand('copy');
+      copyArea.remove();
+    }
+
+    function copyText(buttonId = 'btn-copy-text') {
+      const inputText = document.getElementById('input-text');
+      if (!inputText) return;
+      const text = inputText.value;
       if (!text) return;
-      const btn = document.getElementById('btn-copy-text');
-      navigator.clipboard.writeText(text)
+      const btn = document.getElementById(buttonId);
+      if (!btn) return;
+
+      const clipboard = navigator.clipboard && navigator.clipboard.writeText
+        ? navigator.clipboard.writeText(text)
+        : Promise.reject(new Error('Clipboard API is unavailable'));
+
+      clipboard
         .then(() => {
-          btn.textContent = 'Copied';
-          btn.classList.add('copied');
-          setTimeout(() => {
-            btn.textContent = 'Copy text';
-            btn.classList.remove('copied');
-          }, 2000);
+          setCopyButtonCopied(btn);
         })
         .catch(() => {
-          const ta = document.getElementById('input-text');
-          ta.select();
-          document.execCommand('copy');
-          btn.textContent = 'Copied';
-          btn.classList.add('copied');
-          setTimeout(() => {
-            btn.textContent = 'Copy text';
-            btn.classList.remove('copied');
-          }, 2000);
+          fallbackCopyText(text);
+          setCopyButtonCopied(btn);
         });
     }
   </script>
