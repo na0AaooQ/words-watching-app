@@ -487,12 +487,6 @@
       document.getElementById('loading').style.display  = 'flex';
       document.getElementById('result-area').style.display = 'none';
 
-      // 文章の確認後、「文章を修正して再チェックボタン」をクリックした時、前回の確認結果を表示したままにする
-      const oldNotice = document.getElementById('recheck-notice');
-      if (oldNotice) {
-        oldNotice.remove();
-      }
-
       document.getElementById('loading').scrollIntoView({ behavior: 'smooth', block: 'center' });
 
       try {
@@ -722,7 +716,10 @@
       resultArea.innerHTML = `
         <div class="result-header">
           <p class="result-title">📋 チェック結果</p>
-          <button class="btn-recheck" onclick="recheck()">✏️ 文章を修正して再チェック</button>
+          <div class="result-actions">
+            <button class="btn-recheck" onclick="showResultEditor()">✏️ 結果を見ながら修正する</button>
+            <button class="btn-copy-text" id="btn-copy-text-result" onclick="copyText('btn-copy-text-result')">📋 文章をコピー</button>
+          </div>
         </div>
 
         ${riskChangeBannerHtml}
@@ -746,6 +743,28 @@
         ${nextActionTipsHtml}
 
         ${prePostChecklistHtml}
+
+        <div class="result-followup-actions">
+          <button class="btn-recheck" onclick="showResultEditor()">✏️ 結果を見ながら修正する</button>
+          <button class="btn-copy-text" id="btn-copy-text-result-bottom" onclick="copyText('btn-copy-text-result-bottom')">📋 文章をコピー</button>
+        </div>
+
+        <div id="result-editor" class="result-editor" style="display:none;">
+          <h4>✏️ 結果を見ながら文章を修正する</h4>
+          <p>チェック結果を見ながら、必要に応じて文章を整えられます。</p>
+
+          <textarea
+            id="result-edit-text"
+            maxlength="50000"
+            oninput="syncResultEditorText()"
+            aria-label="チェック結果を見ながら修正する文章"
+          ></textarea>
+
+          <div class="result-editor-actions">
+            <button class="btn-primary" onclick="checkText()">🔍 修正した文章を再チェック</button>
+            <button class="btn-copy-text" id="btn-copy-text-editor" onclick="copyText('btn-copy-text-editor')">📋 文章をコピー</button>
+          </div>
+        </div>
 
         <br>
         <p class="share-info-label">
@@ -775,6 +794,30 @@
       resultArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
+    /* ---------- 結果下の編集エリア ---------- */
+    function showResultEditor() {
+      const editor = document.getElementById('result-editor');
+      const resultEditText = document.getElementById('result-edit-text');
+      const inputText = document.getElementById('input-text');
+
+      if (!editor || !resultEditText || !inputText) return;
+
+      resultEditText.value = inputText.value;
+      editor.style.display = 'block';
+      resultEditText.focus();
+      editor.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function syncResultEditorText() {
+      const resultEditText = document.getElementById('result-edit-text');
+      const inputText = document.getElementById('input-text');
+
+      if (!resultEditText || !inputText) return;
+
+      inputText.value = resultEditText.value;
+      inputText.dispatchEvent(new Event('input'));
+    }
+
     /* ---------- SNSを開く ---------- */
     function openSns() {
       const sel = document.getElementById('sns-select');
@@ -785,60 +828,49 @@
       window.open(sel.value, '_blank', 'noopener');
     }
 
-    /* ---------- 再チェック ---------- */
-    function recheck() {
-      // 文章の確認後、「文章を修正して再チェックボタン」をクリックした時、前回の確認結果を表示したままにする
-      // result-area は非表示にしない（前回の結果を見ながら修正できるようにする）
-      // 「編集中」バナーを表示して、前回の結果であることを明示する
-      const resultArea = document.getElementById('result-area');
-      if (resultArea.style.display !== 'none') {
-        // まだバナーがなければ挿入
-        if (!document.getElementById('recheck-notice')) {
-          const notice = document.createElement('div');
-          notice.id = 'recheck-notice';
-          notice.style.cssText = `
-          background: var(--amber-lt);
-          border: 1px solid var(--amber);
-          border-radius: 10px;
-          padding: 0.6rem 1rem;
-          font-size: 0.85rem;
-          color: #92600a;
-          margin-bottom: 1rem;
-        `;
-        notice.innerHTML = '✏️ <strong>編集中</strong>　上の入力欄を修正して「確認してみる」ボタンをクリックすると、チェック結果が更新されます。';
-        resultArea.insertBefore(notice, resultArea.firstChild);
-      }
-    }
-    document.getElementById('input-text').focus();
-    document.getElementById('input-text').scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }
-
-
     /* ---------- テキストコピー ---------- */
-    function copyText() {
-      const text = document.getElementById('input-text').value;
+    function setCopyButtonCopied(btn) {
+      btn.textContent = '✅ 文章をコピーしました';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = '📋 文章をコピー';
+        btn.classList.remove('copied');
+      }, 2000);
+    }
+
+    function fallbackCopyText(text) {
+      const copyArea = document.createElement('textarea');
+      copyArea.value = text;
+      copyArea.setAttribute('readonly', '');
+      copyArea.style.position = 'fixed';
+      copyArea.style.top = '0';
+      copyArea.style.left = '0';
+      copyArea.style.opacity = '0';
+      document.body.appendChild(copyArea);
+      copyArea.select();
+      document.execCommand('copy');
+      copyArea.remove();
+    }
+
+    function copyText(buttonId = 'btn-copy-text') {
+      const inputText = document.getElementById('input-text');
+      if (!inputText) return;
+      const text = inputText.value;
       if (!text) return;
-      const btn = document.getElementById('btn-copy-text');
-      navigator.clipboard.writeText(text)
+      const btn = document.getElementById(buttonId);
+      if (!btn) return;
+
+      const clipboard = navigator.clipboard && navigator.clipboard.writeText
+        ? navigator.clipboard.writeText(text)
+        : Promise.reject(new Error('Clipboard API is unavailable'));
+
+      clipboard
         .then(() => {
-          btn.textContent = '✅ 文章をコピーしました';
-          btn.classList.add('copied');
-          setTimeout(() => {
-            btn.textContent = '📋 文章をコピー';
-            btn.classList.remove('copied');
-          }, 2000);
+          setCopyButtonCopied(btn);
         })
         .catch(() => {
-          // clipboard API非対応環境のフォールバック
-          const ta = document.getElementById('input-text');
-          ta.select();
-          document.execCommand('copy');
-          btn.textContent = '✅ 文章をコピーしました';
-          btn.classList.add('copied');
-          setTimeout(() => {
-            btn.textContent = '📋 文章をコピー';
-            btn.classList.remove('copied');
-          }, 2000);
+          fallbackCopyText(text);
+          setCopyButtonCopied(btn);
         });
     }
 
