@@ -402,6 +402,24 @@ Ran all test suites matching index.test.js.
 % 
 ```
 
+(7) ローカルで開発している画面を確認する方法
+
+「ことばみまもり」をPCのローカル環境で開発する場合、以下の方法で確認可能です。
+
+```
+% git clone git@github.com:na0AaooQ/words-watching-app.git
+
+% cd words-watching-app
+
+% python3 -m http.server 8080
+```
+
+Webブラウザから以下のURLへアクセスします。
+
+http://localhost:8080/
+
+PCのローカル環境上の「ことばみまもり」画面が表示されます。
+
 ---
 
 ## ESLint 実行方法

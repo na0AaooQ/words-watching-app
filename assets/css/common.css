@@ -292,6 +292,190 @@ main {
   margin-bottom: 1.75rem;
 }
 
+/* ===== Page Table of Contents / Embedded Video ===== */
+.page-toc,
+.manual-video-section {
+  margin-bottom: 2rem;
+  padding: 1.15rem 1.2rem;
+  border-radius: 16px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+}
+
+.page-toc h2,
+.manual-video-section h2 {
+  margin: 0 0 0.8rem;
+  font-family: 'Noto Serif JP', serif;
+  font-size: 1.08rem;
+  line-height: 1.6;
+  color: var(--text);
+}
+
+.page-toc-list {
+  display: grid;
+  gap: 0.55rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.page-toc-list a {
+  display: flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0.55rem 0.7rem;
+  border-radius: 10px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: 0.92rem;
+  font-weight: 700;
+  line-height: 1.6;
+  text-decoration: none;
+  transition: border-color 0.2s, color 0.2s, transform 0.15s, box-shadow 0.2s;
+}
+
+.page-toc-list a:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  box-shadow: 0 8px 24px rgba(74, 108, 247, 0.10);
+  transform: translateY(-1px);
+  text-decoration: none;
+}
+
+.page-toc-list a:focus-visible {
+  outline: 3px solid rgba(74, 108, 247, 0.22);
+  outline-offset: 3px;
+}
+
+.page-toc-target {
+  scroll-margin-top: 96px;
+}
+
+.manual-video-section p {
+  margin: 0 0 1rem;
+  color: var(--text);
+  font-size: 0.95rem;
+  line-height: 1.9;
+}
+
+.manual-video-frame {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.manual-video-frame iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.manual-video-link {
+  margin-top: 0.8rem;
+  font-size: 0.9rem;
+  line-height: 1.8;
+}
+
+.manual-image img[role="button"] {
+  cursor: zoom-in;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.manual-image img[role="button"]:hover {
+  border-color: var(--accent);
+  box-shadow: 0 10px 30px rgba(35, 54, 108, 0.14);
+  transform: translateY(-1px);
+}
+
+.manual-image img[role="button"]:focus-visible {
+  outline: 3px solid rgba(74, 108, 247, 0.32);
+  outline-offset: 3px;
+}
+
+.manual-image-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+}
+
+.manual-image-modal.open {
+  display: flex;
+}
+
+.manual-image-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 17, 23, 0.72);
+  backdrop-filter: blur(3px);
+}
+
+.manual-image-modal-dialog {
+  position: relative;
+  z-index: 1;
+  width: min(1180px, 96vw);
+  max-height: 92vh;
+  padding: 2.7rem 1rem 1rem;
+  overflow: auto;
+  border-radius: 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.28);
+}
+
+.manual-image-modal-close {
+  position: absolute;
+  top: 0.7rem;
+  right: 0.7rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface2);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.manual-image-modal-close:hover {
+  background: var(--accent-lt);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.manual-image-modal-close:focus-visible {
+  outline: 3px solid rgba(74, 108, 247, 0.32);
+  outline-offset: 2px;
+}
+
+.manual-image-modal-img {
+  display: block;
+  width: 100%;
+  max-height: calc(92vh - 4.2rem);
+  object-fit: contain;
+  border-radius: 10px;
+  background: var(--surface);
+}
+
+body.manual-modal-open {
+  overflow: hidden;
+}
+
 /* ===== Contact ===== */
 .contact-method {
   display: flex;
@@ -506,6 +690,35 @@ footer {
 
   .contact-method {
     padding: 1rem;
+  }
+
+  .page-toc,
+  .manual-video-section {
+    padding: 1rem;
+  }
+
+  .page-toc h2,
+  .manual-video-section h2 {
+    font-size: 1rem;
+  }
+
+  .page-toc-list a {
+    min-height: 44px;
+    font-size: 0.9rem;
+  }
+
+  .manual-image-modal {
+    padding: 0.7rem;
+  }
+
+  .manual-image-modal-dialog {
+    width: 96vw;
+    padding: 2.55rem 0.65rem 0.65rem;
+    border-radius: 12px;
+  }
+
+  .manual-image-modal-img {
+    max-height: calc(92vh - 3.7rem);
   }
 
   .related-services-section {
