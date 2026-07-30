@@ -514,6 +514,99 @@
       'You would still feel comfortable posting this after your feelings settle.'
     ];
 
+    const informationCheckingItems = [
+      {
+        label: 'I checked the original source and supporting evidence.',
+        description: 'Check whether the information can be traced to an original announcement, post, document, dataset, or other supporting material. If you provide a source separately, consider whether readers can access and review it.'
+      },
+      {
+        label: 'I checked relevant primary sources from public authorities.',
+        description: 'Where relevant, check official information from the government body, ministry, local authority, or other public institution responsible for the topic. Also confirm that a website or account claiming to represent a public authority is an official source.'
+      },
+      {
+        label: 'I checked the date, location, scope, and any updates.',
+        description: 'Check when and where the information applies, who or what it concerns, and whether it is still applicable. Also check for any updates, corrections, withdrawals, or follow-up announcements.'
+      },
+      {
+        label: 'I separated facts, inferences, opinions, and second-hand information.',
+        description: 'Check whether information presented as fact, your own inferences or opinions, and information received from others are clearly distinguished. When something has not been confirmed, wording that makes this clear can reduce misunderstanding.'
+      },
+      {
+        label: 'Where appropriate, I checked another independent source.',
+        description: 'For important or high-impact information, consider checking another independent source rather than relying on a single post or one person’s account. Check whether the other source has its own basis and is not simply repeating the same information.'
+      },
+      {
+        label: 'I checked the source and supporting context of images, videos, and charts.',
+        description: 'Check the original post or material, when and where it was captured or created, and what it represents. Consider whether it may have been cropped, edited, reused from another event, or generated using AI. For charts and graphs, also review the axes, sample size, scope, and time period.'
+      }
+    ];
+
+    function handleInformationCheckingSummaryKeydown(event) {
+      if (event.key !== 'Enter' && event.key !== ' ') return;
+      event.preventDefault();
+      const details = event.currentTarget.parentElement;
+      if (details && details.tagName === 'DETAILS') {
+        details.open = !details.open;
+      }
+    }
+
+    function handleInformationCheckingCheckboxKeydown(event) {
+      if (event.key !== ' ') return;
+      event.preventDefault();
+      event.currentTarget.checked = !event.currentTarget.checked;
+    }
+
+    function getInformationCheckingTipsHtml() {
+      return `
+        <details class="information-checking-card">
+          <summary class="information-checking-summary" onkeydown="handleInformationCheckingSummaryKeydown(event)">
+            <span class="information-checking-summary-row">
+              <span class="information-checking-title">
+                <span class="information-checking-icon" aria-hidden="true">ⓘ</span>
+                <span>Tips for checking information</span>
+              </span>
+              <span class="information-checking-toggle-icon" aria-hidden="true"></span>
+            </span>
+            <span class="information-checking-teaser">Before sharing, would you like to review the supporting evidence and factual basis of the information?</span>
+          </summary>
+
+          <div class="information-checking-body">
+            <p class="information-checking-intro">This optional checklist helps you review where the information came from, whether it is still current and applicable, and the facts and supporting evidence. Please use the items relevant to what you are sharing.</p>
+
+            <ul class="information-checking-list">
+              ${informationCheckingItems.map((item, index) => `
+                <li>
+                  <label class="information-checking-item" for="information-check-${index + 1}">
+                    <input type="checkbox" id="information-check-${index + 1}" autocomplete="off" onkeydown="handleInformationCheckingCheckboxKeydown(event)">
+                    <span>${escapeHtml(item.label)}</span>
+                  </label>
+                </li>
+              `).join('')}
+            </ul>
+
+            <details class="information-checking-more">
+              <summary onkeydown="handleInformationCheckingSummaryKeydown(event)">
+                <span>Learn more about each item</span>
+                <span class="information-checking-toggle-icon" aria-hidden="true"></span>
+              </summary>
+              <div class="information-checking-explanations">
+                ${informationCheckingItems.map(item => `
+                  <section class="information-checking-explanation">
+                    <h5>${escapeHtml(item.label)}</h5>
+                    <p>${escapeHtml(item.description)}</p>
+                  </section>
+                `).join('')}
+              </div>
+            </details>
+
+            <div class="information-checking-notes">
+              <p>These tips do not determine or guarantee whether information is accurate or still applicable. For important information, please check the relevant public authority and reliable primary sources.</p>
+              <p>Do not rely on this checklist alone when making decisions about disasters, health, legal matters, or safety.</p>
+            </div>
+          </div>
+        </details>`;
+    }
+
     function listHtml(items) {
       return '<ul class="result-list">' + items.map(item => '<li>' + escapeHtml(item) + '</li>').join('') + '</ul>';
     }
@@ -571,6 +664,8 @@
         ${nextActionTipsHtml}
 
         ${checklistHtml}
+
+        ${getInformationCheckingTipsHtml()}
 
         <div class="result-followup-actions">
           <button class="btn-recheck" onclick="showResultEditor()">Edit while viewing result</button>

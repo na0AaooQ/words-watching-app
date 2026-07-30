@@ -110,6 +110,97 @@ const prePostChecklistItems = [
   '今の感情が落ち着いてから見ても、同じ文章を出せそう'
 ];
 
+const informationCheckingItems = [
+  {
+    label: '元の情報源や根拠を確認した',
+    description: '公式発表、元の投稿、資料、統計など、情報の出どころをたどれるか確認します。出典を文章とは別に添える場合も、読み手が確認できる形になっているか見直します。'
+  },
+  {
+    label: '関係する公的機関などの一次情報を確認した',
+    description: '必要に応じて、その内容を担当・所管する日本政府、関係省庁、自治体、その他の公的機関の公式サイトや公式発表を確認します。公的機関を名乗るサイトやアカウントが、実際の公式な発信元かどうかも確認します。'
+  },
+  {
+    label: '日時・地域・対象・更新状況を確認した',
+    description: 'いつ、どこで、誰や何を対象とした情報かを確認します。現在もその地域・対象・条件に当てはまるか、その後に更新、訂正、撤回、続報が出ていないかも確認します。'
+  },
+  {
+    label: '事実・推測・意見・伝聞を分けている',
+    description: '確認できた内容、ご自身の推測や意見、人から聞いた情報が、読み手に区別して伝わるか確認します。確認できていない内容は、そのことが分かる表現にすると、誤解を減らせます。'
+  },
+  {
+    label: '必要に応じて、別の独立した情報源も確認した',
+    description: '重要な情報や影響の大きい情報は、一つの投稿や一人の発信者だけで判断せず、必要に応じて、別の独立した情報源でも確認します。同じ情報を転載・引用しているだけではなく、別の根拠を持つ情報源かどうかも確認します。'
+  },
+  {
+    label: '画像・動画・図表の作成元や根拠を確認した',
+    description: '元の投稿や資料、撮影・作成日時、場所、対象範囲などを確認します。切り抜き、加工、別の出来事からの流用、生成AIによる作成の可能性にも注意します。表やグラフでは、軸、対象となった人数・件数、対象期間なども確認します。'
+  }
+];
+
+let previousRisk = null;
+
+function handleInformationCheckingSummaryKeydown(event) {
+  if (event.key !== 'Enter' && event.key !== ' ') return;
+  event.preventDefault();
+  const details = event.currentTarget.parentElement;
+  if (details && details.tagName === 'DETAILS') {
+    details.open = !details.open;
+  }
+}
+
+function handleInformationCheckingCheckboxKeydown(event) {
+  if (event.key !== ' ') return;
+  event.preventDefault();
+  event.currentTarget.checked = !event.currentTarget.checked;
+}
+
+function getInformationCheckingTipsHtml() {
+  return `
+    <details class="information-checking-card">
+      <summary class="information-checking-summary" onkeydown="handleInformationCheckingSummaryKeydown(event)">
+        <span class="information-checking-summary-row">
+          <span class="information-checking-title">
+            <span class="information-checking-icon" aria-hidden="true">ⓘ</span>
+            <span>情報を確かめるヒント</span>
+          </span>
+          <span class="information-checking-toggle-icon" aria-hidden="true"></span>
+        </span>
+        <span class="information-checking-teaser">情報を共有する前に、情報の根拠や事実関係なども確認してみませんか？</span>
+      </summary>
+      <div class="information-checking-body">
+        <p class="information-checking-intro">情報の出どころ、現在も有効な情報かどうか、事実や根拠などを、ご自身で確かめるための任意のチェックです。内容に合う項目をご利用ください。</p>
+        <ul class="information-checking-list">
+          ${informationCheckingItems.map((item, index) => `
+            <li>
+              <label class="information-checking-item" for="information-check-${index + 1}">
+                <input type="checkbox" id="information-check-${index + 1}" autocomplete="off" onkeydown="handleInformationCheckingCheckboxKeydown(event)">
+                <span>${escapeHtml(item.label)}</span>
+              </label>
+            </li>
+          `).join('')}
+        </ul>
+        <details class="information-checking-more">
+          <summary onkeydown="handleInformationCheckingSummaryKeydown(event)">
+            <span>各項目について詳しく見る</span>
+            <span class="information-checking-toggle-icon" aria-hidden="true"></span>
+          </summary>
+          <div class="information-checking-explanations">
+            ${informationCheckingItems.map(item => `
+              <section class="information-checking-explanation">
+                <h5>${escapeHtml(item.label)}</h5>
+                <p>${escapeHtml(item.description)}</p>
+              </section>
+            `).join('')}
+          </div>
+        </details>
+        <div class="information-checking-notes">
+          <p>このヒントは、情報の真偽や現在も有効な情報かどうかを判定・保証するものではありません。重要な情報は、関係する公的機関や信頼できる一次情報をご確認ください。</p>
+          <p>災害、医療、法律、安全に関する判断は、このチェックだけで行わないでください。</p>
+        </div>
+      </div>
+    </details>`;
+}
+
 function generateDemoData(text) {
   const hasNegative = /最悪|無駄|バカ|死|消えろ|うざ|最低|嫌い/.test(text);
   if (hasNegative) {
@@ -192,6 +283,25 @@ function renderResult(data) {
   const shareUrlLinkedin  = 'https://www.linkedin.com/';
   const shareUrlYoutube   = 'https://www.youtube.com/';
 
+  let riskChangeBannerHtml = '';
+  if (previousRisk !== null && previousRisk !== data.risk) {
+    const prevLabel = getRiskLabel(previousRisk);
+    const riskOrder = { low: 0, medium: 1, high: 2 };
+    const improved = riskOrder[data.risk] < riskOrder[previousRisk];
+    riskChangeBannerHtml = `
+      <div class="risk-change-banner ${improved ? 'improved' : 'worsened'}">
+        <span>${improved ? '🎉' : '📢'}</span>
+        <span>前回：${escapeHtml(prevLabel)} → 今回：${escapeHtml(riskLabel)}</span>
+      </div>`;
+  } else if (previousRisk !== null && previousRisk === data.risk) {
+    riskChangeBannerHtml = `
+      <div class="risk-change-banner unchanged">
+        <span>↔️</span>
+        <span>前回と同じ判定です（リスク：${escapeHtml(riskLabel)}）</span>
+      </div>`;
+  }
+  previousRisk = data.risk;
+
   resultArea.innerHTML = `
     <div class="result-header">
       <p class="result-title">📋 チェック結果</p>
@@ -200,6 +310,7 @@ function renderResult(data) {
         <button class="btn-copy-text" id="btn-copy-text-result" onclick="copyText('btn-copy-text-result')">📋 文章をコピー</button>
       </div>
     </div>
+    ${riskChangeBannerHtml}
     <div class="${escapeHtml(riskClass)}">
       <span class="verdict-icon">${riskIcon}</span>
       <div class="verdict-text">
@@ -215,6 +326,7 @@ function renderResult(data) {
     ${suggestionsHtml}
     ${nextActionTipsHtml}
     ${prePostChecklistHtml}
+    ${getInformationCheckingTipsHtml()}
     <div class="result-followup-actions">
       <button class="btn-recheck" onclick="showResultEditor()">✏️ 結果を見ながら修正する</button>
       <button class="btn-copy-text" id="btn-copy-text-result-bottom" onclick="copyText('btn-copy-text-result-bottom')">📋 文章をコピー</button>
@@ -373,6 +485,7 @@ async function checkText() {
 // DOM セットアップ用ヘルパー
 // ─────────────────────────────────────────────
 function setupDom() {
+  previousRisk = null;
   document.body.innerHTML = `
     <textarea id="input-text"></textarea>
     <span id="char-count" class="char-count"></span>
@@ -1004,6 +1117,231 @@ describe('renderResult()', () => {
     expect(document.cookie).not.toContain('pre-post-check');
   });
 
+  test('「情報を確かめるヒント」が投稿前セルフチェックの直後に表示される', () => {
+    renderResult(baseData);
+
+    const card = document.querySelector('.information-checking-card');
+    expect(card.querySelector('.information-checking-title').textContent).toContain('情報を確かめるヒント');
+    expect(card.querySelector('.information-checking-teaser').textContent).toBe('情報を共有する前に、情報の根拠や事実関係なども確認してみませんか？');
+    expect(document.querySelector('.pre-post-checklist-card + .information-checking-card')).not.toBeNull();
+  });
+
+  test('情報を確かめるヒントの6項目が指定順で表示される', () => {
+    renderResult(baseData);
+
+    const labels = Array.from(document.querySelectorAll('.information-checking-list .information-checking-item span'))
+      .map(item => item.textContent.trim());
+
+    expect(labels).toEqual(informationCheckingItems.map(item => item.label));
+  });
+
+  test('6項目の補足説明が一つの折りたたみ領域に表示される', () => {
+    renderResult(baseData);
+
+    const more = document.querySelector('.information-checking-more');
+    const headings = Array.from(more.querySelectorAll('.information-checking-explanation h5'))
+      .map(item => item.textContent.trim());
+    const descriptions = Array.from(more.querySelectorAll('.information-checking-explanation p'))
+      .map(item => item.textContent.trim());
+
+    expect(document.querySelectorAll('.information-checking-more')).toHaveLength(1);
+    expect(headings).toEqual(informationCheckingItems.map(item => item.label));
+    expect(descriptions).toEqual(informationCheckingItems.map(item => item.description));
+  });
+
+  test('外側と補足説明は初期状態で閉じている', () => {
+    renderResult(baseData);
+
+    expect(document.querySelector('.information-checking-card').open).toBe(false);
+    expect(document.querySelector('.information-checking-more').open).toBe(false);
+  });
+
+  test('外側を開閉できる', () => {
+    renderResult(baseData);
+
+    const details = document.querySelector('.information-checking-card');
+    const summary = details.querySelector(':scope > summary');
+    summary.click();
+    expect(details.open).toBe(true);
+    summary.click();
+    expect(details.open).toBe(false);
+  });
+
+  test('補足説明を開閉できる', () => {
+    renderResult(baseData);
+
+    const more = document.querySelector('.information-checking-more');
+    const summary = more.querySelector('summary');
+    summary.click();
+    expect(more.open).toBe(true);
+    summary.click();
+    expect(more.open).toBe(false);
+  });
+
+  test.each(['Enter', ' '])('%s キーで外側を開閉できる', key => {
+    renderResult(baseData);
+
+    const details = document.querySelector('.information-checking-card');
+    const summary = details.querySelector(':scope > summary');
+    const event = {
+      key,
+      currentTarget: summary,
+      preventDefault: jest.fn()
+    };
+
+    handleInformationCheckingSummaryKeydown(event);
+    expect(details.open).toBe(true);
+    expect(event.preventDefault).toHaveBeenCalledTimes(1);
+    handleInformationCheckingSummaryKeydown(event);
+    expect(details.open).toBe(false);
+  });
+
+  test('Enter キーで補足説明を開閉できる', () => {
+    renderResult(baseData);
+
+    const details = document.querySelector('.information-checking-more');
+    const event = {
+      key: 'Enter',
+      currentTarget: details.querySelector('summary'),
+      preventDefault: jest.fn()
+    };
+
+    handleInformationCheckingSummaryKeydown(event);
+    expect(details.open).toBe(true);
+    handleInformationCheckingSummaryKeydown(event);
+    expect(details.open).toBe(false);
+  });
+
+  test('6個のチェックボックスはすべて未チェックで始まり、ラベルから一部だけ選択できる', () => {
+    renderResult(baseData);
+
+    const checkboxes = Array.from(document.querySelectorAll('.information-checking-list input[type="checkbox"]'));
+    const secondLabel = document.querySelector('label[for="information-check-2"]');
+
+    expect(checkboxes).toHaveLength(6);
+    expect(checkboxes.every(checkbox => !checkbox.checked)).toBe(true);
+    secondLabel.click();
+    expect(checkboxes[1].checked).toBe(true);
+    expect(checkboxes.filter(checkbox => checkbox.checked)).toHaveLength(1);
+  });
+
+  test('Space キーでチェックボックスを切り替えられる', () => {
+    renderResult(baseData);
+
+    const checkbox = document.getElementById('information-check-4');
+    const event = {
+      key: ' ',
+      currentTarget: checkbox,
+      preventDefault: jest.fn()
+    };
+
+    handleInformationCheckingCheckboxKeydown(event);
+    expect(checkbox.checked).toBe(true);
+    expect(event.preventDefault).toHaveBeenCalledTimes(1);
+    handleInformationCheckingCheckboxKeydown(event);
+    expect(checkbox.checked).toBe(false);
+  });
+
+  test('チェックボックスとラベルが関連付けられ、開閉操作にネイティブ要素を使う', () => {
+    renderResult(baseData);
+
+    const labels = Array.from(document.querySelectorAll('.information-checking-list label'));
+    expect(labels).toHaveLength(6);
+    labels.forEach(label => {
+      const input = label.querySelector('input');
+      expect(label.htmlFor).toBe(input.id);
+    });
+    expect(document.querySelector('.information-checking-card').tagName).toBe('DETAILS');
+    expect(document.querySelector('.information-checking-card > summary').tagName).toBe('SUMMARY');
+    expect(document.querySelector('.information-checking-more').tagName).toBe('DETAILS');
+  });
+
+  test('外側を閉じて再度開いてもチェック状態を維持する', () => {
+    renderResult(baseData);
+
+    const details = document.querySelector('.information-checking-card');
+    const summary = details.querySelector(':scope > summary');
+    const checkbox = document.getElementById('information-check-1');
+    summary.click();
+    checkbox.click();
+    summary.click();
+    summary.click();
+
+    expect(details.open).toBe(true);
+    expect(checkbox.checked).toBe(true);
+  });
+
+  test('補足説明を閉じてもチェック状態を維持する', () => {
+    renderResult(baseData);
+
+    const more = document.querySelector('.information-checking-more');
+    const checkbox = document.getElementById('information-check-3');
+    checkbox.click();
+    more.querySelector('summary').click();
+    more.querySelector('summary').click();
+
+    expect(more.open).toBe(false);
+    expect(checkbox.checked).toBe(true);
+  });
+
+  test('新しい結果を表示すると外側と補足説明が閉じ、6項目が未チェックへ戻る', () => {
+    renderResult(baseData);
+
+    document.querySelector('.information-checking-card > summary').click();
+    document.querySelector('.information-checking-more > summary').click();
+    document.getElementById('information-check-1').click();
+    document.getElementById('information-check-4').click();
+
+    renderResult({ ...baseData, risk: 'medium', summary: '新しい結果' });
+
+    expect(document.querySelector('.information-checking-card').open).toBe(false);
+    expect(document.querySelector('.information-checking-more').open).toBe(false);
+    expect(Array.from(document.querySelectorAll('.information-checking-list input')).every(checkbox => !checkbox.checked)).toBe(true);
+  });
+
+  test('チェックや開閉操作でfetchを呼ばず、ブラウザ保存領域も使用しない', () => {
+    window.localStorage.clear();
+    window.sessionStorage.clear();
+    global.fetch = jest.fn();
+    renderResult(baseData);
+
+    document.querySelector('.information-checking-card > summary').click();
+    document.querySelector('.information-checking-more > summary').click();
+    document.querySelector('label[for="information-check-5"]').click();
+
+    expect(global.fetch).not.toHaveBeenCalled();
+    expect(window.localStorage.length).toBe(0);
+    expect(window.sessionStorage.length).toBe(0);
+    expect(document.cookie).not.toContain('information-check');
+  });
+
+  test('チェックや開閉操作をコンソールへ出力しない', () => {
+    const logSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+    const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+    renderResult(baseData);
+
+    document.querySelector('.information-checking-card > summary').click();
+    document.querySelector('.information-checking-more > summary').click();
+    document.getElementById('information-check-6').click();
+
+    expect(logSpy).not.toHaveBeenCalled();
+    expect(warnSpy).not.toHaveBeenCalled();
+    logSpy.mockRestore();
+    warnSpy.mockRestore();
+  });
+
+  test('チェック状態によってリスク表示とリスク変化バナーは変化しない', () => {
+    renderResult(baseData);
+    renderResult({ ...baseData, risk: 'high' });
+
+    const verdictBefore = document.querySelector('.verdict').className;
+    const bannerBefore = document.querySelector('.risk-change-banner').textContent;
+    document.getElementById('information-check-2').click();
+
+    expect(document.querySelector('.verdict').className).toBe(verdictBefore);
+    expect(document.querySelector('.risk-change-banner').textContent).toBe(bannerBefore);
+  });
+
   test('結果ヘッダーに修正ボタンとコピーボタンが表示される', () => {
     renderResult(baseData);
 
@@ -1014,7 +1352,7 @@ describe('renderResult()', () => {
   test('結果下にも修正ボタンとコピーボタンが表示される', () => {
     renderResult(baseData);
 
-    expect(document.querySelector('.pre-post-checklist-card + .result-followup-actions')).not.toBeNull();
+    expect(document.querySelector('.information-checking-card + .result-followup-actions')).not.toBeNull();
     expect(document.querySelector('.result-followup-actions .btn-recheck').textContent).toBe('✏️ 結果を見ながら修正する');
     expect(document.getElementById('btn-copy-text-result-bottom').textContent).toBe('📋 文章をコピー');
   });
@@ -1272,6 +1610,43 @@ describe('checkText()', () => {
     await promise;
   });
 
+  test('通信中は現在のチェック状態を維持し、新しい結果の表示時にリセットする', async () => {
+    renderResult({ risk: 'low', summary: '現在の結果', reasons: [], suggestions: [] });
+    document.getElementById('information-check-1').click();
+
+    let resolvePromise;
+    global.fetch = jest.fn().mockReturnValue(
+      new Promise(resolve => { resolvePromise = resolve; })
+    );
+
+    const promise = checkText();
+
+    expect(document.getElementById('information-check-1').checked).toBe(true);
+    resolvePromise({ ok: true, json: async () => ({ risk: 'medium', summary: '新しい結果', reasons: [], suggestions: [] }) });
+    await promise;
+    expect(Array.from(document.querySelectorAll('.information-checking-list input')).every(checkbox => !checkbox.checked)).toBe(true);
+  });
+
+  test('通信失敗時もデモ結果が表示されるまでは現在のチェック状態を消さない', async () => {
+    renderResult({ risk: 'low', summary: '現在の結果', reasons: [], suggestions: [] });
+    document.getElementById('information-check-2').click();
+
+    let rejectPromise;
+    global.fetch = jest.fn().mockReturnValue(
+      new Promise((resolve, reject) => {
+        rejectPromise = reject;
+      })
+    );
+
+    const promise = checkText();
+
+    expect(document.getElementById('information-check-2').checked).toBe(true);
+    rejectPromise(new Error('Network Error'));
+    await promise;
+    expect(document.getElementById('result-area').style.display).toBe('block');
+    expect(Array.from(document.querySelectorAll('.information-checking-list input')).every(checkbox => !checkbox.checked)).toBe(true);
+  });
+
   test('POST リクエストが JSON ボディで送信される', async () => {
     global.fetch = jest.fn().mockResolvedValue({
       ok: true,
@@ -1286,6 +1661,22 @@ describe('checkText()', () => {
     expect(url).toBe('/prod/check');
     expect(options.method).toBe('POST');
     expect(JSON.parse(options.body)).toEqual({ text: inputText, tone: 'standard', scene: 'general', language: 'ja' });
+  });
+
+  test('情報を確かめるヒントのチェック状態をAPIリクエストへ含めない', async () => {
+    renderResult({ risk: 'low', summary: '現在の結果', reasons: [], suggestions: [] });
+    document.getElementById('information-check-1').click();
+    document.getElementById('information-check-4').click();
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ risk: 'low', summary: 'ok', reasons: [], suggestions: [] })
+    });
+
+    await checkText();
+
+    const requestBody = JSON.parse(global.fetch.mock.calls[0][1].body);
+    expect(requestBody).toEqual({ text: 'テスト投稿文', tone: 'standard', scene: 'general', language: 'ja' });
+    expect(JSON.stringify(requestBody)).not.toContain('information-check');
   });
 
   test('soft 選択時は tone: "soft" が送信される', async () => {
