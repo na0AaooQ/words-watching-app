@@ -602,6 +602,100 @@
       '今の感情が落ち着いてから見ても、同じ文章を出せそう'
     ];
 
+    /* ---------- 情報を確かめるヒント（フロント固定表示） ---------- */
+    const informationCheckingItems = [
+      {
+        label: '元の情報源や根拠を確認した',
+        description: '公式発表、元の投稿、資料、統計など、情報の出どころをたどれるか確認します。出典を文章とは別に添える場合も、読み手が確認できる形になっているか見直します。'
+      },
+      {
+        label: '関係する公的機関などの一次情報を確認した',
+        description: '必要に応じて、その内容を担当・所管する日本政府、関係省庁、自治体、その他の公的機関の公式サイトや公式発表を確認します。公的機関を名乗るサイトやアカウントが、実際の公式な発信元かどうかも確認します。'
+      },
+      {
+        label: '日時・地域・対象・更新状況を確認した',
+        description: 'いつ、どこで、誰や何を対象とした情報かを確認します。現在もその地域・対象・条件に当てはまるか、その後に更新、訂正、撤回、続報が出ていないかも確認します。'
+      },
+      {
+        label: '事実・推測・意見・伝聞を分けている',
+        description: '確認できた内容、ご自身の推測や意見、人から聞いた情報が、読み手に区別して伝わるか確認します。確認できていない内容は、そのことが分かる表現にすると、誤解を減らせます。'
+      },
+      {
+        label: '必要に応じて、別の独立した情報源も確認した',
+        description: '重要な情報や影響の大きい情報は、一つの投稿や一人の発信者だけで判断せず、必要に応じて、別の独立した情報源でも確認します。同じ情報を転載・引用しているだけではなく、別の根拠を持つ情報源かどうかも確認します。'
+      },
+      {
+        label: '画像・動画・図表の作成元や根拠を確認した',
+        description: '元の投稿や資料、撮影・作成日時、場所、対象範囲などを確認します。切り抜き、加工、別の出来事からの流用、生成AIによる作成の可能性にも注意します。表やグラフでは、軸、対象となった人数・件数、対象期間なども確認します。'
+      }
+    ];
+
+    function handleInformationCheckingSummaryKeydown(event) {
+      if (event.key !== 'Enter' && event.key !== ' ') return;
+      event.preventDefault();
+      const details = event.currentTarget.parentElement;
+      if (details && details.tagName === 'DETAILS') {
+        details.open = !details.open;
+      }
+    }
+
+    function handleInformationCheckingCheckboxKeydown(event) {
+      if (event.key !== ' ') return;
+      event.preventDefault();
+      event.currentTarget.checked = !event.currentTarget.checked;
+    }
+
+    function getInformationCheckingTipsHtml() {
+      return `
+        <details class="information-checking-card">
+          <summary class="information-checking-summary" onkeydown="handleInformationCheckingSummaryKeydown(event)">
+            <span class="information-checking-summary-row">
+              <span class="information-checking-title">
+                <span class="information-checking-icon" aria-hidden="true">ⓘ</span>
+                <span>情報を確かめるヒント</span>
+              </span>
+              <span class="information-checking-toggle-icon" aria-hidden="true"></span>
+            </span>
+            <span class="information-checking-teaser">情報を共有する前に、情報の根拠や事実関係なども確認してみませんか？</span>
+          </summary>
+
+          <div class="information-checking-body">
+            <p class="information-checking-intro">情報の出どころ、現在も有効な情報かどうか、事実や根拠などを、ご自身で確かめるための任意のチェックです。内容に合う項目をご利用ください。</p>
+
+            <ul class="information-checking-list">
+              ${informationCheckingItems.map((item, index) => `
+                <li>
+                  <label class="information-checking-item" for="information-check-${index + 1}">
+                    <input type="checkbox" id="information-check-${index + 1}" autocomplete="off" onkeydown="handleInformationCheckingCheckboxKeydown(event)">
+                    <span>${escapeHtml(item.label)}</span>
+                  </label>
+                </li>
+              `).join('')}
+            </ul>
+
+            <details class="information-checking-more">
+              <summary onkeydown="handleInformationCheckingSummaryKeydown(event)">
+                <span>各項目について詳しく見る</span>
+                <span class="information-checking-toggle-icon" aria-hidden="true"></span>
+              </summary>
+              <div class="information-checking-explanations">
+                ${informationCheckingItems.map(item => `
+                  <section class="information-checking-explanation">
+                    <h5>${escapeHtml(item.label)}</h5>
+                    <p>${escapeHtml(item.description)}</p>
+                  </section>
+                `).join('')}
+              </div>
+            </details>
+
+            <div class="information-checking-notes">
+              <p>このヒントは、情報の真偽や現在も有効な情報かどうかを判定・保証するものではありません。重要な情報は、関係する公的機関や信頼できる一次情報をご確認ください。</p>
+              <p>災害、医療、法律、安全に関する判断は、このチェックだけで行わないでください。</p>
+            </div>
+          </div>
+        </details>`;
+    }
+
     /* ---------- 結果レンダリング ---------- */
     // APIレスポンス形式: { risk: string, summary: string, reasons: string[], suggestions?: string[] }
     function renderResult(data) {
@@ -745,6 +839,8 @@
         ${nextActionTipsHtml}
 
         ${prePostChecklistHtml}
+
+        ${getInformationCheckingTipsHtml()}
 
         <div class="result-followup-actions">
           <button class="btn-recheck" onclick="showResultEditor()">✏️ 結果を見ながら修正する</button>

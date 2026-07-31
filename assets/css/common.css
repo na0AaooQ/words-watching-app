@@ -352,6 +352,50 @@ main {
   scroll-margin-top: 96px;
 }
 
+.manual-information-subheading {
+  margin: 1.4rem 0 0.65rem;
+  color: var(--text);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.manual-information-items {
+  display: grid;
+  gap: 0.8rem;
+  margin: 1rem 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: information-item;
+}
+
+.manual-information-items > li {
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface2);
+  counter-increment: information-item;
+}
+
+.manual-information-items h3 {
+  margin: 0 0 0.35rem;
+  color: var(--text);
+  font-size: 0.95rem;
+  line-height: 1.65;
+}
+
+.manual-information-items h3::before {
+  content: counter(information-item) ". ";
+  color: var(--accent);
+}
+
+.manual-information-items p {
+  margin: 0;
+  color: var(--text);
+  font-size: 0.92rem;
+  line-height: 1.85;
+  overflow-wrap: anywhere;
+}
+
 .manual-video-section p {
   margin: 0 0 1rem;
   color: var(--text);

@@ -10,6 +10,9 @@
   --muted:     #56607a;
   --accent:    #4a6cf7;
   --accent-lt: #e9efff;
+  --info:      #6253c7;
+  --info-lt:   #f0effd;
+  --info-border: rgba(98, 83, 199, 0.28);
   --green:     #22c48a;
   --green-lt:  #e8faf3;
   --amber:     #f59e0b;
@@ -32,6 +35,9 @@
     --muted:     #8b93b8;
     --accent:    #6b8aff;
     --accent-lt: #1a2040;
+    --info:      #a89cff;
+    --info-lt:   #211e3a;
+    --info-border: rgba(168, 156, 255, 0.32);
     --green:     #2dd4a0;
     --green-lt:  #0d2b22;
     --amber:     #fbbf24;
@@ -122,6 +128,9 @@
   --muted:     #8b93b8;
   --accent:    #6b8aff;
   --accent-lt: #1a2040;
+  --info:      #a89cff;
+  --info-lt:   #211e3a;
+  --info-border: rgba(168, 156, 255, 0.32);
   --green:     #2dd4a0;
   --green-lt:  #0d2b22;
   --amber:     #fbbf24;
@@ -1242,6 +1251,203 @@ textarea::placeholder {
   min-width: 0;
 }
 
+/* ===== 情報を確かめるヒント ===== */
+.information-checking-card {
+  margin-bottom: 1.25rem;
+  overflow: hidden;
+  border: 1px solid var(--info-border);
+  border-left: 4px solid var(--info);
+  border-radius: 10px;
+  background: var(--info-lt);
+  color: var(--text);
+}
+
+.information-checking-summary {
+  display: block;
+  padding: 1rem 1.25rem;
+  list-style: none;
+  cursor: pointer;
+}
+
+.information-checking-summary::-webkit-details-marker,
+.information-checking-more > summary::-webkit-details-marker {
+  display: none;
+}
+
+.information-checking-summary-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.information-checking-title {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.45rem;
+  min-width: 0;
+  color: var(--text);
+  font-size: 0.93rem;
+  font-weight: 700;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.information-checking-icon {
+  flex: 0 0 auto;
+  color: var(--info);
+  font-size: 1rem;
+}
+
+.information-checking-toggle-icon {
+  flex: 0 0 auto;
+  color: var(--info);
+  font-size: 0.78rem;
+  line-height: 1.6;
+}
+
+.information-checking-toggle-icon::before {
+  content: "▼";
+}
+
+.information-checking-card[open] > .information-checking-summary .information-checking-toggle-icon::before,
+.information-checking-more[open] > summary .information-checking-toggle-icon::before {
+  content: "▲";
+}
+
+.information-checking-teaser {
+  display: block;
+  margin-top: 0.35rem;
+  color: var(--muted);
+  font-size: 0.84rem;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
+.information-checking-card[open] > .information-checking-summary .information-checking-teaser {
+  display: none;
+}
+
+.information-checking-summary:focus-visible,
+.information-checking-more > summary:focus-visible {
+  outline: 3px solid rgba(74, 108, 247, 0.3);
+  outline-offset: -3px;
+}
+
+.information-checking-body {
+  padding: 0 1.25rem 1.25rem;
+}
+
+.information-checking-intro {
+  margin: 0 0 0.85rem;
+  color: var(--text);
+  font-size: 0.88rem;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+
+.information-checking-list {
+  display: grid;
+  gap: 0.65rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.information-checking-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  min-width: 0;
+  color: var(--text);
+  font-size: 0.91rem;
+  font-weight: 500;
+  line-height: 1.7;
+  cursor: pointer;
+}
+
+.information-checking-item input {
+  flex: 0 0 auto;
+  width: 1.1rem;
+  height: 1.1rem;
+  margin-top: 0.26rem;
+  accent-color: var(--info);
+  cursor: pointer;
+}
+
+.information-checking-item input:focus-visible {
+  outline: 3px solid rgba(74, 108, 247, 0.3);
+  outline-offset: 2px;
+}
+
+.information-checking-item span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.information-checking-more {
+  margin-top: 1rem;
+  border-top: 1px solid var(--info-border);
+  border-bottom: 1px solid var(--info-border);
+}
+
+.information-checking-more > summary {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.75rem 0;
+  color: var(--text);
+  font-size: 0.86rem;
+  font-weight: 700;
+  line-height: 1.6;
+  list-style: none;
+  cursor: pointer;
+}
+
+.information-checking-explanations {
+  padding: 0 0 0.3rem;
+}
+
+.information-checking-explanation {
+  padding: 0.85rem 0;
+  border-top: 1px solid var(--info-border);
+}
+
+.information-checking-explanation h5 {
+  margin: 0 0 0.3rem;
+  color: var(--text);
+  font-size: 0.88rem;
+  font-weight: 700;
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+}
+
+.information-checking-explanation p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.84rem;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+
+.information-checking-notes {
+  padding-top: 0.9rem;
+}
+
+.information-checking-notes p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.8rem;
+  line-height: 1.75;
+  overflow-wrap: anywhere;
+}
+
+.information-checking-notes p + p {
+  margin-top: 0.55rem;
+}
+
 /* ===== 各種SNSを開くボタンの文章 ===== */
 .share-info-label {
   font-size: 0.79rem;
@@ -1546,6 +1752,14 @@ footer {
 
   .result-editor-actions .btn-primary {
     width: 100%;
+  }
+
+  .information-checking-summary {
+    padding: 0.9rem 1rem;
+  }
+
+  .information-checking-body {
+    padding: 0 1rem 1rem;
   }
 
   .char-count-row {

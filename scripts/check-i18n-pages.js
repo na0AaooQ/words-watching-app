@@ -282,6 +282,98 @@ function checkApiRequestLanguages() {
   }
 }
 
+function assertTextsInOrder(text, expectedTexts, context) {
+  let cursor = 0;
+  for (const expectedText of expectedTexts) {
+    const index = text.indexOf(expectedText, cursor);
+    assert(index >= 0, `${context}: missing or out-of-order text "${expectedText}"`);
+    if (index >= 0) cursor = index + expectedText.length;
+  }
+}
+
+function checkInformationCheckingTips() {
+  const expectations = [
+    {
+      indexFile: "index.html",
+      manualFile: "manual.html",
+      title: "情報を確かめるヒント",
+      moreTitle: "各項目について詳しく見る",
+      labels: [
+        "元の情報源や根拠を確認した",
+        "関係する公的機関などの一次情報を確認した",
+        "日時・地域・対象・更新状況を確認した",
+        "事実・推測・意見・伝聞を分けている",
+        "必要に応じて、別の独立した情報源も確認した",
+        "画像・動画・図表の作成元や根拠を確認した",
+      ],
+    },
+    {
+      indexFile: "en/index.html",
+      manualFile: "en/manual.html",
+      title: "Tips for checking information",
+      moreTitle: "Learn more about each item",
+      labels: [
+        "I checked the original source and supporting evidence.",
+        "I checked relevant primary sources from public authorities.",
+        "I checked the date, location, scope, and any updates.",
+        "I separated facts, inferences, opinions, and second-hand information.",
+        "Where appropriate, I checked another independent source.",
+        "I checked the source and supporting context of images, videos, and charts.",
+      ],
+    },
+  ];
+
+  for (const expectation of expectations) {
+    const indexText = readText(expectation.indexFile);
+    const manualDocument = getDom(expectation.manualFile).window.document;
+    const manualSection = manualDocument.getElementById("information-checking-tips");
+
+    assert(indexText.includes(expectation.title), `${expectation.indexFile}: information checking title is missing`);
+    assert(indexText.includes(expectation.moreTitle), `${expectation.indexFile}: information checking details title is missing`);
+    assert(
+      indexText.includes('<details class="information-checking-card">'),
+      `${expectation.indexFile}: outer information checking details is missing`
+    );
+    assert(
+      indexText.includes('<details class="information-checking-more">'),
+      `${expectation.indexFile}: nested information checking details is missing`
+    );
+    assert(
+      !/<details class="information-checking-(?:card|more)"[^>]*\sopen(?:\s|>)/.test(indexText),
+      `${expectation.indexFile}: information checking details should be closed initially`
+    );
+    assertTextsInOrder(indexText, expectation.labels, expectation.indexFile);
+
+    assert(Boolean(manualSection), `${expectation.manualFile}: information checking manual section is missing`);
+    if (manualSection) {
+      const sectionTitle = manualSection.querySelector("h2");
+      const itemHeadings = Array.from(manualSection.querySelectorAll(".manual-information-items h3"))
+        .map((heading) => heading.textContent.trim());
+      const itemDescriptions = Array.from(manualSection.querySelectorAll(".manual-information-items p"))
+        .map((paragraph) => paragraph.textContent.trim());
+      assert(sectionTitle && sectionTitle.textContent.trim() === expectation.title, `${expectation.manualFile}: manual section title should match the UI`);
+      assert(
+        JSON.stringify(itemHeadings) === JSON.stringify(expectation.labels),
+        `${expectation.manualFile}: manual checklist items should match the UI`
+      );
+      assert(itemDescriptions.length === 6, `${expectation.manualFile}: manual should contain six item descriptions`);
+      for (const description of itemDescriptions) {
+        assert(indexText.includes(description), `${expectation.manualFile}: manual item description should match the UI`);
+      }
+    }
+  }
+
+  const userFacingText = expectations
+    .flatMap((expectation) => [readText(expectation.indexFile), readText(expectation.manualFile)])
+    .join("\n");
+  assert(!/\bFact(?: |-)?check(?:ing)?\b/i.test(userFacingText), "information checking feature should not use Fact check or Fact-checking as a user-facing name");
+  assert(
+    readText("en/index.html").includes("second-hand information") &&
+      readText("en/manual.html").includes("second-hand information"),
+    "English UI and manual should use second-hand information"
+  );
+}
+
 checkExpectedFiles();
 checkInternalHrefTargets();
 checkLanguageSwitchers();
@@ -289,6 +381,7 @@ checkSeoAlternates();
 checkSitemap();
 checkDeployScript();
 checkApiRequestLanguages();
+checkInformationCheckingTips();
 
 if (failures.length > 0) {
   console.error("Static i18n checks failed:");

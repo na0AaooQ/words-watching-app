@@ -22,7 +22,7 @@ print_deploy_targets() {
     -path "./aws" -prune -o \
     -path "./docs" -prune -o \
     -path "./BACKUP" -prune -o \
-    -type f \( -name "*.html" -o -name "*.css" -o -name "sitemap.xml" \) -print | sort
+    -type f \( -name "*.html" -o -name "*.css" -o -name "sitemap.xml" -o -path "./scripts/*" \) -print | sort
 }
 
 if [ ! -d "${BASE_DIR}" ] ; then
@@ -53,7 +53,7 @@ else
 fi
 
 echo "S3バケット [${S3_BUKKET_NAME}] へデプロイする対象ファイルです。"
-aws s3 sync . "${S3_BUKKET_NAME}" --exclude "*" --include "*.html" --include "en/*.html" --include "*.css" --include "assets/css/*.css" --include "sitemap.xml" \
+aws s3 sync . "${S3_BUKKET_NAME}" --exclude "*" --include "*.html" --include "en/*.html" --include "*.css" --include "assets/css/*.css" --include "sitemap.xml" --include "scripts/*" \
     --delete \
     --size-only \
     --exclude ".git/*" \
@@ -76,7 +76,7 @@ read ANS || ANS=""
 case $ANS in
   [Yy]* )
     echo "S3バケット [${S3_BUKKET_NAME}] へデプロイします。"
-    aws s3 sync . "${S3_BUKKET_NAME}" --exclude "*" --include "*.html" --include "en/*.html" --include "*.css" --include "assets/css/*.css" --include "sitemap.xml" \
+    aws s3 sync . "${S3_BUKKET_NAME}" --exclude "*" --include "*.html" --include "en/*.html" --include "*.css" --include "assets/css/*.css" --include "sitemap.xml" --include "scripts/*" \
         --delete \
         --size-only \
         --exclude ".git/*" \
