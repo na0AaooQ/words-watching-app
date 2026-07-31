@@ -134,6 +134,21 @@ function checkInternalHrefTargets() {
   }
 }
 
+function checkInternalImageTargets() {
+  for (const page of pages) {
+    const document = getDom(page.file).window.document;
+    const images = Array.from(document.querySelectorAll("img[src]"));
+
+    for (const image of images) {
+      const src = image.getAttribute("src");
+      const target = resolveInternalReference(page.file, src);
+      if (!target) continue;
+
+      assert(fileExists(target.file), `${page.file}: img src="${src}" points to missing file ${target.file}`);
+    }
+  }
+}
+
 function optionText(option) {
   return option.textContent.replace(/\s+/g, " ").trim();
 }
@@ -260,7 +275,11 @@ function checkDeployScript() {
     "--include \"en/*.html\"",
     "--include \"*.css\"",
     "--include \"assets/css/*.css\"",
+    "--include \"assets/img/manual-step5_*.png\"",
+    "--include \"assets/img/manual-step6.png\"",
+    "--include \"assets/img/manual-step7.png\"",
     "--include \"sitemap.xml\"",
+    "--include \"scripts/*\"",
     "--dryrun",
   ];
 
@@ -376,6 +395,7 @@ function checkInformationCheckingTips() {
 
 checkExpectedFiles();
 checkInternalHrefTargets();
+checkInternalImageTargets();
 checkLanguageSwitchers();
 checkSeoAlternates();
 checkSitemap();
