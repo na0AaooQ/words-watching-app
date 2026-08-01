@@ -1,4 +1,4 @@
-# ことばみまもり｜SNS投稿前の炎上防止・文章リスク確認サービス
+# ことばみまもり｜SNS投稿前の炎上防止・文章リスク確認サービス (英語表記: Kotoba Mimamori｜Text risk checking service to help prevent harmful SNS posts)
 
 > 投稿前に、ひと呼吸。— SNS投稿前の炎上防止・文章リスク確認ツール
 SNS投稿前の炎上防止・文章リスク確認ツール「ことばみまもり」のソースコード管理リポジトリ
