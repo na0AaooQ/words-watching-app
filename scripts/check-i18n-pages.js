@@ -145,6 +145,7 @@ function checkInternalHrefTargets() {
 
     for (const element of elements) {
       const href = element.getAttribute("href");
+      assert(href !== "/en/", `${page.file}: top page links must use /en/index.html for static hosting`);
       const target = resolveInternalReference(page.file, href);
       if (!target) continue;
 
@@ -200,6 +201,8 @@ function checkLanguageSwitchers() {
     for (const option of options) {
       const value = option.getAttribute("value") || "";
       if (value === "") continue;
+
+      assert(value !== "/" && value !== "/en/", `${page.file}: language option "${optionText(option)}" must use an explicit HTML path`);
 
       const target = resolveInternalReference(page.file, value);
       assert(Boolean(target), `${page.file}: language option "${optionText(option)}" must point to an internal page`);
