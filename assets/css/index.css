@@ -477,6 +477,27 @@ header {
   color: var(--accent);
 }
 
+.hero-service-description {
+  color: var(--text);
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.6;
+  margin: 0 auto 0.35rem;
+}
+
+.hero-catch {
+  color: var(--text);
+  font-family: 'Noto Serif JP', serif;
+  font-size: clamp(1.35rem, 4vw, 2rem);
+  font-weight: 600;
+  line-height: 1.45;
+  margin: 0 auto 0.9rem;
+}
+
+.hero-catch span {
+  color: var(--accent);
+}
+
 .hero-sub {
   color: var(--muted);
   font-size: 0.98rem;

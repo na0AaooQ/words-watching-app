@@ -37,6 +37,28 @@ const pages = PAGE_PAIRS.flatMap((pair) => [
   },
 ]);
 
+const INDEXED_PAGE_FILES = new Set([
+  "index.html",
+  "about.html",
+  "manual.html",
+  "en/index.html",
+  "en/about.html",
+  "en/manual.html",
+]);
+
+const NOINDEX_PAGE_FILES = new Set([
+  "terms_of_service.html",
+  "disclaimer.html",
+  "contact.html",
+  "privacy.html",
+  "consultation.html",
+  "en/terms_of_service.html",
+  "en/disclaimer.html",
+  "en/contact.html",
+  "en/privacy.html",
+  "en/consultation.html",
+]);
+
 const pageByFile = new Map(pages.map((page) => [page.file, page]));
 const failures = [];
 const domCache = new Map();
@@ -231,6 +253,18 @@ function checkSeoAlternates() {
   }
 }
 
+function checkRobots() {
+  for (const file of INDEXED_PAGE_FILES) {
+    const robots = getDom(file).window.document.querySelector('meta[name="robots"]');
+    assert(robots && robots.getAttribute("content") === "index, follow", `${file}: robots should be index, follow`);
+  }
+
+  for (const file of NOINDEX_PAGE_FILES) {
+    const robots = getDom(file).window.document.querySelector('meta[name="robots"]');
+    assert(robots && robots.getAttribute("content") === "noindex", `${file}: robots should be noindex`);
+  }
+}
+
 function getSitemapLocs() {
   const sitemapDom = new JSDOM(readText("sitemap.xml"), { contentType: "text/xml" });
   const parserError = sitemapDom.window.document.querySelector("parsererror");
@@ -241,10 +275,13 @@ function getSitemapLocs() {
 function checkSitemap() {
   const locs = getSitemapLocs();
   const locSet = new Set(locs);
-  const expectedUrls = pages.map((page) => page.canonicalUrl);
+  const expectedUrls = pages.filter((page) => INDEXED_PAGE_FILES.has(page.file)).map((page) => page.canonicalUrl);
   const expectedSet = new Set(expectedUrls);
 
+  assert(locs.length === expectedUrls.length, `sitemap.xml: should contain exactly ${expectedUrls.length} URLs`);
   assert(locs.length === locSet.size, "sitemap.xml: loc entries should not contain duplicates");
+  assert(!/<(?:priority|changefreq|lastmod)\b/i.test(readText("sitemap.xml")), "sitemap.xml: priority, changefreq, and lastmod are not allowed");
+  assert(!/hreflang/i.test(readText("sitemap.xml")), "sitemap.xml: hreflang is not allowed");
 
   for (const expectedUrl of expectedUrls) {
     assert(locSet.has(expectedUrl), `sitemap.xml: missing ${expectedUrl}`);
@@ -398,6 +435,7 @@ checkInternalHrefTargets();
 checkInternalImageTargets();
 checkLanguageSwitchers();
 checkSeoAlternates();
+checkRobots();
 checkSitemap();
 checkDeployScript();
 checkApiRequestLanguages();
