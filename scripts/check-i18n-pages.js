@@ -8,7 +8,7 @@ const ROOT_DIR = path.resolve(__dirname, "..");
 const SITE_ORIGIN = "https://words-watching-app.na0aaooq.com";
 
 const PAGE_PAIRS = [
-  { ja: "index.html", en: "en/index.html", jaPath: "/", enPath: "/en/" },
+  { ja: "index.html", en: "en/index.html", jaPath: "/", enPath: "/en/index.html" },
   { ja: "about.html", en: "en/about.html", jaPath: "/about.html", enPath: "/en/about.html" },
   { ja: "manual.html", en: "en/manual.html", jaPath: "/manual.html", enPath: "/en/manual.html" },
   { ja: "consultation.html", en: "en/consultation.html", jaPath: "/consultation.html", enPath: "/en/consultation.html" },
