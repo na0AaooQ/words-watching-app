@@ -1,0 +1,164 @@
+/* ===== 404 page ===== */
+.not-found-page {
+  display: flex;
+  flex-direction: column;
+}
+
+.not-found-page header {
+  flex-shrink: 0;
+}
+
+.not-found-main {
+  display: grid;
+  flex: 1;
+  place-items: center;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: clamp(2rem, 6vw, 5rem) 1.5rem;
+}
+
+.not-found-card {
+  position: relative;
+  width: min(100%, 740px);
+  overflow: hidden;
+  padding: clamp(2rem, 5vw, 3.5rem) clamp(1.25rem, 5vw, 3.5rem);
+  text-align: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: calc(var(--radius) + 2px);
+  box-shadow: var(--shadow);
+}
+
+.not-found-card::before {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 5px;
+  content: "";
+  background: linear-gradient(90deg, var(--accent), #7c8fff, var(--green));
+}
+
+.not-found-code {
+  margin-bottom: 0.35rem;
+  color: var(--accent);
+  font-size: clamp(0.82rem, 2vw, 0.95rem);
+  font-weight: 700;
+  letter-spacing: 0.22em;
+}
+
+.not-found-card h1 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.1rem 0.35rem;
+  margin-bottom: 1.75rem;
+  color: var(--text);
+  font-family: 'Noto Serif JP', serif;
+  font-size: clamp(1.55rem, 4.5vw, 2.35rem);
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.not-found-card h1 span {
+  white-space: nowrap;
+}
+
+.not-found-divider {
+  color: var(--muted);
+  font-family: 'Zen Kaku Gothic New', sans-serif;
+  font-weight: 400;
+}
+
+.not-found-copy {
+  display: grid;
+  gap: 1.2rem;
+  color: var(--muted);
+  font-size: 0.97rem;
+  line-height: 1.95;
+}
+
+.not-found-copy p {
+  margin: 0;
+}
+
+.not-found-copy p[lang="en"] {
+  font-size: 0.94rem;
+  overflow-wrap: anywhere;
+}
+
+.not-found-links {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.85rem;
+  margin-top: 2rem;
+}
+
+.not-found-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  min-height: 3.25rem;
+  padding: 0.7rem 1rem;
+  color: var(--text);
+  font-size: 0.93rem;
+  font-weight: 700;
+  line-height: 1.5;
+  text-decoration: none;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  transition: border-color 0.2s, background 0.2s, color 0.2s, transform 0.15s, box-shadow 0.2s;
+}
+
+.not-found-link:hover {
+  color: var(--accent);
+  text-decoration: none;
+  background: var(--accent-lt);
+  border-color: var(--accent);
+  box-shadow: 0 8px 24px rgba(74, 108, 247, 0.1);
+  transform: translateY(-1px);
+}
+
+.not-found-link:focus-visible {
+  outline: 3px solid rgba(74, 108, 247, 0.32);
+  outline-offset: 3px;
+}
+
+.not-found-link-arrow {
+  color: var(--accent);
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.not-found-page footer {
+  flex-shrink: 0;
+}
+
+@media (max-width: 600px) {
+  .not-found-main {
+    padding: 1.5rem 1rem 2.5rem;
+  }
+
+  .not-found-card h1 {
+    margin-bottom: 1.35rem;
+  }
+
+  .not-found-copy {
+    font-size: 0.92rem;
+  }
+
+  .not-found-copy p[lang="en"] {
+    font-size: 0.9rem;
+  }
+
+  .not-found-links {
+    grid-template-columns: 1fr;
+    margin-top: 1.6rem;
+  }
+
+  .not-found-link {
+    min-height: 3.5rem;
+  }
+}
