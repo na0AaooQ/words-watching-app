@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>ページが見つかりません / Page not found | ことばみまもり</title>
+  <link rel="icon" href="/favicon.png" type="image/png">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <meta name="robots" content="noindex, follow">
+
+  <link rel="stylesheet" href="/assets/css/common.css">
+  <link rel="stylesheet" href="/assets/css/404.css">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-V947PLZR3S"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-V947PLZR3S');
+  </script>
+
+  <script>
+    (function () {
+      const saved = localStorage.getItem('theme');
+      if (saved === 'light' || saved === 'dark') {
+        document.documentElement.setAttribute('data-theme', saved);
+      }
+    })();
+
+    function toggleTheme() {
+      const root = document.documentElement;
+      const current = root.getAttribute('data-theme');
+      const osDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const isDark = current === 'dark' || (!current && osDark);
+      const next = isDark ? 'light' : 'dark';
+
+      root.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+      updateThemeButton(next);
+    }
+
+    function updateThemeButton(theme) {
+      const icon = document.getElementById('theme-icon');
+      const label = document.getElementById('theme-label');
+      const button = document.getElementById('btn-theme');
+      if (!icon || !label || !button) return;
+
+      const isDark = theme === 'dark';
+      icon.textContent = isDark ? '☀️' : '🌙';
+      label.textContent = isDark ? 'ライトモード' : 'ダークモード';
+      button.setAttribute('aria-label', isDark ? 'ライトモードに切り替え' : 'ダークモードに切り替え');
+      button.setAttribute('aria-pressed', String(isDark));
+    }
+
+    window.addEventListener('DOMContentLoaded', function () {
+      const saved = localStorage.getItem('theme');
+      const osDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      updateThemeButton(saved || (osDark ? 'dark' : 'light'));
+    });
+  </script>
+</head>
+<body class="not-found-page">
+  <header>
+    <a href="/" class="header-logo">
+      <span class="logo-dot" aria-hidden="true"></span>
+      ことばみまもり
+    </a>
+    <div class="header-actions">
+      <span class="header-action theme-toggle-wrapper">
+        <button class="btn-theme" id="btn-theme" type="button" onclick="toggleTheme()" aria-label="ダークモードに切り替え" aria-pressed="false">
+          <span id="theme-icon" aria-hidden="true">🌙</span>
+          <span id="theme-label">ダークモード</span>
+        </button>
+      </span>
+    </div>
+  </header>
+
+  <main class="not-found-main">
+    <section class="not-found-card" aria-labelledby="not-found-title">
+      <p class="not-found-code" aria-hidden="true">404</p>
+      <h1 id="not-found-title">
+        <span lang="ja">ページが見つかりません</span>
+        <span class="not-found-divider" aria-hidden="true"> / </span>
+        <span lang="en">Page not found</span>
+      </h1>
+
+      <div class="not-found-copy">
+        <p lang="ja">お探しのページは見つかりませんでした。<br>URLが変更されたか、ページが利用できなくなっている可能性があります。<br>トップページから、もう一度お探しください。</p>
+        <p lang="en">The page you were looking for could not be found.<br>The URL may have changed or the page may no longer be available.<br>Please return to the top page.</p>
+      </div>
+
+      <nav class="not-found-links" aria-label="トップページへのリンク">
+        <a class="not-found-link" href="/">
+          <span lang="ja">日本語トップへ</span>
+          <span class="not-found-link-arrow" aria-hidden="true">→</span>
+        </a>
+        <a class="not-found-link" href="/en/index.html">
+          <span lang="en">Go to English top</span>
+          <span class="not-found-link-arrow" aria-hidden="true">→</span>
+        </a>
+      </nav>
+    </section>
+  </main>
+
+  <footer>
+    <p class="footer-copy">&copy; ことばみまもり 2026 青木直之 (@na0AaooQ) All Rights Reserved.</p>
+  </footer>
+</body>
+</html>
