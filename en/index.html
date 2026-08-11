@@ -413,17 +413,26 @@
       return allowedScenes.includes(scene) ? scene : 'general';
     }
 
+    function scrollToResult() {
+      const resultArea = document.getElementById('result-area');
+      const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      resultArea.scrollIntoView({
+        behavior: prefersReducedMotion ? 'auto' : 'smooth',
+        block: 'start'
+      });
+    }
+
     async function checkText() {
       const text = document.getElementById('input-text').value.trim();
       if (!text) return;
       const tone = getSelectedAdviceTone();
       const scene = getSelectedUsageScene();
+      let hasRenderedResult = false;
 
       document.getElementById('submit-btn').disabled = true;
       document.getElementById('loading').style.display = 'flex';
       document.getElementById('result-area').style.display = 'none';
-
-      document.getElementById('loading').scrollIntoView({ behavior: 'smooth', block: 'center' });
 
       try {
         const res = await fetch('/prod/check', {
@@ -440,12 +449,15 @@
           data = data.body;
         }
         renderResult(data);
+        hasRenderedResult = true;
       } catch (e) {
         console.warn('Using demo data because API is unavailable:', e.message);
         renderResult(generateDemoData(text));
+        hasRenderedResult = true;
       } finally {
         document.getElementById('loading').style.display = 'none';
         document.getElementById('submit-btn').disabled = false;
+        if (hasRenderedResult) scrollToResult();
       }
     }
 
@@ -712,7 +724,6 @@
       `;
 
       resultArea.style.display = 'block';
-      resultArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
     function openSns() {

@@ -920,6 +920,7 @@ textarea::placeholder {
 #result-area {
   display: none;
   animation: fadeUp 0.4s ease;
+  scroll-margin-top: 5rem;
 }
 
 .result-header {
@@ -1702,6 +1703,12 @@ footer {
 .footer-copy {
   font-size: 0.75rem;
   color: #8b95ad;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 }
 
 /* ===== Responsive ===== */

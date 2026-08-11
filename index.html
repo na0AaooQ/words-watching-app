@@ -493,18 +493,27 @@
       return allowedScenes.includes(scene) ? scene : 'general';
     }
 
+    function scrollToResult() {
+      const resultArea = document.getElementById('result-area');
+      const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      resultArea.scrollIntoView({
+        behavior: prefersReducedMotion ? 'auto' : 'smooth',
+        block: 'start'
+      });
+    }
+
     async function checkText() {
       const text = document.getElementById('input-text').value.trim();
       if (!text) return;
       const tone = getSelectedAdviceTone();
       const scene = getSelectedUsageScene();
+      let hasRenderedResult = false;
 
       // UI切り替え
       document.getElementById('submit-btn').disabled   = true;
       document.getElementById('loading').style.display  = 'flex';
       document.getElementById('result-area').style.display = 'none';
-
-      document.getElementById('loading').scrollIntoView({ behavior: 'smooth', block: 'center' });
 
       try {
         // ===== 呼び出すAPIを指定する =====
@@ -529,15 +538,18 @@
 
         console.log('APIレスポンス:', data); // デバッグ用（本番では削除可）
         renderResult(data);
+        hasRenderedResult = true;
 
       } catch (e) {
         // ローカル確認用ダミー（APIエンドポイント未設定時）
         console.warn('API未接続のためデモデータを使用:', e.message);
         const demoData = generateDemoData(text);
         renderResult(demoData);  // 引数は data のみ
+        hasRenderedResult = true;
       } finally {
         document.getElementById('loading').style.display = 'none';
         document.getElementById('submit-btn').disabled   = false;
+        if (hasRenderedResult) scrollToResult();
       }
     }
 
@@ -904,7 +916,6 @@
       `;
 
       resultArea.style.display = 'block';
-      resultArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
     /* ---------- 結果下の編集エリア ---------- */

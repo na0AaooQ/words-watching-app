@@ -445,11 +445,22 @@ function getSelectedUsageScene() {
   return allowedScenes.includes(scene) ? scene : 'general';
 }
 
+function scrollToResult() {
+  const resultArea = document.getElementById('result-area');
+  const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  resultArea.scrollIntoView({
+    behavior: prefersReducedMotion ? 'auto' : 'smooth',
+    block: 'start'
+  });
+}
+
 async function checkText() {
   const text = document.getElementById('input-text').value.trim();
   if (!text) return;
   const tone = getSelectedAdviceTone();
   const scene = getSelectedUsageScene();
+  let hasRenderedResult = false;
 
   document.getElementById('submit-btn').disabled        = true;
   document.getElementById('loading').style.display       = 'flex';
@@ -472,12 +483,15 @@ async function checkText() {
     }
 
     renderResult(data);
+    hasRenderedResult = true;
   } catch (e) {
     const demoData = generateDemoData(text);
     renderResult(demoData);
+    hasRenderedResult = true;
   } finally {
     document.getElementById('loading').style.display   = 'none';
     document.getElementById('submit-btn').disabled     = false;
+    if (hasRenderedResult) scrollToResult();
   }
 }
 
@@ -1501,6 +1515,8 @@ describe('checkText()', () => {
     setupDom();
     document.getElementById('input-text').value = 'テスト投稿文';
     document.getElementById('submit-btn').disabled = false;
+    HTMLElement.prototype.scrollIntoView = jest.fn();
+    window.matchMedia = jest.fn().mockReturnValue({ matches: false });
   });
 
   afterEach(() => {
@@ -1539,6 +1555,49 @@ describe('checkText()', () => {
     });
     await checkText();
     expect(document.getElementById('loading').style.display).toBe('none');
+  });
+
+  test('API成功時: Loadingを非表示にした後、結果へ1回だけsmooth scrollする', async () => {
+    const scrollIntoView = jest.fn(() => {
+      expect(document.getElementById('loading').style.display).toBe('none');
+    });
+    HTMLElement.prototype.scrollIntoView = scrollIntoView;
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ risk: 'low', summary: 'ok', reasons: [], suggestions: [] })
+    });
+
+    await checkText();
+
+    expect(scrollIntoView).toHaveBeenCalledTimes(1);
+    expect(scrollIntoView).toHaveBeenCalledWith({ behavior: 'smooth', block: 'start' });
+  });
+
+  test('チェック開始時はLoadingへスクロールしない', async () => {
+    let resolveRequest;
+    global.fetch = jest.fn().mockReturnValue(new Promise(resolve => {
+      resolveRequest = resolve;
+    }));
+
+    const checkPromise = checkText();
+
+    expect(document.getElementById('loading').style.display).toBe('flex');
+    expect(HTMLElement.prototype.scrollIntoView).not.toHaveBeenCalled();
+
+    resolveRequest({ ok: true, json: async () => ({ risk: 'low', summary: 'ok', reasons: [], suggestions: [] }) });
+    await checkPromise;
+  });
+
+  test('reduced motion時はアニメーションなしで結果へスクロールする', async () => {
+    window.matchMedia = jest.fn().mockReturnValue({ matches: true });
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ risk: 'low', summary: 'ok', reasons: [], suggestions: [] })
+    });
+
+    await checkText();
+
+    expect(HTMLElement.prototype.scrollIntoView).toHaveBeenCalledWith({ behavior: 'auto', block: 'start' });
   });
 
   test('API成功時: ボタンが再び enabled になる', async () => {
@@ -1591,6 +1650,7 @@ describe('checkText()', () => {
     global.fetch = jest.fn().mockRejectedValue(new Error('Network Error'));
     await checkText();
     expect(document.getElementById('result-area').style.display).toBe('block');
+    expect(HTMLElement.prototype.scrollIntoView).toHaveBeenCalledTimes(1);
   });
 
   test('チェック実行中はローディングが表示される', async () => {
