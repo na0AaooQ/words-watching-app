@@ -5,6 +5,10 @@
  *                package.json に "jest": { "testEnvironment": "jsdom" } を追加
  */
 
+/* global require */
+
+const { readFileSync } = require('node:fs');
+
 // ─────────────────────────────────────────────
 // テスト対象の関数を直接定義（index.html の <script> と同一ロジック）
 // 実装を外部 JS ファイルに切り出した場合は import/require に変更してください
@@ -30,7 +34,7 @@ function onTextInput() {
     guide.style.display = 'none';
   } else {
     guide.style.display = 'flex';
-    const limits = { x: 280, threads: 500, tiktok: 2200, instagram: 2200, facebook: 50000, line: 1000, linkedin: 3000, youtube: 350 };
+    const limits = { x: 280, threads: 500, tiktok: 2200, instagram: 2200, facebook: 50000, line: 1000, linkedin: 3000, youtube: 350, pixiv: 140, note: 500 };
     Object.entries(limits).forEach(([key, limit]) => {
       const el = document.getElementById('guide-' + key);
       if (el) el.classList.toggle('over-limit', len > limit);
@@ -282,6 +286,10 @@ function renderResult(data) {
   const shareUrlLine      = 'https://line.me/R/nv/chat';
   const shareUrlLinkedin  = 'https://www.linkedin.com/';
   const shareUrlYoutube   = 'https://www.youtube.com/';
+  const shareUrlPixiv     = 'https://www.pixiv.net/';
+  const shareUrlNote      = 'https://note.com/';
+  const shareUrlGirlsChannel = 'https://girlschannel.net/';
+  const shareUrlSukiKira  = 'https://suki-kira.com/';
 
   let riskChangeBannerHtml = '';
   if (previousRisk !== null && previousRisk !== data.risk) {
@@ -356,6 +364,10 @@ function renderResult(data) {
         <option value="${escapeHtml(shareUrlLine)}">LINE（※アプリ必要）</option>
         <option value="${escapeHtml(shareUrlLinkedin)}">Linkedin</option>
         <option value="${escapeHtml(shareUrlYoutube)}">YouTube</option>
+        <option value="${escapeHtml(shareUrlPixiv)}">pixiv</option>
+        <option value="${escapeHtml(shareUrlNote)}">note</option>
+        <option value="${escapeHtml(shareUrlGirlsChannel)}">ガールズちゃんねる</option>
+        <option value="${escapeHtml(shareUrlSukiKira)}">好き嫌い.com</option>
       </select>
       <button class="btn-sns-open" onclick="openSns()">開く ↗</button>
     </div>
@@ -514,6 +526,10 @@ function setupDom() {
       <span id="guide-line"></span>
       <span id="guide-linkedin"></span>
       <span id="guide-youtube"></span>
+      <span id="guide-pixiv"></span>
+      <span id="guide-note"></span>
+      <span id="guide-girls-channel"></span>
+      <span id="guide-suki-kira"></span>
     </div>
     <div id="loading" style="display:none;"></div>
     <div id="result-area" style="display:none;"></div>
@@ -632,6 +648,38 @@ describe('onTextInput()', () => {
     onTextInput();
 
     expect(document.getElementById('guide-linkedin').classList.contains('over-limit')).toBe(true);
+  });
+
+  test('pixiv は140文字まで許容し、141文字で over-limit になる', () => {
+    const input = document.getElementById('input-text');
+
+    input.value = 'a'.repeat(140);
+    onTextInput();
+    expect(document.getElementById('guide-pixiv').classList.contains('over-limit')).toBe(false);
+
+    input.value = 'a'.repeat(141);
+    onTextInput();
+    expect(document.getElementById('guide-pixiv').classList.contains('over-limit')).toBe(true);
+  });
+
+  test('note は500文字まで許容し、501文字で over-limit になる', () => {
+    const input = document.getElementById('input-text');
+
+    input.value = 'a'.repeat(500);
+    onTextInput();
+    expect(document.getElementById('guide-note').classList.contains('over-limit')).toBe(false);
+
+    input.value = 'a'.repeat(501);
+    onTextInput();
+    expect(document.getElementById('guide-note').classList.contains('over-limit')).toBe(true);
+  });
+
+  test('未確認の2サービスは数値上限の判定対象にならない', () => {
+    document.getElementById('input-text').value = 'a'.repeat(50001);
+    onTextInput();
+
+    expect(document.getElementById('guide-girls-channel').classList.contains('over-limit')).toBe(false);
+    expect(document.getElementById('guide-suki-kira').classList.contains('over-limit')).toBe(false);
   });
 });
 
@@ -1427,6 +1475,32 @@ describe('renderResult()', () => {
     expect(document.getElementById('result-area').innerHTML).toContain('www.youtube.com');
   });
 
+  test('追加4サービスのリンク・表示名・順序が仕様どおり', () => {
+    renderResult(baseData);
+    const options = Array.from(document.querySelectorAll('#sns-select option'));
+    const optionTexts = options.map(option => option.textContent);
+    const optionValues = options.map(option => option.value);
+
+    expect(optionTexts.slice(-4)).toEqual(['pixiv', 'note', 'ガールズちゃんねる', '好き嫌い.com']);
+    expect(optionValues.slice(-4)).toEqual([
+      'https://www.pixiv.net/',
+      'https://note.com/',
+      'https://girlschannel.net/',
+      'https://suki-kira.com/'
+    ]);
+    expect(options[0].value).toBe('');
+  });
+
+  test('SNS選択肢の追加部分はYouTubeの直後に並ぶ', () => {
+    renderResult(baseData);
+    const optionTexts = Array.from(document.querySelectorAll('#sns-select option')).map(option => option.textContent);
+    const youtubeIndex = optionTexts.indexOf('YouTube');
+
+    expect(optionTexts.slice(youtubeIndex, youtubeIndex + 5)).toEqual([
+      'YouTube', 'pixiv', 'note', 'ガールズちゃんねる', '好き嫌い.com'
+    ]);
+  });
+
   test('SNSプルダウンで Linkedin と YouTube は LINE の下に表示される', () => {
     renderResult(baseData);
     const optionTexts = Array.from(document.querySelectorAll('#sns-select option')).map(option => option.textContent);
@@ -1436,6 +1510,90 @@ describe('renderResult()', () => {
     expect(optionTexts[lineIndex + 2]).toBe('YouTube');
   });
 
+});
+
+// ================================================================
+// 10.5. 静的HTMLの日英表示・説明文
+// ================================================================
+describe('追加SNSの静的HTML仕様', () => {
+  const jaIndex = readFileSync('index.html', 'utf8');
+  const enIndex = readFileSync('en/index.html', 'utf8');
+  const jaManual = readFileSync('manual.html', 'utf8');
+  const enManual = readFileSync('en/manual.html', 'utf8');
+
+  test('日本語トップの文字数ガイドがYouTubeの後ろに追加されている', () => {
+    const labels = [
+      'pixiv コメント上限：140字',
+      'note コメント上限：500字',
+      'ガールズちゃんねる コメント上限：未確認',
+      '好き嫌い.com コメント上限：未確認'
+    ];
+    const youtubeIndex = jaIndex.indexOf('id="guide-youtube"');
+    const positions = labels.map(label => jaIndex.indexOf(label));
+
+    expect(youtubeIndex).toBeGreaterThanOrEqual(0);
+    expect(positions.every(position => position > youtubeIndex)).toBe(true);
+    expect(positions).toEqual([...positions].sort((a, b) => a - b));
+  });
+
+  test('英語トップの文字数ガイドがYouTubeの後ろに追加されている', () => {
+    const labels = [
+      'pixiv comment limit: 140 chars',
+      'note comment limit: 500 chars',
+      'Girls Channel comment limit: not confirmed',
+      '好き嫌い.com comment limit: not confirmed'
+    ];
+    const youtubeIndex = enIndex.indexOf('id="guide-youtube"');
+    const positions = labels.map(label => enIndex.indexOf(label));
+
+    expect(youtubeIndex).toBeGreaterThanOrEqual(0);
+    expect(positions.every(position => position > youtubeIndex)).toBe(true);
+    expect(positions).toEqual([...positions].sort((a, b) => a - b));
+  });
+
+  test('日英トップに4サービスの説明と正しいURLがある', () => {
+    expect(jaIndex).toContain('pixiv、note、ガールズちゃんねる、好き嫌い.comは、「開く」ボタンから各サービスのトップページを表示します。');
+    expect(enIndex).toContain("For pixiv, note, Girls Channel, and 好き嫌い.com, the Open button opens each service's top page.");
+
+    for (const url of [
+      'https://www.pixiv.net/',
+      'https://note.com/',
+      'https://girlschannel.net/',
+      'https://suki-kira.com/'
+    ]) {
+      expect(jaIndex).toContain(url);
+      expect(enIndex).toContain(url);
+    }
+  });
+
+  test('英語トップのSNS選択肢はYouTubeの直後に仕様どおり並ぶ', () => {
+    const options = [
+      'https://www.youtube.com/">YouTube',
+      'https://www.pixiv.net/">pixiv',
+      'https://note.com/">note',
+      'https://girlschannel.net/">Girls Channel',
+      'https://suki-kira.com/">好き嫌い.com'
+    ];
+    const positions = options.map(option => enIndex.indexOf(option));
+
+    expect(positions.every(position => position >= 0)).toBe(true);
+    expect(positions).toEqual([...positions].sort((a, b) => a - b));
+  });
+
+  test('SNSを開く処理の別タブ・noopener挙動を維持している', () => {
+    expect(jaIndex).toContain("window.open(sel.value, '_blank', 'noopener');");
+    expect(enIndex).toContain("window.open(sel.value, '_blank', 'noopener');");
+  });
+
+  test('日英マニュアルに追加サービス・未確認の説明がある', () => {
+    expect(jaManual).toContain('pixiv、note、ガールズちゃんねる、好き嫌い.comは、「開く」ボタンから各サービスのトップページを表示します。');
+    expect(jaManual).toContain('pixivの140字、noteの500字はコメントの文字数上限の目安です。');
+    expect(jaManual).toContain('「未確認」と表示し、文字数超過の判定は行いません。');
+    expect(enManual).toContain("For pixiv, note, Girls Channel, and 好き嫌い.com, the Open button opens each service's top page.");
+    expect(enManual).toContain('The 140-character limit for pixiv and the 500-character limit for note refer to comments.');
+    expect(enManual).toContain('the comment limit is shown as “not confirmed,”');
+    expect(enManual).not.toContain('Suki-Kira');
+  });
 });
 
 // ================================================================

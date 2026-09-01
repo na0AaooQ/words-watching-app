@@ -186,6 +186,10 @@
         <span class="sns-guide-item" id="guide-line">LINE 1,000字</span>
         <span class="sns-guide-item" id="guide-linkedin">Linkedin 3,000字</span>
         <span class="sns-guide-item" id="guide-youtube">YouTube 350字</span>
+        <span class="sns-guide-item" id="guide-pixiv">pixiv コメント上限：140字</span>
+        <span class="sns-guide-item" id="guide-note">note コメント上限：500字</span>
+        <span class="sns-guide-item" id="guide-girls-channel">ガールズちゃんねる コメント上限：未確認</span>
+        <span class="sns-guide-item" id="guide-suki-kira">好き嫌い.com コメント上限：未確認</span>
       </div>
 
       <!-- 利用シーン -->
@@ -446,7 +450,7 @@
       } else {
         guide.style.display = 'flex';
         // SNSごとの上限文字数
-        const limits = { x: 280, threads: 500, tiktok: 2200, instagram: 2200, facebook: 50000, line: 1000, linkedin: 3000, youtube: 350 };
+        const limits = { x: 280, threads: 500, tiktok: 2200, instagram: 2200, facebook: 50000, line: 1000, linkedin: 3000, youtube: 350, pixiv: 140, note: 500 };
         Object.entries(limits).forEach(([key, limit]) => {
           const el = document.getElementById('guide-' + key);
           if (el) el.classList.toggle('over-limit', len > limit);
@@ -809,6 +813,22 @@
       const shareUrlYoutube =
         'https://www.youtube.com/';
 
+      // pixiv URL (pixivトップページ表示用のリンクURL）
+      const shareUrlPixiv =
+        'https://www.pixiv.net/';
+
+      // note URL (noteトップページ表示用のリンクURL）
+      const shareUrlNote =
+        'https://note.com/';
+
+      // ガールズちゃんねる URL (トップページ表示用のリンクURL）
+      const shareUrlGirlsChannel =
+        'https://girlschannel.net/';
+
+      // 好き嫌い.com URL (トップページ表示用のリンクURL）
+      const shareUrlSukiKira =
+        'https://suki-kira.com/';
+
       // 結果エリアを innerHTML で組み立て
       // ユーザー入力（textareaの値）は一切含めない
       // APIレスポンスの文字列はすべて escapeHtml() を通す
@@ -896,6 +916,7 @@
         💡 確認もしくは修正した文章について、各SNSへ投稿される場合、SNSを選んで「開く」ボタンをクリックしてください。<br>
         💡 SNS画面を開くだけで、文章は自動的に投稿されませんので、ご安心ください。<br>
         💡 最終的にSNSへ文章を投稿するかどうかの判断はご本人さまに委ねられています。<br>
+        💡 pixiv、note、ガールズちゃんねる、好き嫌い.comは、「開く」ボタンから各サービスのトップページを表示します。<br>
         💡 「LINE（※アプリ必要）」を選択すると、LINEアプリをインストールしている環境のみLINEトーク画面が表示されます。それ以外の環境ではLINEアプリダウンロード画面が表示されます。
         </p>
 
@@ -910,6 +931,10 @@
             <option value="${escapeHtml(shareUrlLine)}">LINE（※アプリ必要）</option>
             <option value="${escapeHtml(shareUrlLinkedin)}">Linkedin</option>
             <option value="${escapeHtml(shareUrlYoutube)}">YouTube</option>
+            <option value="${escapeHtml(shareUrlPixiv)}">pixiv</option>
+            <option value="${escapeHtml(shareUrlNote)}">note</option>
+            <option value="${escapeHtml(shareUrlGirlsChannel)}">ガールズちゃんねる</option>
+            <option value="${escapeHtml(shareUrlSukiKira)}">好き嫌い.com</option>
           </select>
           <button class="btn-sns-open" onclick="openSns()">開く ↗</button>
         </div>
