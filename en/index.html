@@ -156,6 +156,10 @@
         <span class="sns-guide-item" id="guide-line">LINE 1,000 chars</span>
         <span class="sns-guide-item" id="guide-linkedin">LinkedIn 3,000 chars</span>
         <span class="sns-guide-item" id="guide-youtube">YouTube 350 chars</span>
+        <span class="sns-guide-item" id="guide-pixiv">pixiv comment limit: 140 chars</span>
+        <span class="sns-guide-item" id="guide-note">note comment limit: 500 chars</span>
+        <span class="sns-guide-item" id="guide-girls-channel">Girls Channel comment limit: not confirmed</span>
+        <span class="sns-guide-item" id="guide-suki-kira">好き嫌い.com comment limit: not confirmed</span>
       </div>
 
       <fieldset class="usage-scene" aria-label="Usage scene">
@@ -370,7 +374,7 @@
         guide.style.display = 'none';
       } else {
         guide.style.display = 'flex';
-        const limits = { x: 280, threads: 500, tiktok: 2200, instagram: 2200, facebook: 50000, line: 1000, linkedin: 3000, youtube: 350 };
+        const limits = { x: 280, threads: 500, tiktok: 2200, instagram: 2200, facebook: 50000, line: 1000, linkedin: 3000, youtube: 350, pixiv: 140, note: 500 };
         Object.entries(limits).forEach(([key, limit]) => {
           const el = document.getElementById('guide-' + key);
           if (el) el.classList.toggle('over-limit', len > limit);
@@ -706,7 +710,10 @@
         </div>
 
         <br>
-        <p class="share-info-label">If you want to post after reviewing your text, choose a service and click Open. The tool only opens the selected service; it does not post your text automatically. The final decision remains yours.</p>
+        <p class="share-info-label">
+          If you want to post after reviewing your text, choose a service and click Open. The tool only opens the selected service; it does not post your text automatically. The final decision remains yours.<br>
+          💡 For pixiv, note, Girls Channel, and 好き嫌い.com, the Open button opens each service's top page.
+        </p>
         <div class="sns-open-row" style="margin-top:1rem;">
           <select class="sns-select" id="sns-select" aria-label="Choose social media destination">
             <option value="">-- Choose a service --</option>
@@ -718,6 +725,10 @@
             <option value="https://line.me/R/nv/chat">LINE</option>
             <option value="https://www.linkedin.com/">LinkedIn</option>
             <option value="https://www.youtube.com/">YouTube</option>
+            <option value="https://www.pixiv.net/">pixiv</option>
+            <option value="https://note.com/">note</option>
+            <option value="https://girlschannel.net/">Girls Channel</option>
+            <option value="https://suki-kira.com/">好き嫌い.com</option>
           </select>
           <button class="btn-sns-open" onclick="openSns()">Open</button>
         </div>
