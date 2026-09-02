@@ -175,6 +175,8 @@
         <span class="char-count" id="char-count">0 / 50000</span>
       </div>
 
+      <div class="input-error" id="input-error" role="alert" hidden></div>
+
       <!-- SNS別文字数ガイド -->
       <div class="sns-guide" id="sns-guide" style="display:none;">
         <span class="sns-guide-label">SNS別 最大文字数の目安：</span>
@@ -429,6 +431,22 @@
     /* ---------- グローバル変数 ---------- */
     let previousRisk = null; // 前回のリスクレベルを保持（リスク変化表示に使用）
 
+    function clearInputError() {
+      const error = document.getElementById('input-error');
+      if (!error) return;
+      error.textContent = '';
+      error.hidden = true;
+    }
+
+    function showInputError(statusCode) {
+      const error = document.getElementById('input-error');
+      if (!error) return;
+      error.textContent = statusCode === 413
+        ? '入力できる文字数が上限を超えています。文章を短くして、もう一度お試しください。'
+        : '入力内容を確認できませんでした。文章を確認して、もう一度お試しください。';
+      error.hidden = false;
+    }
+
     /* ---------- 文字数カウント ---------- */
     function onTextInput() {
       // 入力可能な最大文字数
@@ -439,6 +457,7 @@
       const btn  = document.getElementById('submit-btn');
       const len  = ta.value.length;
 
+      clearInputError();
       cc.textContent = len + ' / ' + inputMaxNumberOfChar;
       cc.className   = 'char-count' + (len > 1800 ? ' warn' : '') + (len >= inputMaxNumberOfChar ? ' over' : '');
       btn.disabled   = len === 0;
@@ -508,11 +527,14 @@
     }
 
     async function checkText() {
-      const text = document.getElementById('input-text').value.trim();
+      const inputText = document.getElementById('input-text');
+      const text = inputText.value.trim();
+      clearInputError();
       if (!text) return;
       const tone = getSelectedAdviceTone();
       const scene = getSelectedUsageScene();
       let hasRenderedResult = false;
+      let shouldFocusInput = false;
 
       // UI切り替え
       document.getElementById('submit-btn').disabled   = true;
@@ -531,6 +553,12 @@
 
         if (!res.ok) throw new Error('API error: ' + res.status);
         let data = await res.json();
+
+        if (data && (data.statusCode === 400 || data.statusCode === 413)) {
+          showInputError(data.statusCode);
+          shouldFocusInput = true;
+          return;
+        }
 
         // Lambda プロキシ統合の場合、レスポンスが { statusCode, body } の形で
         // body が文字列として返ることがある。その場合はパースして取り出す。
@@ -553,6 +581,7 @@
       } finally {
         document.getElementById('loading').style.display = 'none';
         document.getElementById('submit-btn').disabled   = false;
+        if (shouldFocusInput) inputText.focus();
         if (hasRenderedResult) scrollToResult();
       }
     }

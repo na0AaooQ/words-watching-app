@@ -646,6 +646,22 @@ textarea::placeholder {
   color: var(--red);
 }
 
+.input-error {
+  margin: 0.55rem 0 0.75rem;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--red);
+  border-radius: 10px;
+  background: var(--red-lt);
+  color: var(--red);
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1.6;
+}
+
+.input-error[hidden] {
+  display: none;
+}
+
 /* ===== テキストコピーボタン ===== */
 .btn-copy-text {
   display: inline-flex;

@@ -25,6 +25,7 @@ function onTextInput() {
   const btn = document.getElementById('submit-btn');
   const len = ta.value.length;
 
+  clearInputError();
   cc.textContent = len + ' / ' + inputMaxNumberOfChar;
   cc.className   = 'char-count' + (len > 1800 ? ' warn' : '') + (len >= inputMaxNumberOfChar ? ' over' : '');
   btn.disabled   = len === 0;
@@ -142,6 +143,22 @@ const informationCheckingItems = [
 ];
 
 let previousRisk = null;
+
+function clearInputError() {
+  const error = document.getElementById('input-error');
+  if (!error) return;
+  error.textContent = '';
+  error.hidden = true;
+}
+
+function showInputError(statusCode) {
+  const error = document.getElementById('input-error');
+  if (!error) return;
+  error.textContent = statusCode === 413
+    ? '入力できる文字数が上限を超えています。文章を短くして、もう一度お試しください。'
+    : '入力内容を確認できませんでした。文章を確認して、もう一度お試しください。';
+  error.hidden = false;
+}
 
 function handleInformationCheckingSummaryKeydown(event) {
   if (event.key !== 'Enter' && event.key !== ' ') return;
@@ -468,11 +485,14 @@ function scrollToResult() {
 }
 
 async function checkText() {
-  const text = document.getElementById('input-text').value.trim();
+  const inputText = document.getElementById('input-text');
+  const text = inputText.value.trim();
+  clearInputError();
   if (!text) return;
   const tone = getSelectedAdviceTone();
   const scene = getSelectedUsageScene();
   let hasRenderedResult = false;
+  let shouldFocusInput = false;
 
   document.getElementById('submit-btn').disabled        = true;
   document.getElementById('loading').style.display       = 'flex';
@@ -487,6 +507,12 @@ async function checkText() {
 
     if (!res.ok) throw new Error('API error: ' + res.status);
     let data = await res.json();
+
+    if (data && (data.statusCode === 400 || data.statusCode === 413)) {
+      showInputError(data.statusCode);
+      shouldFocusInput = true;
+      return;
+    }
 
     if (data.body && typeof data.body === 'string') {
       data = JSON.parse(data.body);
@@ -503,6 +529,7 @@ async function checkText() {
   } finally {
     document.getElementById('loading').style.display   = 'none';
     document.getElementById('submit-btn').disabled     = false;
+    if (shouldFocusInput) inputText.focus();
     if (hasRenderedResult) scrollToResult();
   }
 }
@@ -517,6 +544,7 @@ function setupDom() {
     <span id="char-count" class="char-count"></span>
     <button class="btn-copy-text" id="btn-copy-text">📋 文章をコピー</button>
     <button id="submit-btn" disabled></button>
+    <div id="input-error" role="alert" hidden></div>
     <div id="sns-guide" style="display:none;">
       <span id="guide-x"></span>
       <span id="guide-facebook"></span>
@@ -1585,6 +1613,17 @@ describe('追加SNSの静的HTML仕様', () => {
     expect(enIndex).toContain("window.open(sel.value, '_blank', 'noopener');");
   });
 
+  test('日英トップに入力エラー用のalert領域と固定文言がある', () => {
+    expect(jaIndex).toContain('class="input-error" id="input-error" role="alert" hidden');
+    expect(enIndex).toContain('class="input-error" id="input-error" role="alert" hidden');
+    expect(jaIndex).toContain('入力できる文字数が上限を超えています。文章を短くして、もう一度お試しください。');
+    expect(jaIndex).toContain('入力内容を確認できませんでした。文章を確認して、もう一度お試しください。');
+    expect(enIndex).toContain('The input exceeds the allowed character limit. Please shorten the text and try again.');
+    expect(enIndex).toContain("We couldn't process the input. Please review the text and try again.");
+    expect(jaIndex).toContain('data.statusCode === 400 || data.statusCode === 413');
+    expect(enIndex).toContain('data.statusCode === 400 || data.statusCode === 413');
+  });
+
   test('日英マニュアルに追加サービス・未確認の説明がある', () => {
     expect(jaManual).toContain('pixiv、note、ガールズちゃんねる、好き嫌い.comは、「開く」ボタンから各サービスのトップページを表示します。');
     expect(jaManual).toContain('pixivの140字、noteの500字はコメントの文字数上限の目安です。');
@@ -1931,5 +1970,74 @@ describe('checkText()', () => {
     await checkText();
 
     expect(JSON.parse(global.fetch.mock.calls[0][1].body).scene).toBe('sns');
+  });
+
+  test('413相当では固定文言だけを表示し、結果やデモへフォールバックしない', async () => {
+    previousRisk = 'medium';
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        statusCode: 413,
+        body: JSON.stringify({ error: '<script>server-message</script>' })
+      })
+    });
+
+    await checkText();
+
+    const error = document.getElementById('input-error');
+    expect(error.getAttribute('role')).toBe('alert');
+    expect(error.hidden).toBe(false);
+    expect(error.textContent).toBe('入力できる文字数が上限を超えています。文章を短くして、もう一度お試しください。');
+    expect(error.textContent).not.toContain('server-message');
+    expect(document.getElementById('input-text').value).toBe('テスト投稿文');
+    expect(document.getElementById('result-area').style.display).toBe('none');
+    expect(document.getElementById('loading').style.display).toBe('none');
+    expect(document.getElementById('submit-btn').disabled).toBe(false);
+    expect(document.activeElement).toBe(document.getElementById('input-text'));
+    expect(HTMLElement.prototype.scrollIntoView).not.toHaveBeenCalled();
+    expect(previousRisk).toBe('medium');
+  });
+
+  test('400相当では固定文言だけを表示し、結果やデモへフォールバックしない', async () => {
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        statusCode: 400,
+        body: JSON.stringify({ error: '<script>server-message</script>' })
+      })
+    });
+
+    await checkText();
+
+    const error = document.getElementById('input-error');
+    expect(error.hidden).toBe(false);
+    expect(error.textContent).toBe('入力内容を確認できませんでした。文章を確認して、もう一度お試しください。');
+    expect(error.textContent).not.toContain('server-message');
+    expect(document.getElementById('result-area').style.display).toBe('none');
+    expect(HTMLElement.prototype.scrollIntoView).not.toHaveBeenCalled();
+  });
+
+  test('textarea の編集で入力エラーを解除する', () => {
+    showInputError(413);
+    const input = document.getElementById('input-text');
+    input.value = '修正した文章';
+    input.dispatchEvent(new Event('input'));
+
+    expect(document.getElementById('input-error').hidden).toBe(true);
+    expect(document.getElementById('input-error').textContent).toBe('');
+  });
+
+  test('次回チェック開始時に古い入力エラーを解除する', async () => {
+    showInputError(413);
+    let resolveRequest;
+    global.fetch = jest.fn().mockReturnValue(new Promise(resolve => {
+      resolveRequest = resolve;
+    }));
+
+    const checkPromise = checkText();
+    expect(document.getElementById('input-error').hidden).toBe(true);
+
+    resolveRequest({ ok: true, json: async () => ({ risk: 'low', summary: 'ok', reasons: [], suggestions: [] }) });
+    await checkPromise;
   });
 });
