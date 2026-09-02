@@ -16,7 +16,11 @@ bedrock = boto3.client("bedrock-runtime")
 cloudwatch = boto3.client("cloudwatch")
 
 ALLOWED_LANGUAGES = {"ja", "en"}
+# Lambdaが受信したJSON bodyを空白なし・UTF-8で再シリアライズした際の最大許容サイズ（512 KiB）。
+# この値を超える場合は、Bedrock呼び出し前に入力サイズ超過として拒否する。
 MAX_BODY_SIZE_BYTES = 512 * 1024
+# ブラウザのmaxlengthとJavaScript String.lengthに合わせた、textの最大UTF-16コード単位数。
+# この値を超える場合は、strip前に入力文字数超過として拒否する。
 MAX_TEXT_UTF16_CODE_UNITS = 50000
 
 ALLOWED_TONES = {"standard", "soft", "business"}
