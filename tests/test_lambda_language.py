@@ -55,7 +55,33 @@ class FakeBedrock:
         }
 
 
+def body_with_serialized_size(target_size, text="ok", padding_prefix=""):
+    body = {"text": text, "padding": padding_prefix}
+    current_size = len(json.dumps(
+        body,
+        ensure_ascii=False,
+        separators=(",", ":")
+    ).encode("utf-8"))
+    padding_length = target_size - current_size
+    if padding_length < 0:
+        raise ValueError("target_size is smaller than the required JSON body")
+
+    body["padding"] += "x" * padding_length
+    actual_size = len(json.dumps(
+        body,
+        ensure_ascii=False,
+        separators=(",", ":")
+    ).encode("utf-8"))
+    if actual_size != target_size:
+        raise AssertionError("JSON body size fixture is not exact")
+    return body
+
+
 class LambdaLanguageTests(unittest.TestCase):
+    def setUp(self):
+        self.fake_bedrock = FakeBedrock()
+        lambda_function.bedrock = self.fake_bedrock
+
     def test_normalize_language_accepts_allowed_values(self):
         self.assertEqual(lambda_function.normalize_language("ja"), "ja")
         self.assertEqual(lambda_function.normalize_language("en"), "en")
@@ -210,6 +236,166 @@ class LambdaLanguageTests(unittest.TestCase):
             "We couldn't prepare the check result properly this time. Please wait a moment and try again."
         ])
         self.assertEqual(response_body["suggestions"], [])
+
+    def test_lambda_handler_invokes_bedrock_once_for_normal_input(self):
+        response = lambda_function.lambda_handler({
+            "body": {"text": "確認したい文章です。"}
+        }, None)
+
+        self.assertEqual(response["statusCode"], 200)
+        self.assertEqual(len(self.fake_bedrock.calls), 1)
+
+    def test_lambda_handler_supports_direct_invocation_body(self):
+        response = lambda_function.lambda_handler({
+            "text": "直接実行の文章です。"
+        }, None)
+
+        self.assertEqual(response["statusCode"], 200)
+        self.assertEqual(len(self.fake_bedrock.calls), 1)
+
+    def test_utf16_code_unit_length_counts_code_units_without_normalization(self):
+        self.assertEqual(lambda_function.utf16_code_unit_length("a"), 1)
+        self.assertEqual(lambda_function.utf16_code_unit_length("あ"), 1)
+        self.assertEqual(lambda_function.utf16_code_unit_length("😀"), 2)
+        self.assertEqual(lambda_function.utf16_code_unit_length("e\u0301\ufe0f"), 3)
+
+    def test_lambda_handler_allows_text_at_utf16_limit(self):
+        for label, text in [
+            ("ascii", "a" * 50000),
+            ("japanese", "あ" * 50000),
+            ("emoji", "😀" * 25000)
+        ]:
+            with self.subTest(label=label):
+                self.fake_bedrock.calls.clear()
+                response = lambda_function.lambda_handler({"body": {"text": text}}, None)
+
+                self.assertEqual(response["statusCode"], 200)
+                self.assertEqual(len(self.fake_bedrock.calls), 1)
+
+    def test_lambda_handler_rejects_text_over_utf16_limit_before_bedrock(self):
+        for label, text, expected_length in [
+            ("ascii", "a" * 50001, 50001),
+            ("emoji", "😀" * 25001, 50002)
+        ]:
+            with self.subTest(label=label):
+                self.fake_bedrock.calls.clear()
+                with self.assertLogs(lambda_function.logger, level="INFO") as captured:
+                    response = lambda_function.lambda_handler({"body": {"text": text}}, None)
+
+                logs = "\n".join(captured.output)
+                self.assertEqual(response["statusCode"], 413)
+                self.assertEqual(len(self.fake_bedrock.calls), 0)
+                self.assertIn("event=input_validation_rejected", logs)
+                self.assertIn("reason=text_too_long", logs)
+                self.assertIn(f"text_utf16_length={expected_length}", logs)
+
+    def test_lambda_handler_checks_length_before_stripping_whitespace(self):
+        for label, text, expected_status in [
+            ("at_limit", " " * 50000, 400),
+            ("over_limit", " " * 50001, 413)
+        ]:
+            with self.subTest(label=label):
+                self.fake_bedrock.calls.clear()
+                response = lambda_function.lambda_handler({"body": {"text": text}}, None)
+
+                self.assertEqual(response["statusCode"], expected_status)
+                self.assertEqual(len(self.fake_bedrock.calls), 0)
+
+    def test_lambda_handler_rejects_invalid_text_values_before_bedrock(self):
+        invalid_bodies = [
+            {},
+            {"text": None},
+            {"text": 123},
+            {"text": []},
+            {"text": {}}
+        ]
+
+        for body in invalid_bodies:
+            with self.subTest(body=body):
+                self.fake_bedrock.calls.clear()
+                response = lambda_function.lambda_handler({"body": body}, None)
+
+                self.assertEqual(response["statusCode"], 400)
+                self.assertEqual(len(self.fake_bedrock.calls), 0)
+
+    def test_lambda_handler_rejects_missing_or_invalid_body_before_bedrock(self):
+        invalid_events = [
+            {},
+            {"body": None},
+            {"body": "{"},
+            {"body": []},
+            {"body": "[]"},
+            {"body": 123}
+        ]
+
+        for event in invalid_events:
+            with self.subTest(event=event):
+                self.fake_bedrock.calls.clear()
+                response = lambda_function.lambda_handler(event, None)
+
+                self.assertEqual(response["statusCode"], 400)
+                self.assertEqual(len(self.fake_bedrock.calls), 0)
+
+    def test_lambda_handler_enforces_exact_serialized_body_size_boundary(self):
+        for target_size, expected_status in [
+            (524287, 200),
+            (524288, 200),
+            (524289, 413)
+        ]:
+            with self.subTest(target_size=target_size):
+                body = body_with_serialized_size(target_size)
+                self.assertEqual(len(json.dumps(
+                    body,
+                    ensure_ascii=False,
+                    separators=(",", ":")
+                ).encode("utf-8")), target_size)
+
+                self.fake_bedrock.calls.clear()
+                response = lambda_function.lambda_handler({"body": body}, None)
+
+                self.assertEqual(response["statusCode"], expected_status)
+                self.assertEqual(
+                    len(self.fake_bedrock.calls),
+                    1 if expected_status == 200 else 0
+                )
+
+    def test_lambda_handler_checks_body_size_before_text_length(self):
+        body = body_with_serialized_size(524289, text="a" * 50001)
+
+        response = lambda_function.lambda_handler({"body": body}, None)
+
+        self.assertEqual(response["statusCode"], 413)
+        self.assertEqual(len(self.fake_bedrock.calls), 0)
+
+    def test_input_validation_logs_do_not_include_user_text(self):
+        sentinel = "DO_NOT_LOG_TEST_SENTINEL"
+        text = sentinel + "a" * (50001 - len(sentinel))
+
+        with self.assertLogs(lambda_function.logger, level="INFO") as captured:
+            response = lambda_function.lambda_handler({"body": {"text": text}}, None)
+
+        logs = "\n".join(captured.output)
+        self.assertEqual(response["statusCode"], 413)
+        self.assertEqual(len(self.fake_bedrock.calls), 0)
+        self.assertIn("event=input_validation_rejected", logs)
+        self.assertIn("reason=text_too_long", logs)
+        self.assertIn("text_utf16_length=50001", logs)
+        self.assertNotIn(sentinel, logs)
+
+    def test_body_size_rejection_logs_only_safe_metadata(self):
+        sentinel = "DO_NOT_LOG_TEST_SENTINEL"
+        body = body_with_serialized_size(524289, padding_prefix=sentinel)
+
+        with self.assertLogs(lambda_function.logger, level="INFO") as captured:
+            response = lambda_function.lambda_handler({"body": body}, None)
+
+        logs = "\n".join(captured.output)
+        self.assertEqual(response["statusCode"], 413)
+        self.assertEqual(len(self.fake_bedrock.calls), 0)
+        self.assertIn("event=input_validation_rejected", logs)
+        self.assertIn("reason=body_too_large", logs)
+        self.assertIn("body_size_bytes=524289", logs)
+        self.assertNotIn(sentinel, logs)
 
 
 if __name__ == "__main__":

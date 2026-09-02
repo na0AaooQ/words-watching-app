@@ -16,6 +16,8 @@ bedrock = boto3.client("bedrock-runtime")
 cloudwatch = boto3.client("cloudwatch")
 
 ALLOWED_LANGUAGES = {"ja", "en"}
+MAX_BODY_SIZE_BYTES = 512 * 1024
+MAX_TEXT_UTF16_CODE_UNITS = 50000
 
 ALLOWED_TONES = {"standard", "soft", "business"}
 TONE_INSTRUCTIONS_JA = {
@@ -50,6 +52,7 @@ SCENE_INSTRUCTIONS_EN = {
 FALLBACK_MESSAGES = {
     "ja": {
         "empty_text_error": "文章が入力されていません。",
+        "input_too_large_error": "入力できる文字数が上限を超えています。文章を短くして、もう一度お試しください。",
         "summary": "文章の受け取られ方について、注意が必要な可能性があります。",
         "reason": "文章の受け取られ方について、注意が必要な可能性があります。",
         "parse_error_reason": "文章の解析結果の整形中に一時的な問題が発生しました。お手数ですが、時間をおいて再度お試しください。",
@@ -57,6 +60,7 @@ FALLBACK_MESSAGES = {
     },
     "en": {
         "empty_text_error": "Please enter some text to check.",
+        "input_too_large_error": "The input exceeds the allowed character limit. Please shorten the text and try again.",
         "summary": "This text may be worth reviewing before posting.",
         "reason": "The wording may benefit from a gentle review before posting.",
         "parse_error_reason": "We couldn't prepare the check result properly this time. Please wait a moment and try again.",
@@ -105,6 +109,37 @@ def fallback_result(language: str, reason_type: str = "reason") -> dict:
         ],
         "suggestions": []
     }
+
+
+def make_response(status_code: int, payload: dict) -> dict:
+    return {
+        "statusCode": status_code,
+        "headers": {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*"
+        },
+        "body": json.dumps(payload, ensure_ascii=False)
+    }
+
+
+def utf16_code_unit_length(text: str) -> int:
+    return sum(2 if ord(char) > 0xFFFF else 1 for char in text)
+
+
+def input_error_response(status_code: int, language: str = "ja") -> dict:
+    message_key = "input_too_large_error" if status_code == 413 else "empty_text_error"
+    return make_response(status_code, {"error": fallback_message(language, message_key)})
+
+
+def serialize_body_for_size_check(body: object):
+    try:
+        return json.dumps(
+            body,
+            ensure_ascii=False,
+            separators=(",", ":")
+        ).encode("utf-8")
+    except (TypeError, ValueError, UnicodeEncodeError):
+        return None
 
 
 # Amazon Bedrockレスポンスのパース失敗時、CloudWatchにメトリクスを送信する
@@ -668,29 +703,61 @@ def lambda_handler(event, context):
         # -----------------------------
         # 1. リクエストボディの取得
         # -----------------------------
-        raw_body = event.get("body")
+        if not isinstance(event, dict):
+            return input_error_response(400)
+
+        if "body" not in event:
+            # Lambdaを直接実行する既存の呼び出し形式にも対応する。
+            raw_body = event
+        else:
+            raw_body = event.get("body")
 
         if raw_body is None:
-            body = event
-        elif isinstance(raw_body, str):
-            body = json.loads(raw_body)
+            return input_error_response(400)
+
+        if isinstance(raw_body, str):
+            try:
+                body = json.loads(raw_body)
+            except (JSONDecodeError, TypeError):
+                return input_error_response(400)
         else:
             body = raw_body
 
-        text = body.get("text", "").strip()
-        tone = normalize_tone(body.get("tone", "standard"))
-        scene = normalize_scene(body.get("scene", "general"))
+        serialized_body = serialize_body_for_size_check(body)
+        if serialized_body is None:
+            return input_error_response(400)
+
+        body_size_bytes = len(serialized_body)
+        if body_size_bytes > MAX_BODY_SIZE_BYTES:
+            logger.info(
+                "event=input_validation_rejected reason=body_too_large body_size_bytes=%s",
+                body_size_bytes
+            )
+            return input_error_response(413)
+
+        if not isinstance(body, dict):
+            return input_error_response(400)
+
         language = normalize_language(body.get("language", "ja"))
 
+        if "text" not in body or not isinstance(body["text"], str):
+            return input_error_response(400, language)
+
+        text = body["text"]
+        text_utf16_length = utf16_code_unit_length(text)
+        if text_utf16_length > MAX_TEXT_UTF16_CODE_UNITS:
+            logger.info(
+                "event=input_validation_rejected reason=text_too_long text_utf16_length=%s",
+                text_utf16_length
+            )
+            return input_error_response(413, language)
+
+        text = text.strip()
+        tone = normalize_tone(body.get("tone", "standard"))
+        scene = normalize_scene(body.get("scene", "general"))
+
         if not text:
-            return {
-                "statusCode": 400,
-                "headers": {
-                    "Content-Type": "application/json",
-                    "Access-Control-Allow-Origin": "*"
-                },
-                "body": json.dumps({"error": fallback_message(language, "empty_text_error")}, ensure_ascii=False)
-            }
+            return input_error_response(400, language)
 
         # -----------------------------
         # 2. プロンプト構築

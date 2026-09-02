@@ -146,6 +146,8 @@
         <span class="char-count" id="char-count">0 / 50000</span>
       </div>
 
+      <div class="input-error" id="input-error" role="alert" hidden></div>
+
       <div class="sns-guide" id="sns-guide" style="display:none;">
         <span class="sns-guide-label">Approximate character limits:</span>
         <span class="sns-guide-item" id="guide-x">X 280 chars</span>
@@ -358,6 +360,22 @@
 
     let previousRisk = null;
 
+    function clearInputError() {
+      const error = document.getElementById('input-error');
+      if (!error) return;
+      error.textContent = '';
+      error.hidden = true;
+    }
+
+    function showInputError(statusCode) {
+      const error = document.getElementById('input-error');
+      if (!error) return;
+      error.textContent = statusCode === 413
+        ? 'The input exceeds the allowed character limit. Please shorten the text and try again.'
+        : "We couldn't process the input. Please review the text and try again.";
+      error.hidden = false;
+    }
+
     function onTextInput() {
       const inputMaxNumberOfChar = 50000;
       const ta = document.getElementById('input-text');
@@ -365,6 +383,7 @@
       const btn = document.getElementById('submit-btn');
       const len = ta.value.length;
 
+      clearInputError();
       cc.textContent = len + ' / ' + inputMaxNumberOfChar;
       cc.className = 'char-count' + (len > 1800 ? ' warn' : '') + (len >= inputMaxNumberOfChar ? ' over' : '');
       btn.disabled = len === 0;
@@ -428,11 +447,14 @@
     }
 
     async function checkText() {
-      const text = document.getElementById('input-text').value.trim();
+      const inputText = document.getElementById('input-text');
+      const text = inputText.value.trim();
+      clearInputError();
       if (!text) return;
       const tone = getSelectedAdviceTone();
       const scene = getSelectedUsageScene();
       let hasRenderedResult = false;
+      let shouldFocusInput = false;
 
       document.getElementById('submit-btn').disabled = true;
       document.getElementById('loading').style.display = 'flex';
@@ -447,6 +469,11 @@
 
         if (!res.ok) throw new Error('API error: ' + res.status);
         let data = await res.json();
+        if (data && (data.statusCode === 400 || data.statusCode === 413)) {
+          showInputError(data.statusCode);
+          shouldFocusInput = true;
+          return;
+        }
         if (data.body && typeof data.body === 'string') {
           data = JSON.parse(data.body);
         } else if (data.body && typeof data.body === 'object') {
@@ -461,6 +488,7 @@
       } finally {
         document.getElementById('loading').style.display = 'none';
         document.getElementById('submit-btn').disabled = false;
+        if (shouldFocusInput) inputText.focus();
         if (hasRenderedResult) scrollToResult();
       }
     }
