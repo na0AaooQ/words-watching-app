@@ -1,4 +1,3 @@
-
 /* exported handler */
 function handler(event) {
   var html = `<!DOCTYPE html>
@@ -60,4 +59,3 @@ function handler(event) {
     body: event.request.method === 'HEAD' ? '' : html
   };
 }
-
