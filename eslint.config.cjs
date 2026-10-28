@@ -8,6 +8,7 @@ module.exports = [
   },
   {
     files: ["**/*.js"],
+    ignores: ["modules/aws/cloudfront/functions/**/*.js"],
     ...js.configs.recommended,
     languageOptions: {
       ...js.configs.recommended.languageOptions,
@@ -20,6 +21,18 @@ module.exports = [
     },
     rules: {
       "no-console": "off",
+    },
+  },
+  {
+    files: ["modules/aws/cloudfront/functions/**/*.js"],
+    ...js.configs.recommended,
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "script",
+    },
+    rules: {
+      ...js.configs.recommended.rules,
+      "no-console": "error",
     },
   },
   {

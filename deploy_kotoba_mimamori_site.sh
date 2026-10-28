@@ -20,6 +20,7 @@ print_deploy_targets() {
     -path "./.git" -prune -o \
     -path "./node_modules" -prune -o \
     -path "./aws" -prune -o \
+    -path "./modules" -prune -o \
     -path "./docs" -prune -o \
     -path "./BACKUP" -prune -o \
     -type f \( -name "*.html" -o -name "*.css" -o -name "sitemap.xml" -o -path "./assets/img/manual-step5_*.png" -o -path "./assets/img/manual-step6.png" -o -path "./assets/img/manual-step7.png" -o -path "./scripts/*" \) -print | sort
@@ -64,6 +65,7 @@ aws s3 sync . "${S3_BUKKET_NAME}" --exclude "*" --include "*.html" --include "en
     --exclude "docs/**" \
     --exclude "${ENV_FILE}" \
     --exclude "aws/*" \
+    --exclude "modules/*" \
     --exclude "BACKUP/*" \
     --exclude ".DS_Store" \
     --exclude "assets/.DS_Store" \
@@ -87,6 +89,7 @@ case $ANS in
         --exclude "docs/**" \
         --exclude "${ENV_FILE}" \
         --exclude "aws/*" \
+        --exclude "modules/*" \
         --exclude "BACKUP/*" \
         --exclude ".DS_Store" \
         --exclude "assets/.DS_Store" \
